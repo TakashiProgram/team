@@ -8,22 +8,27 @@ public class InputManager : MonoBehaviour
     //コントローラ
     [SerializeField]
     private GameObject stick, stickBase;
+    //ボタン
     [SerializeField]
     private GameObject leftTap, rightTap;
+    //プレイヤー
+    [SerializeField]
+    private GameObject player;
     //uiCamera
     [SerializeField]
     Camera uiCamera;
    
-    public float distance = 100f;
-    float len;
-    float maxLen = 1.0f;
-    bool test = true;
-    string objectName;
+    private float distance = 100f;
 
-    bool tapFlag = true;
+    private float len;
+    private float maxLen = 1.0f;
+
+    private string objectName;
 
     Color setColor = new Color(1,1,1,1);
     Color resetColor = new Color(1, 1, 1, 0.5f);
+    Vector3 playerMove;
+    float moveCount=0.05f;
     void Start()
     {
 
@@ -31,7 +36,7 @@ public class InputManager : MonoBehaviour
     
     void Update()
     {
-      //   Move();
+         //Move();
         TapMove();
     }
     //プレイヤーの移動処理一つ目
@@ -69,18 +74,19 @@ public class InputManager : MonoBehaviour
         }
 
     }
-    //
+    //プレイヤーの移動処理二つ目
     void TapMove()
     {
         TapRay();
-        TapUpReset();
+     //   TapUpReset();
     }
 
   //タップしたオブジェクトの名前を取ってくる
     void TapRay()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButton(0))
         {
+            
             Ray ray = uiCamera.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
             RaycastHit hit = new RaycastHit();
 
@@ -88,30 +94,42 @@ public class InputManager : MonoBehaviour
             {
                 objectName = hit.collider.gameObject.name;
             }
-            if (tapFlag)
-            {
                 switch (objectName)
                 {
                     case "Left":
                         leftTap.GetComponent<SpriteRenderer>().color = setColor;
-                        tapFlag = false;
+                        playerMove = player.transform.position;
+                        playerMove.x-=moveCount;
+                        player.transform.position = playerMove;
+
+                    iTween.RotateTo(player, iTween.Hash("y", -90));
+                    player.GetComponent<Animator>().SetBool("Move",true);
                         break;
                     case "Right":
                         rightTap.GetComponent<SpriteRenderer>().color = setColor;
-                        tapFlag = false;
-                        break;
+                        playerMove = player.transform.position;
+                        playerMove.x+=moveCount;
+                        player.transform.position = playerMove;
+                    iTween.RotateTo(player, iTween.Hash("y", 90));
+                    player.GetComponent<Animator>().SetBool("Move",true);
+
+                    break;
+                case "TapStop":
+                    TapUpReset();
+                    break;
                 }
-            }
+        }
+        if (Input.GetMouseButtonUp(0))
+        {;
+            TapUpReset();
         }
     }
     //手を離したら元に戻す
     void TapUpReset()
     {
-        if (Input.GetMouseButtonUp(0))
-        {
-            tapFlag = true;
             leftTap.GetComponent<SpriteRenderer>().color = resetColor;
             rightTap.GetComponent<SpriteRenderer>().color = resetColor;
-        }
+            player.GetComponent<Animator>().SetBool("Move", false);
+            objectName = null;
     }
 }
