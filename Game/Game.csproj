@@ -85,6 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\GameMain\Script\InputManager.cs" />
+    <Compile Include="Assets\GameMain\Script\Player.cs" />
     <Compile Include="Assets\GameMain\Script\UIManager.cs" />
     <Compile Include="Assets\UnityChan\Scripts\AutoBlink.cs" />
     <Compile Include="Assets\UnityChan\Scripts\AutoBlinkforSD.cs" />

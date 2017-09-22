@@ -32,17 +32,21 @@ public class UIManager : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-       //ダメージをくらったらHPバー減少
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
+      
+    }
+
+    public void PlayerDamage()
+    {
+        //ダメージをくらったらHPバー減少
+     
             iTween.ValueTo(this.gameObject, iTween.Hash
-                ("from", m_Life, 
-                "to", m_Life -m_Damage ,
+                ("from", m_Life,
+                "to", m_Life - m_Damage,
                 "time", m_Time,
                 "onupdate", "DamageRed"));
             m_Life -= m_Damage;
-            lifeGage.fillAmount = m_Life / m_LifeMax;  
-        }
+            lifeGage.fillAmount = m_Life / m_LifeMax;
+        
         //シャボン玉を膨らましているとき
         if (Input.GetKey(KeyCode.Z))
         {

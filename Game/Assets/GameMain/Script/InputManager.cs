@@ -36,49 +36,52 @@ public class InputManager : MonoBehaviour
     
     void Update()
     {
-         //Move();
-        TapMove();
+       
+            //Move();
+            TapMove();
     }
+
+  
     //プレイヤーの移動処理一つ目
-    void Move()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            stick.SetActive(true);
-            stickBase.SetActive(true);
-        }
+    //void Move()
+    //{
+    //    if (Input.GetMouseButtonDown(0))
+    //    {
+    //        stick.SetActive(true);
+    //        stickBase.SetActive(true);
+    //    }
 
-        if (Input.GetMouseButton(0))
-        {
+    //    if (Input.GetMouseButton(0))
+    //    {
 
-            Vector3 tapPos = uiCamera.GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
+    //        Vector3 tapPos = uiCamera.GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
 
-            stick.transform.position = new Vector3(tapPos.x, stick.transform.position.y, 0);
+    //        stick.transform.position = new Vector3(tapPos.x, stick.transform.position.y, 0);
 
-            Vector3 v1 = (stick.transform.position - stickBase.transform.position);
+    //        Vector3 v1 = (stick.transform.position - stickBase.transform.position);
 
-            float len = v1.magnitude;
+    //        float len = v1.magnitude;
 
-            float maxLen = 1.0f;
-            if (len > maxLen)
-            {
-                stick.transform.position = stickBase.transform.position + ((v1.normalized) * maxLen);
-            }
-        
-        }
+    //        float maxLen = 1.0f;
+    //        if (len > maxLen)
+    //        {
+    //            stick.transform.position = stickBase.transform.position + ((v1.normalized) * maxLen);
+    //        }
 
-        if (Input.GetMouseButtonUp(0))
-        {
-            stick.SetActive(false);
-            stickBase.SetActive(false);
-        }
+    //    }
 
-    }
+    //    if (Input.GetMouseButtonUp(0))
+    //    {
+    //        stick.SetActive(false);
+    //        stickBase.SetActive(false);
+    //    }
+
+    //}
     //プレイヤーの移動処理二つ目
     void TapMove()
     {
+        
         TapRay();
-     //   TapUpReset();
     }
 
   //タップしたオブジェクトの名前を取ってくる
@@ -94,6 +97,7 @@ public class InputManager : MonoBehaviour
             {
                 objectName = hit.collider.gameObject.name;
             }
+            //UIの名前で判定
                 switch (objectName)
                 {
                     case "Left":
@@ -120,7 +124,7 @@ public class InputManager : MonoBehaviour
                 }
         }
         if (Input.GetMouseButtonUp(0))
-        {;
+        {
             TapUpReset();
         }
     }
