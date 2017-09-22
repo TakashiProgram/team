@@ -17,7 +17,11 @@ public class InputManager : MonoBehaviour
     //uiCamera
     [SerializeField]
     Camera uiCamera;
-   
+    //プレイヤー前方
+    [SerializeField]
+    private GameObject front;
+
+    public GameObject[] Bubble;
     private float distance = 100f;
 
     private float len;
@@ -29,6 +33,16 @@ public class InputManager : MonoBehaviour
     Color resetColor = new Color(1, 1, 1, 0.5f);
     Vector3 playerMove;
     float moveCount=0.05f;
+
+    private bool longPressFlag = false;
+    
+    private GameObject test;
+
+    float x = 0;
+    float y = 0;
+    float z = 0;
+
+
     void Start()
     {
 
@@ -36,9 +50,8 @@ public class InputManager : MonoBehaviour
     
     void Update()
     {
-       
-            //Move();
-            TapMove();
+        TapBubble();
+        TapMove();
     }
 
   
@@ -80,7 +93,6 @@ public class InputManager : MonoBehaviour
     //プレイヤーの移動処理二つ目
     void TapMove()
     {
-        
         TapRay();
     }
 
@@ -89,16 +101,19 @@ public class InputManager : MonoBehaviour
     {
         if (Input.GetMouseButton(0))
         {
-            
             Ray ray = uiCamera.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
+
+          
             RaycastHit hit = new RaycastHit();
 
             if (Physics.Raycast(ray, out hit, distance))
             {
+
                 objectName = hit.collider.gameObject.name;
             }
+            
             //UIの名前で判定
-                switch (objectName)
+            switch (objectName)
                 {
                     case "Left":
                         leftTap.GetComponent<SpriteRenderer>().color = setColor;
@@ -118,9 +133,7 @@ public class InputManager : MonoBehaviour
                     player.GetComponent<Animator>().SetBool("Move",true);
 
                     break;
-                case "TapStop":
-                    TapUpReset();
-                    break;
+               
                 }
         }
         if (Input.GetMouseButtonUp(0))
@@ -128,6 +141,7 @@ public class InputManager : MonoBehaviour
             TapUpReset();
         }
     }
+    
     //手を離したら元に戻す
     void TapUpReset()
     {
@@ -135,5 +149,51 @@ public class InputManager : MonoBehaviour
             rightTap.GetComponent<SpriteRenderer>().color = resetColor;
             player.GetComponent<Animator>().SetBool("Move", false);
             objectName = null;
+    }
+
+    void TapBubble()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            RaycastHit hit = new RaycastHit();
+
+            if (Physics.Raycast(ray, out hit, distance))
+            {
+
+                objectName = hit.collider.gameObject.name;
+            }
+
+            switch (objectName)
+            {
+                case "front":
+                    test= Instantiate(Bubble[0], new Vector3(front.transform.position.x, front.transform.position.y, 0), Quaternion.identity);
+
+                    longPressFlag = true;
+                        break;
+            }
+                    //   var pos = Camera.main.ScreenToWorldPoint(Input.mousePosition + Camera.main.transform.forward * 10);
+                    //  Instantiate(Bubble[0], new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0), Quaternion.identity);
+
+            }
+        if (longPressFlag)
+        {
+            x += 0.01f;
+            y += 0.01f;
+            z += 0.01f;
+            test.transform.localScale = new Vector3(x, y, z);
+            if (x>1)
+            {
+                x = 1;
+                y = 1;
+                z = 1;
+            }
+        }
+        if (Input.GetMouseButtonUp(0))
+        {
+            longPressFlag = false;
+        }
+
     }
 }
