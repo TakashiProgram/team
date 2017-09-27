@@ -22,8 +22,8 @@ public static class SceneList {
         ",", "<"
     };
 
-    private const string ITEM_NAME = "Tools/Create/SceneName";
-    private const string PATH = "Assets/SceneName.cs";
+    private const string ITEM_NAME = "Tools/Create/SceneNameList";
+    private const string PATH = "Assets/Custom/SceneName.cs";
 
     private static readonly string FILENAME = Path.GetFileName(PATH);                   // ファイル名(拡張子あり)
     private static readonly string FILENAME_WITHOUT_EXTENSION = Path.GetFileNameWithoutExtension(PATH);   // ファイル名(拡張子なし)
@@ -54,18 +54,19 @@ public static class SceneList {
         builder.AppendLine("/// <summary>");
         builder.AppendLine("/// シーン名を定数で管理するクラス");
         builder.AppendLine("/// </summary>");
-        //builder.AppendFormat("public static class {0}", FILENAME_WITHOUT_EXTENSION).AppendLine();
-      //  builder.AppendLine("{");
-        builder.Append("\t").AppendLine(@"enum SceneListTest {");
+        builder.Append("\t").AppendLine(@"public enum SceneNameList {");
+
+        int num = 0;
         foreach (var n in EditorBuildSettings.scenes
             .Select(c => Path.GetFileNameWithoutExtension(c.path))
             .Distinct()
-            .Select(c => new { var = RemoveInvalidChars(c), val = c }))
+            .Select(c => new { var = RemoveInvalidChars(c), val = c}))
         {
-            
-            builder.Append("\t").AppendFormat(@"{0},", n.var, n.val).AppendLine();
+            if (EditorBuildSettings.scenes[num++].enabled)
+            {
+                builder.Append("\t").AppendFormat(@"{0},", n.var, n.val).AppendLine();
+            }
         }
-        //builder.AppendLine("\t };");
         builder.AppendLine("}");
 
         var directoryName = Path.GetDirectoryName(PATH);
