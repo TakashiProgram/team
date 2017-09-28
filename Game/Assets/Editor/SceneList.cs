@@ -10,8 +10,8 @@ using UnityEditorInternal;
 
 public class BuildSettingSceneFile : AssetPostprocessor
 {
-    private const string BUILD_DIRECTORY_PATH = "Assets/Scenes/Build";
-    private const string BUILD_DIRECTORY_FIRST_PATH = "Assets/Scenes/Build/First";
+    private const string BUILD_DIRECTORY_PATH = "Assets/Scenes/BuildScenes";
+    private const string BUILD_DIRECTORY_FIRST_PATH = "Assets/Scenes/BuildScenes/First";
     static bool ExistsDrectryInAssets(List<string[]> assetsList,List<string> targetDirectoryNameList)
     {
         return assetsList
