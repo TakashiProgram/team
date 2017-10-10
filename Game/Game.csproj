@@ -87,6 +87,8 @@
     <Compile Include="Assets\GameMain\Script\InputManager.cs" />
     <Compile Include="Assets\GameMain\Script\Player.cs" />
     <Compile Include="Assets\GameMain\Script\UIManager.cs" />
+    <Compile Include="Assets\SceneChanger.cs" />
+    <Compile Include="Assets\SceneName.cs" />
     <Compile Include="Assets\UnityChan\Scripts\AutoBlink.cs" />
     <Compile Include="Assets\UnityChan\Scripts\AutoBlinkforSD.cs" />
     <Compile Include="Assets\UnityChan\Scripts\CameraController.cs" />
@@ -102,6 +104,7 @@
     <Compile Include="Assets\UnityChan\Scripts\UnityChanControlScriptWithRgidBody.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Fade.shader" />
     <None Include="Assets\Plugins\Pixelplacement\iTween\ReadMe!\ReadMe!.txt" />
     <None Include="Assets\UnityChan\Models\UnityChanShader\Shader\Unitychan_chara_akarami_blend.shader" />
     <None Include="Assets\UnityChan\Models\UnityChanShader\Shader\Unitychan_chara_eye.shader" />

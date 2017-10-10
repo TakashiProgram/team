@@ -44,11 +44,7 @@ public class Player : MonoBehaviour
         if (collision.gameObject.tag=="Damage")
         {
             StartCoroutine("CreateCube");
-
-           
-
-            UiManager.GetComponent<UIManager>().PlayerDamage();
-           
+            
             _animator.SetBool("Damage", true);
         //   
           // 
@@ -57,6 +53,7 @@ public class Player : MonoBehaviour
                 ));
         }
     }
+    //無敵時間
     IEnumerator CreateCube()
     {
         gameObject.layer = LayerMask.NameToLayer("PlayerDamage");

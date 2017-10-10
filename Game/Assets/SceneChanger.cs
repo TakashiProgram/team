@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 public static class SceneChanger {
 
 	
-   public static void LoadSceneAtList(SceneNameList _listName)
+   static void LoadSceneAtList(SceneNameList _listName)
     {
         if((int)_listName < 0)
         {
@@ -16,7 +16,7 @@ public static class SceneChanger {
         SceneManager.LoadScene((int)_listName,LoadSceneMode.Single);
     }
 
-   public static void LoadSceneAtListAsync(SceneNameList _listName)
+   static void LoadSceneAtListAsync(SceneNameList _listName)
     {
         if ((int)_listName < 0)
         {

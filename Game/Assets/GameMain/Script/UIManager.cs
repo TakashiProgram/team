@@ -34,31 +34,5 @@ public class UIManager : MonoBehaviour {
     {
       
     }
-
-    public void PlayerDamage()
-    {
-        //ダメージをくらったらHPバー減少
-     
-            iTween.ValueTo(this.gameObject, iTween.Hash
-                ("from", m_Life,
-                "to", m_Life - m_Damage,
-                "time", m_Time,
-                "onupdate", "DamageRed"));
-            m_Life -= m_Damage;
-            lifeGage.fillAmount = m_Life / m_LifeMax;
-        
-        //シャボン玉を膨らましているとき
-        if (Input.GetKey(KeyCode.Z))
-        {
-            lifeGage.fillAmount -= m_Gradually;
-            lifeRedGage.fillAmount -= m_Gradually;
-        }
-    }
-    //ダメージレットバーの減少
-    void DamageRed(float m_Damage)
-    {
-        lifeRedGage.fillAmount = m_Damage / m_LifeMax;
-        
-    }
   
 }

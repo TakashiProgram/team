@@ -84,6 +84,7 @@
     <Compile Include="Assets\Plugins\Pixelplacement\iTween\iTween.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Fade.shader" />
     <None Include="Assets\Plugins\Pixelplacement\iTween\ReadMe!\ReadMe!.txt" />
     <None Include="Assets\UnityChan\Models\UnityChanShader\Shader\Unitychan_chara_akarami_blend.shader" />
     <None Include="Assets\UnityChan\Models\UnityChanShader\Shader\Unitychan_chara_eye.shader" />
