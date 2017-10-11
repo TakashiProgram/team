@@ -84,6 +84,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\GameMain\Script\Bubble.cs" />
+    <Compile Include="Assets\GameMain\Script\CreateManager.cs" />
     <Compile Include="Assets\GameMain\Script\InputManager.cs" />
     <Compile Include="Assets\GameMain\Script\Player.cs" />
     <Compile Include="Assets\GameMain\Script\UIManager.cs" />

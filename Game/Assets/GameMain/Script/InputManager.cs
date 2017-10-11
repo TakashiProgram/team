@@ -5,9 +5,7 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
-    //コントローラ
-    [SerializeField]
-    private GameObject stick, stickBase;
+    
     //ボタン
     [SerializeField]
     private GameObject leftTap, rightTap;
@@ -17,31 +15,27 @@ public class InputManager : MonoBehaviour
     //uiCamera
     [SerializeField]
     Camera uiCamera;
-    //プレイヤー前方
     [SerializeField]
-    private GameObject front;
+    private GameObject createManager;
 
-    public GameObject[] Bubble;
-    private float distance = 100f;
+
+
+
+    private float m_Distance = 10f;
 
     private float len;
     private float maxLen = 1.0f;
 
     private string objectName;
 
+    private bool createrFlag = false;
+
     Color setColor = new Color(1,1,1,1);
     Color resetColor = new Color(1, 1, 1, 0.5f);
     Vector3 playerMove;
     float moveCount=0.05f;
 
-    private bool longPressFlag = false;
-    
-    private GameObject test;
-
-    float x = 0;
-    float y = 0;
-    float z = 0;
-
+  
 
     void Start()
     {
@@ -50,16 +44,9 @@ public class InputManager : MonoBehaviour
     
     void Update()
     {
-        TapBubble();
-        TapMove();
-    }
 
-  
-    
-    //プレイヤーの移動処理二つ目
-    void TapMove()
-    {
         TapRay();
+
     }
 
   //タップしたオブジェクトの名前を取ってくる
@@ -69,17 +56,10 @@ public class InputManager : MonoBehaviour
         {
             Ray ray = uiCamera.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
 
+            RaycastHit2D hit = Physics2D.Raycast((Vector2)ray.origin, (Vector2)ray.direction, m_Distance);
           
-            RaycastHit hit = new RaycastHit();
-
-            if (Physics.Raycast(ray, out hit, distance))
-            {
-
-                objectName = hit.collider.gameObject.name;
-            }
-            
             //UIの名前で判定
-            switch (objectName)
+            switch (hit.collider.gameObject.name)
                 {
                     case "Left":
                         leftTap.GetComponent<SpriteRenderer>().color = setColor;
@@ -99,8 +79,15 @@ public class InputManager : MonoBehaviour
                     player.GetComponent<Animator>().SetBool("Move",true);
 
                     break;
-               
-                }
+                case "Bubble":
+                    //    TapBubble();
+                    createManager.GetComponent<CreateManager>().TapBubble();
+                    break;
+                case "Null":
+
+                    break;
+
+            }
         }
         if (Input.GetMouseButtonUp(0))
         {
@@ -111,55 +98,14 @@ public class InputManager : MonoBehaviour
     //手を離したら元に戻す
     void TapUpReset()
     {
-            leftTap.GetComponent<SpriteRenderer>().color = resetColor;
-            rightTap.GetComponent<SpriteRenderer>().color = resetColor;
-            player.GetComponent<Animator>().SetBool("Move", false);
-            objectName = null;
+        leftTap.GetComponent<SpriteRenderer>().color = resetColor;
+        rightTap.GetComponent<SpriteRenderer>().color = resetColor;
+        player.GetComponent<Animator>().SetBool("Move", false);
+        objectName = null;
+    //    m_BubbleScale = 0;
+       
     }
     //バブル生成
-    void TapBubble()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-            RaycastHit hit = new RaycastHit();
-
-            if (Physics.Raycast(ray, out hit, distance))
-            {
-
-                objectName = hit.collider.gameObject.name;
-            }
-
-            switch (objectName)
-            {
-                case "front":
-                    test= Instantiate(Bubble[0], new Vector3(front.transform.position.x, front.transform.position.y, 0), Quaternion.identity);
-
-                    longPressFlag = true;
-                        break;
-            }
-                    //   var pos = Camera.main.ScreenToWorldPoint(Input.mousePosition + Camera.main.transform.forward * 10);
-                    //  Instantiate(Bubble[0], new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0), Quaternion.identity);
-
-            }
-        if (longPressFlag)
-        {
-            x += 0.01f;
-            y += 0.01f;
-            z += 0.01f;
-            test.transform.localScale = new Vector3(x, y, z);
-            if (x>1)
-            {
-                x = 1;
-                y = 1;
-                z = 1;
-            }
-        }
-        if (Input.GetMouseButtonUp(0))
-        {
-            longPressFlag = false;
-        }
-
-    }
+    
+   
 }
