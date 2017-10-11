@@ -9,7 +9,7 @@ public class CreateManager : MonoBehaviour {
     //プレイヤー前方
     [SerializeField]
     private GameObject front;
-
+    
     public GameObject[] Bubble;
 
     private bool longPressFlag = false;
