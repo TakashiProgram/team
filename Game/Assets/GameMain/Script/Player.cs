@@ -19,7 +19,7 @@ public class Player : MonoBehaviour
 
     private int m_PlayerDesCountMax = 2;
 
-
+    public bool bubbleFlag = false;
     void Start()
     {
        _animator= GetComponent<Animator>();
@@ -28,7 +28,7 @@ public class Player : MonoBehaviour
     
     void Update()
     {
-       
+
     }
     //playerのダメージ処理
     void DamageSart()
@@ -67,15 +67,50 @@ public class Player : MonoBehaviour
             StartCoroutine("CreateCube");
             
             _animator.SetBool("Damage", true);
-
-           
-        //   
-          // 
+            
             iTween.MoveTo(gameObject, iTween.Hash("position", transform.position - (transform.forward * 1f),
                 "time", 1.0f
                 ));
         }
+
+        if (collision.gameObject.tag == "Bubble")
+        {
+            Debug.Log("sgfn");
+            transform.parent = GameObject.Find("Bubble").transform;
+        }
     }
+
+    private void OnTriggerEnter(Collider collision)
+    {
+        if (collision.gameObject.tag == "Bubble")
+        {
+            bubbleFlag = true;
+            this.GetComponent<Rigidbody>().useGravity = false;
+            transform.parent = GameObject.Find("Bubble(Clone)").transform;
+            this.transform.position = this.transform.parent.position;
+            Debug.Log("sgfn");
+        }
+    }
+
+    private void OnTriggerStay(Collider collision)
+    {
+        if (collision.gameObject.tag == "Bubble")
+        {
+           
+            this.transform.position = this.transform.parent.position;
+           // Debug.Log("sgfn");
+        }
+    }
+
+    //private void OnTriggerExit(Collider collision)
+    //{
+    //    if (collision.gameObject.tag == "Bubble")
+    //    {
+    //        bubbleFlag = false;
+    //        transform.parent = null;
+    //        Debug.Log("sgfn");
+    //    }
+    //}
     //無敵時間
     IEnumerator CreateCube()
     {
@@ -86,5 +121,7 @@ public class Player : MonoBehaviour
         
         gameObject.layer = LayerMask.NameToLayer("Player");
     }
+
+
 
 }
