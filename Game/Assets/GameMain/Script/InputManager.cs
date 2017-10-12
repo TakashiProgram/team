@@ -34,7 +34,7 @@ public class InputManager : MonoBehaviour
     Color resetColor = new Color(1, 1, 1, 0.5f);
     Vector3 playerMove;
     float moveCount=0.05f;
-
+    private float m_BubbleScale = 0.01f;
   
 
     void Start()
@@ -58,30 +58,54 @@ public class InputManager : MonoBehaviour
 
             RaycastHit2D hit = Physics2D.Raycast((Vector2)ray.origin, (Vector2)ray.direction, m_Distance);
           
-            //UIの名前で判定
             switch (hit.collider.gameObject.name)
                 {
                     case "Left":
                         leftTap.GetComponent<SpriteRenderer>().color = setColor;
-                        playerMove = player.transform.position;
-                        playerMove.x-=moveCount;
-                        player.transform.position = playerMove;
 
+                    if (player.GetComponent<Player>().bubbleFlag)
+                    {
+                     /*   playerMove = player.transform.parent.position;
+                        playerMove.x -= moveCount;
+                        player.transform.parent.position = playerMove;*/
+                    }
+                    else
+                    {
+                        playerMove = player.transform.position;
+                        playerMove.x -= moveCount;
+                        player.transform.position = playerMove;
+                    }
+                      
                     iTween.RotateTo(player, iTween.Hash("y", -90));
                     player.GetComponent<Animator>().SetBool("Move",true);
+
                         break;
                     case "Right":
+
                         rightTap.GetComponent<SpriteRenderer>().color = setColor;
+                    if (player.GetComponent<Player>().bubbleFlag)
+                    {
+                       /*playerMove = player.transform.parent.position;
+                        playerMove.x += moveCount;
+                        player.transform.parent.position = playerMove;*/
+                    }
+                    else
+                    {
                         playerMove = player.transform.position;
-                        playerMove.x+=moveCount;
+                        playerMove.x += moveCount;
                         player.transform.position = playerMove;
+                    }
+                    
                     iTween.RotateTo(player, iTween.Hash("y", 90));
                     player.GetComponent<Animator>().SetBool("Move",true);
 
                     break;
                 case "Bubble":
                     //    TapBubble();
-                    createManager.GetComponent<CreateManager>().TapBubble();
+                    player.transform.parent = null;
+                    player.GetComponent<Player>().bubbleFlag=false;
+                    player.GetComponent<Rigidbody>().useGravity = true;
+                    createManager.GetComponent<CreateManager>().TapBubble(m_BubbleScale);
                     break;
                 case "Null":
 
@@ -105,7 +129,6 @@ public class InputManager : MonoBehaviour
     //    m_BubbleScale = 0;
        
     }
-    //バブル生成
     
    
 }

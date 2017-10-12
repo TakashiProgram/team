@@ -15,9 +15,9 @@ public class CreateManager : MonoBehaviour {
     private bool longPressFlag = false;
 
 
-
+    [SerializeField]
     private float m_BubbleScale = 0;
-    // Use this for initialization
+
     void Start () {
         Debug.Log("rgfh");
         m_BubbleScale = 0;
@@ -29,20 +29,20 @@ public class CreateManager : MonoBehaviour {
 		
 	}
 
-  public  void TapBubble()
+  public  void TapBubble( float scale)
     {
         if (Input.GetMouseButtonDown(0))
         {
-
+            m_BubbleScale = scale;
             Destroy(BubbleCreate);
-
+            Debug.Log("sfgnh");
             BubbleCreate = Instantiate(Bubble[0], new Vector3(front.transform.position.x, front.transform.position.y, 0), Quaternion.identity);
 
             longPressFlag = true;
         }
         if (longPressFlag)
         {
-            m_BubbleScale += 0.01f;
+            m_BubbleScale+=Time.deltaTime;
 
             BubbleCreate.transform.localScale = new Vector3(m_BubbleScale, m_BubbleScale, m_BubbleScale);
             if (m_BubbleScale > 1)
