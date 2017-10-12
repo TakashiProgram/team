@@ -20,10 +20,10 @@ public class Player : MonoBehaviour
     private int m_PlayerDesCountMax = 2;
 
     public bool bubbleFlag = false;
+
     void Start()
     {
        _animator= GetComponent<Animator>();
-    //   UI = UiManager.GetComponent<UIManager>();
     }
     
     void Update()
@@ -39,13 +39,13 @@ public class Player : MonoBehaviour
         }
         Left.GetComponent<BoxCollider2D>().enabled = false;
         Right.GetComponent<BoxCollider2D>().enabled = false;
+
         Destroy(PlayerHp[m_PlayerDesCount]);
         m_PlayerDesCount++;
         
-
     }
 
-    //playerの移動するときの処理
+    //playerの移動処理
    void MoveBox()
     {
         Left.GetComponent<BoxCollider2D>().enabled = true;
@@ -62,6 +62,7 @@ public class Player : MonoBehaviour
    
     private void OnCollisionEnter(Collision collision)
     {
+        //ノックバック
         if (collision.gameObject.tag=="Enemy")
         {
             StartCoroutine("CreateCube");
@@ -72,12 +73,6 @@ public class Player : MonoBehaviour
                 "time", 1.0f
                 ));
         }
-
-        if (collision.gameObject.tag == "Bubble")
-        {
-            Debug.Log("sgfn");
-            transform.parent = GameObject.Find("Bubble").transform;
-        }
     }
 
     private void OnTriggerEnter(Collider collision)
@@ -85,10 +80,13 @@ public class Player : MonoBehaviour
         if (collision.gameObject.tag == "Bubble")
         {
             bubbleFlag = true;
+
             this.GetComponent<Rigidbody>().useGravity = false;
+
             transform.parent = GameObject.Find("Bubble(Clone)").transform;
+
             this.transform.position = this.transform.parent.position;
-            Debug.Log("sgfn");
+            
         }
     }
 
@@ -98,19 +96,9 @@ public class Player : MonoBehaviour
         {
            
             this.transform.position = this.transform.parent.position;
-           // Debug.Log("sgfn");
         }
     }
 
-    //private void OnTriggerExit(Collider collision)
-    //{
-    //    if (collision.gameObject.tag == "Bubble")
-    //    {
-    //        bubbleFlag = false;
-    //        transform.parent = null;
-    //        Debug.Log("sgfn");
-    //    }
-    //}
     //無敵時間
     IEnumerator CreateCube()
     {

@@ -5,35 +5,33 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
-    
     //ボタン
     [SerializeField]
     private GameObject leftTap, rightTap;
-    //プレイヤー
+    
     [SerializeField]
     private GameObject player;
-    //uiCamera
+
     [SerializeField]
     Camera uiCamera;
+
     [SerializeField]
     private GameObject createManager;
 
-
-
-
     private float m_Distance = 10f;
-
-    private float len;
-    private float maxLen = 1.0f;
 
     private string objectName;
 
     private bool createrFlag = false;
 
     Color setColor = new Color(1,1,1,1);
+
     Color resetColor = new Color(1, 1, 1, 0.5f);
+
     Vector3 playerMove;
+
     float moveCount=0.05f;
+    
     private float m_BubbleScale = 0.01f;
   
 
@@ -63,19 +61,14 @@ public class InputManager : MonoBehaviour
                     case "Left":
                         leftTap.GetComponent<SpriteRenderer>().color = setColor;
 
-                    if (player.GetComponent<Player>().bubbleFlag)
+                    if (player.GetComponent<Player>().bubbleFlag==false)
                     {
-                     /*   playerMove = player.transform.parent.position;
-                        playerMove.x -= moveCount;
-                        player.transform.parent.position = playerMove;*/
-                    }
-                    else
-                    {
+                        
                         playerMove = player.transform.position;
                         playerMove.x -= moveCount;
                         player.transform.position = playerMove;
                     }
-                      
+                
                     iTween.RotateTo(player, iTween.Hash("y", -90));
                     player.GetComponent<Animator>().SetBool("Move",true);
 
@@ -83,29 +76,28 @@ public class InputManager : MonoBehaviour
                     case "Right":
 
                         rightTap.GetComponent<SpriteRenderer>().color = setColor;
-                    if (player.GetComponent<Player>().bubbleFlag)
+                    if (player.GetComponent<Player>().bubbleFlag==false)
                     {
-                       /*playerMove = player.transform.parent.position;
-                        playerMove.x += moveCount;
-                        player.transform.parent.position = playerMove;*/
-                    }
-                    else
-                    {
+                        
                         playerMove = player.transform.position;
                         playerMove.x += moveCount;
                         player.transform.position = playerMove;
                     }
-                    
+                   
                     iTween.RotateTo(player, iTween.Hash("y", 90));
                     player.GetComponent<Animator>().SetBool("Move",true);
 
                     break;
                 case "Bubble":
-                    //    TapBubble();
+
                     player.transform.parent = null;
+
                     player.GetComponent<Player>().bubbleFlag=false;
+
                     player.GetComponent<Rigidbody>().useGravity = true;
+
                     createManager.GetComponent<CreateManager>().TapBubble(m_BubbleScale);
+
                     break;
                 case "Null":
 
@@ -126,7 +118,6 @@ public class InputManager : MonoBehaviour
         rightTap.GetComponent<SpriteRenderer>().color = resetColor;
         player.GetComponent<Animator>().SetBool("Move", false);
         objectName = null;
-    //    m_BubbleScale = 0;
        
     }
     
