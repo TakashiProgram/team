@@ -36,5 +36,7 @@ Thumbs.db
 *.userprefs
 *.pidb
 *.booproj
-SceneName.cs
-SceneName.cs.meta
+SceneNameList.cs
+SceneNameList.cs.meta
+saveData.dat
+saveData.dat.meta
