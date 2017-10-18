@@ -8,10 +8,17 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditorInternal;
 
+/*
+ * BuildSceneに追加されたSceneをビルドセッティングへ追加し、そのリストを作成するクラスです。
+ */
 public class BuildSettingSceneFile : AssetPostprocessor
 {
+    //ビルドするSceneを格納するフォルダのパス
     private const string BUILD_DIRECTORY_PATH = "Assets/Scenes/BuildScenes";
+    //ビルドするSceneを格納するフォルダの最初のシーンを格納するフォルダへのパス
     private const string BUILD_DIRECTORY_FIRST_PATH = "Assets/Scenes/BuildScenes/First";
+
+    //変更されたファイルが指定しているディレクトリ内のファイルであるかどうかを判定します
     static bool ExistsDrectryInAssets(List<string[]> assetsList,List<string> targetDirectoryNameList)
     {
         return assetsList
@@ -21,9 +28,11 @@ public class BuildSettingSceneFile : AssetPostprocessor
               .Count() > 0);
     }
 
-
+    //ファイルの情報変更がある場合に実行され、情報変更があったファイルがBUILD_DIRECTORY_PATH・BUILD_DIRECTORY_FIRST_PATHに格納されている場合に
+    //BuildSettingのシーン追加情報・シーンリストを更新します。
     private static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets,string[] movedFromAssetPaths)
     {
+        //変更のあったアセットの名前リスト
         List<string[]> assetsList = new List<string[]>() {
             importedAssets,deletedAssets,movedAssets,movedFromAssetPaths
         };
@@ -53,6 +62,9 @@ public class BuildSettingSceneFile : AssetPostprocessor
         return false;
     }
 
+
+    //BUILD_DIRECTORY_PATH・BUILD_DIRECTORY_FIRST_PATH内の情報を参照し、ビルド情報のシーンリストを更新、シーンリストであるSceneNameListを作成します。
+    //この関数はエディタ画面のToolsバーから手動実行することができます。
     [MenuItem("Tools/Update/Scenes In Build")]
     private static void UpdateScenesInBuild()
     {
@@ -113,6 +125,8 @@ public class BuildSettingSceneFile : AssetPostprocessor
     }
 }
 
+//ビルドセッティング内のシーンリスト情報から、現在設定されているシーンを参照し
+//列挙型リストを作成するクラスです。
 public static class SceneList {
  
     //無効な文字列を管理する固定配列
@@ -127,16 +141,18 @@ public static class SceneList {
         ",", "<"
     };
 
+    //エディタ画面での実行名
     private const string ITEM_NAME = "Tools/Create/SceneNameList";
-    private const string PATH = "Assets/SceneName.cs";
+    //作成するリストのファイルパス&名前
+    private const string PATH = "Assets/SceneNameList.cs";
 
     private static readonly string FILENAME = Path.GetFileName(PATH);                   // ファイル名(拡張子あり)
     private static readonly string FILENAME_WITHOUT_EXTENSION = Path.GetFileNameWithoutExtension(PATH);   // ファイル名(拡張子なし)
 
 
     /*
-     *管理クラスの作成 
-     * 
+     *現在のビルドセッティングのシーンリストの情報から
+     * 新たにシーンのリスト情報を作成します。 
      */
      [MenuItem(ITEM_NAME)]
      public static void CreateList()
@@ -146,21 +162,21 @@ public static class SceneList {
             return;
         }
         CreateScript();
-
+        Debug.Log(FILENAME + "Edit Success");
        // EditorUtility.DisplayDialog(FILENAME, "作成が完了しました", "OK");
 
     }
 
-
+    //ビルドセッティングのシーンリストを参照してシーンをリスト化したスクリプトを作成します。
     public static void CreateScript()
     {
         StringBuilder builder = new StringBuilder();
 
         builder.AppendLine("/// <summary>");
-        builder.AppendLine("/// シーン名を定数で管理するクラス");
+        builder.AppendLine("/// シーン名を定数で管理する");
         builder.AppendLine("/// </summary>");
         builder.Append("\t").AppendLine(@"public enum SceneNameList {");
-
+        builder.Append("\t").AppendLine(@"None = -1,").AppendLine();
         int num = 0;
         foreach (var n in EditorBuildSettings.scenes
             .Select(c => Path.GetFileNameWithoutExtension(c.path))
@@ -185,12 +201,13 @@ public static class SceneList {
 
     }
 
-
+    //現在のエディタ情報をもとに現在CreateScriptが実行可能であるかを判定します。
     public static bool CanCreate()
     {
         return !EditorApplication.isPlaying && !Application.isPlaying && !EditorApplication.isCompiling;
     }
 
+    //引数strの中から無効な文字を削除して返却します。
     public static string RemoveInvalidChars(string str)
     {
         Array.ForEach(INVALUD_CHARS, c => str = str.Replace(c, string.Empty));

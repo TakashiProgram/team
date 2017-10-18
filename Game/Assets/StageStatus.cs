@@ -4,7 +4,7 @@ using UnityEngine;
 
 public enum ClearRank
 {
-    rank_none = -1,rank_D,rank_C,rank_B,rank_A,rank_S
+    rank_none = 0,rank_D,rank_C,rank_B,rank_A,rank_S
 }
 
 public class StageStatus : MonoBehaviour {
@@ -95,4 +95,6 @@ public class StageStatus : MonoBehaviour {
         }
         return false;
     }
+
+    
 }

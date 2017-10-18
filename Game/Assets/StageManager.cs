@@ -15,11 +15,7 @@ public class StageManager : MonoBehaviour
         public bool ReleaseFlag;
         public ClearRank rank;
     }
-    [System.Serializable]
-    public struct SaveData
-    {
-        public StageData[] stageData;
-    }
+   
 
     [SerializeField, Tooltip("シーン上に配置されるすべてのステージを格納します。")]
     private GameObject[] m_stages;
@@ -49,30 +45,30 @@ public class StageManager : MonoBehaviour
         {
             LoadStagesData();
         }
+
+        //データの設定が終わったらそのデータによるステージ開放の更新をかけていく
+        foreach (var stage in m_stages)
+        {
+            stage.GetComponent<StageStatus>().Check();
+        }
     }
 
     
     private void OnApplicationQuit()
     {
-
-
         m_stagesData = new StageData[m_stages.Length];
 
         for (int i = 0; i < m_stages.Length; i++)
         {
             m_stagesData[i].name = m_stages[i].name;
             m_stagesData[i].ReleaseFlag = m_stages[i].GetComponent<StageStatus>().IsRelease();
-            m_stagesData[i].rank = m_stages[i].GetComponent<StageStatus>().GetRank() + 1;
+            m_stagesData[i].rank = m_stages[i].GetComponent<StageStatus>().GetRank();
         }
         //自身が終了するときにステージの全情報を保存する
         SaveManager.SaveFile();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
 
-    }
     //引数に設定されたステージのクリア状況を返す。
     //true : クリアされている(ランク問わず)
     //false : クリアされていない
