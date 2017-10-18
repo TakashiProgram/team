@@ -8,15 +8,18 @@ public class CreateManager : MonoBehaviour {
     [SerializeField]
     private GameObject front;
     [SerializeField]
-    private GameObject Bubble;
+    private GameObject Bubble,Wind;
 
-    private GameObject BubbleCreateBox;
+    public GameObject BubbleCreateBox;
 
     private bool longPressFlag = false;
 
     private float m_BubbleScale = 0;
 
-    private int m_ScaleMax = 1; 
+    private int m_ScaleMax = 1;
+
+    public bool windflagtest = false;
+    public Vector3 dir;
 
     void Start () {
 
@@ -47,7 +50,18 @@ public class CreateManager : MonoBehaviour {
             if (m_BubbleScale > m_ScaleMax)
             {
                 m_BubbleScale = m_ScaleMax;
-
+            windflagtest = true;
             }
+    }
+    //風作成
+    public void TapWind(float test)
+    {
+        Instantiate(Wind, BubbleCreateBox.transform.position, Quaternion.identity);
+
+        //   float angleDir = transform.eulerAngles.z * (Mathf.PI / 180.0f);
+          dir = new Vector3(Mathf.Cos(test), Mathf.Sin(test), 0.0f);
+    //    dir = new Vector3(0,test,0);
+        BubbleCreateBox.transform.position += dir * 5 * Time.deltaTime;
+
     }
 }

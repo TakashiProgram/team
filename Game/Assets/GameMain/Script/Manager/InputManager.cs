@@ -13,7 +13,7 @@ public class InputManager : MonoBehaviour
     private GameObject player;
 
     [SerializeField]
-    Camera uiCamera;
+    Camera uiCamera, mainCamera;
 
     [SerializeField]
     private GameObject createManager;
@@ -33,8 +33,21 @@ public class InputManager : MonoBehaviour
     float moveCount=0.05f;
     
     private float m_BubbleScale = 0.01f;
-  
 
+    Vector3 test;
+
+    Vector3 te;
+
+    bool windflag = false;
+
+    bool testflag = false;
+    public float angle;
+
+
+    private Vector3 touchStartPos;
+    private Vector3 touchEndPos;
+
+    string Direction;
     void Start()
     {
 
@@ -42,12 +55,12 @@ public class InputManager : MonoBehaviour
     
     void Update()
     {
-
+        TapVector();
         TapRay();
-
+     
     }
 
-  //タップしたオブジェクトの名前を取ってくる
+    //タップしたオブジェクトの名前を取ってくる
     void TapRay()
     {
         if (Input.GetMouseButton(0))
@@ -97,9 +110,12 @@ public class InputManager : MonoBehaviour
                     player.GetComponent<Rigidbody>().useGravity = true;
 
                     createManager.GetComponent<CreateManager>().TapBubble(m_BubbleScale);
-
+                   // windflag = true;
                     break;
-                case "Null":
+                case "Wind":
+                   
+
+
 
                     break;
 
@@ -108,6 +124,10 @@ public class InputManager : MonoBehaviour
         if (Input.GetMouseButtonUp(0))
         {
             TapUpReset();
+            if (createManager.GetComponent<CreateManager>().windflagtest)
+            {
+                windflag = true;
+            }
         }
     }
     
@@ -120,6 +140,35 @@ public class InputManager : MonoBehaviour
         objectName = null;
        
     }
-    
-   
+
+    private void TapVector()
+    {
+        if (windflag)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                Debug.Log(Input.mousePosition);
+                //test = mainCamera.GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition + mainCamera.transform.forward * 10);
+                test = Input.mousePosition;
+                //test.z = 0;
+
+                test = mainCamera.ScreenToWorldPoint(Input.mousePosition + mainCamera.transform.forward * 10);
+            }
+            if (Input.GetMouseButtonUp(0))
+            {
+                Debug.Log(Input.mousePosition);
+                //  te = mainCamera.GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition + mainCamera.transform.forward * 10);
+                te = Input.mousePosition;
+                angle = Vector2.Angle(test, te);
+
+                createManager.GetComponent<CreateManager>().TapWind(angle);
+
+                Debug.Log(angle);
+                windflag = false;
+            }
+        }
+      
+    }
+
+  
 }

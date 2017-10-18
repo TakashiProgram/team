@@ -7,7 +7,7 @@ public class Player : MonoBehaviour
     private Animator _animator;
 
     [SerializeField]
-    private GameObject UiManager;
+    private GameObject UiManager,InputManager;
 
     [SerializeField]
     private GameObject Right, Left;
@@ -28,7 +28,10 @@ public class Player : MonoBehaviour
     
     void Update()
     {
+        //float angleDir = transform.eulerAngles.z * (Mathf.PI / 180.0f);
+        //Vector3 dir = new Vector3(Mathf.Cos(InputManager.GetComponent<InputManager>().angle), Mathf.Sin(InputManager.GetComponent<InputManager>().angle), 0.0f);
 
+        //transform.position += dir * 10 * Time.deltaTime;
     }
     //playerのダメージ処理
     void DamageSart()
@@ -65,13 +68,19 @@ public class Player : MonoBehaviour
         //ノックバック
         if (collision.gameObject.tag=="Enemy")
         {
-            StartCoroutine("CreateCube");
-            
-            _animator.SetBool("Damage", true);
-            
-            iTween.MoveTo(gameObject, iTween.Hash("position", transform.position - (transform.forward * 1f),
-                "time", 1.0f
-                ));
+            //StartCoroutine("CreateCube");
+
+            //_animator.SetBool("Damage", true);
+
+            //iTween.MoveTo(gameObject, iTween.Hash("position", transform.position - (transform.forward * 1f),
+            //    "time", 1.0f
+            //    ));
+            Debug.Log("wg");
+            float angleDir = transform.eulerAngles.z * (Mathf.PI / 180.0f);
+            Vector3 dir = new Vector3(Mathf.Cos(InputManager.GetComponent<InputManager>().angle), Mathf.Sin(InputManager.GetComponent<InputManager>().angle), 0.0f);
+
+            transform.position += dir *10* Time.deltaTime; 
+
         }
     }
 
@@ -88,6 +97,9 @@ public class Player : MonoBehaviour
             this.transform.position = this.transform.parent.position;
             
         }
+
+
+        
     }
 
     private void OnTriggerStay(Collider collision)

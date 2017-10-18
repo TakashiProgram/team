@@ -20,5 +20,6 @@ public class CameraManager : MonoBehaviour {
         this.transform.position = new Vector3(player.transform.position.x, player.transform.position.y, m_PosMaxZ);
         this.transform.position = new Vector3(Mathf.Clamp(this.transform.position.x, m_PosMinX, m_PosMaxX),
                                               Mathf.Clamp(this.transform.position.y+2, m_PosMinY, m_PosMaxY), m_PosMaxZ);
-	}
+	
+    }
 }
