@@ -3,23 +3,25 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CreateManager : MonoBehaviour {
-   
+
+    public Vector3 WingMove;
+
+    public GameObject BubbleCreateBox;
+
     //プレイヤー前方
     [SerializeField]
     private GameObject front;
     [SerializeField]
     private GameObject Bubble,Wind;
 
-    public GameObject BubbleCreateBox;
-
-    private bool longPressFlag = false;
+    private int m_ScaleMax = 1;
 
     private float m_BubbleScale = 0;
 
-    private int m_ScaleMax = 1;
+    private bool longPressFlag = false;
 
-    public bool windflagtest = false;
-    public Vector3 dir;
+    public bool windFlag = false;
+    
 
     void Start () {
 
@@ -50,19 +52,15 @@ public class CreateManager : MonoBehaviour {
             if (m_BubbleScale > m_ScaleMax)
             {
                 m_BubbleScale = m_ScaleMax;
-            windflagtest = true;
+            windFlag = true;
             }
     }
     //風作成
-    public void TapWind(Vector3 test)
+    public void TapWind(Vector3 vector)
     {
         Instantiate(Wind, BubbleCreateBox.transform.position, Quaternion.identity);
-
-        //   float angleDir = transform.eulerAngles.z * (Mathf.PI / 180.0f);
-        //  dir = new Vector3(Mathf.Cos(test), Mathf.Sin(test), 0.0f);
-        //    dir = new Vector3(0,test,0);
-        dir = test;
-        BubbleCreateBox.transform.position += test * 5 * Time.deltaTime;
+        
+        WingMove = vector;
 
     }
 }

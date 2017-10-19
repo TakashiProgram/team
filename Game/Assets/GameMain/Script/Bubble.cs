@@ -14,17 +14,16 @@ public class Bubble : MonoBehaviour {
 
     private GameObject create;
 
+    private float m_BubbleMove = 1.5f;
+
+    private int m_Flip = -1;
+
     void Start () {
         create = GameObject.Find("CreateManager");
     }
 	
 	void Update () {
-
-        Move = this.transform.position;
-        Move.y += m_StartMove * Time.deltaTime;
-        this.transform.position = Move;
-
-        this.transform.position+= create.GetComponent<CreateManager>().dir*2 * Time.deltaTime;
+        this.transform.position+= create.GetComponent<CreateManager>().WingMove * m_BubbleMove * m_Flip * Time.deltaTime;
     }
     private void OnTriggerStay(Collider collision)
     {
