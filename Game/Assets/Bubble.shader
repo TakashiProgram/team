@@ -3,11 +3,12 @@
 		_Color ("Color", Color) = (1,1,1,1)
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
 		//_NoiseTex("NoiseTex",2D) = "white"{}
-		//_NormalTex("NormalTex",2D) = ""{}
-
-		_Transparency("Transparency",Range(0,1))=1.0
-		_CoatTickness("CoatTickness",Range(0,1))=0.1
-		_CoatTransparency("CoatTransparency",Range(0,1))=1.0
+		
+		//前面ポリゴン不透明度
+		_Transparency("Transparency_Back",Range(0,1))=1.0
+		//_CoatTickness("CoatTickness",Range(0,1))=0.1
+		//背面ポリゴン不透明度
+		_CoatTransparency("Transparency_Front",Range(0,1))=1.0
 		_SpecularPower("SpecularPower",Range(0,80))=1
 	}
 	SubShader {
