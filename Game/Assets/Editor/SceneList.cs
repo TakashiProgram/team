@@ -65,7 +65,8 @@ public class BuildSettingSceneFile : AssetPostprocessor
 
     //BUILD_DIRECTORY_PATH・BUILD_DIRECTORY_FIRST_PATH内の情報を参照し、ビルド情報のシーンリストを更新、シーンリストであるSceneNameListを作成します。
     //この関数はエディタ画面のToolsバーから手動実行することができます。
-    [MenuItem("Tools/Update/Scenes In Build")]
+    //※この関数はUnityEditorが開かれたときに自動実行されます。
+    [MenuItem("Tools/Update/Scenes In Build"),InitializeOnLoadMethod]
     private static void UpdateScenesInBuild()
     {
 
@@ -93,7 +94,6 @@ public class BuildSettingSceneFile : AssetPostprocessor
             //親ディレクトリがFirstなら最初のシーンに設定
             else if(System.IO.Path.GetFileName(System.IO.Path.GetDirectoryName(path)) == "First")
             {
-                Debug.Log(System.IO.Path.GetFileName(System.IO.Path.GetDirectoryName(path)));
                 //二つ以上入っているならエラー
                 if (!string.IsNullOrEmpty(firstScenePath))
                 {
@@ -110,7 +110,7 @@ public class BuildSettingSceneFile : AssetPostprocessor
 
         //追加するシーンのリストの作成追加
         List<EditorBuildSettingsScene> sceneList = new List<EditorBuildSettingsScene>();
-        Debug.Log(string.IsNullOrEmpty(firstScenePath));
+
         if (!string.IsNullOrEmpty(firstScenePath))
         {
             Debug.Log("PushBuildSceneTo" + firstScenePath);
@@ -118,7 +118,7 @@ public class BuildSettingSceneFile : AssetPostprocessor
         }
         foreach(string path in pathList)
         {
-            Debug.Log("AddScene");
+            Debug.Log("PushBuildSceneTo" + firstScenePath);
             sceneList.Add(new EditorBuildSettingsScene(path, true));
         }
         EditorBuildSettings.scenes = sceneList.ToArray();
@@ -147,14 +147,15 @@ public static class SceneList {
     private const string PATH = "Assets/SceneNameList.cs";
 
     private static readonly string FILENAME = Path.GetFileName(PATH);                   // ファイル名(拡張子あり)
-    private static readonly string FILENAME_WITHOUT_EXTENSION = Path.GetFileNameWithoutExtension(PATH);   // ファイル名(拡張子なし)
+                                                                                        //private static readonly string FILENAME_WITHOUT_EXTENSION = Path.GetFileNameWithoutExtension(PATH);   // ファイル名(拡張子なし)
 
 
     /*
      *現在のビルドセッティングのシーンリストの情報から
-     * 新たにシーンのリスト情報を作成します。 
+     * 新たにシーンのリスト情報を作成します。
+     * ※この関数はUnityEditorが開かれたときに自動実行されます。 
      */
-     [MenuItem(ITEM_NAME)]
+    [MenuItem(ITEM_NAME), InitializeOnLoadMethod]
      public static void CreateList()
     {
         if (!CanCreate())
