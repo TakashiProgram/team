@@ -94,6 +94,7 @@ public class StageStatus : MonoBehaviour {
             return true;
         }
         return false;
+
     }
 
     

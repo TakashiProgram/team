@@ -54,14 +54,15 @@ public class CreateManager : MonoBehaviour {
             }
     }
     //風作成
-    public void TapWind(float test)
+    public void TapWind(Vector3 test)
     {
         Instantiate(Wind, BubbleCreateBox.transform.position, Quaternion.identity);
 
         //   float angleDir = transform.eulerAngles.z * (Mathf.PI / 180.0f);
-          dir = new Vector3(Mathf.Cos(test), Mathf.Sin(test), 0.0f);
-    //    dir = new Vector3(0,test,0);
-        BubbleCreateBox.transform.position += dir * 5 * Time.deltaTime;
+        //  dir = new Vector3(Mathf.Cos(test), Mathf.Sin(test), 0.0f);
+        //    dir = new Vector3(0,test,0);
+        dir = test;
+        BubbleCreateBox.transform.position += test * 5 * Time.deltaTime;
 
     }
 }
