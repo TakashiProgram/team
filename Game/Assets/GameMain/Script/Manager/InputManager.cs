@@ -38,6 +38,7 @@ public class InputManager : MonoBehaviour
 
     Vector3 te;
 
+    Vector3 tesssss;
     bool windflag = false;
 
     bool testflag = false;
@@ -48,6 +49,10 @@ public class InputManager : MonoBehaviour
     private Vector3 touchEndPos;
 
     string Direction;
+
+
+
+
     void Start()
     {
 
@@ -147,23 +152,37 @@ public class InputManager : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0))
             {
-                Debug.Log(Input.mousePosition);
+
                 //test = mainCamera.GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition + mainCamera.transform.forward * 10);
                 test = Input.mousePosition;
+                //test = Vector3.forward;
+                Debug.Log(test);
                 //test.z = 0;
 
-                test = mainCamera.ScreenToWorldPoint(Input.mousePosition + mainCamera.transform.forward * 10);
+               // test = mainCamera.ScreenToWorldPoint(Input.mousePosition + mainCamera.transform.forward * 10);
             }
             if (Input.GetMouseButtonUp(0))
             {
-                Debug.Log(Input.mousePosition);
+
                 //  te = mainCamera.GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition + mainCamera.transform.forward * 10);
                 te = Input.mousePosition;
-                angle = Vector2.Angle(test, te);
+                Debug.Log(te);
+                //  angle = Vector3.Angle(test, te);
 
-                createManager.GetComponent<CreateManager>().TapWind(angle);
+                //  float dx = te.x - test.x;
+                //float dy = te.y - test.y;
+                //   Vector3 vec = new Vector3(dx, dy).normalized;
 
-                Debug.Log(angle);
+                //float rot = Mathf.Atan2(vec.y, vec.x) * 180 / Mathf.PI;
+                //if (rot > 180) rot -= 360;
+                //if (rot < -180) rot += 360;
+                //   angle = Mathf.Atan2(dx, dy);
+                tesssss = (test - te);
+                tesssss.z = 0;
+                tesssss.Normalize();
+                createManager.GetComponent<CreateManager>().TapWind(tesssss);
+
+              //  Debug.Log(rot);
                 windflag = false;
             }
         }
