@@ -18,41 +18,32 @@ public class InputManager : MonoBehaviour
     [SerializeField]
     private GameObject createManager;
 
+    Vector3 playerMove;
+
+    Vector3 DownWind;
+
+    Vector3 UpWind;
+
+    Vector3 SetWind;
+
+    Color setColor = new Color(1, 1, 1, 1);
+
+    Color resetColor = new Color(1, 1, 1, 0.5f);
+
+    private int m_PlayerRotation = 90;
+
     private float m_Distance = 10f;
+
+    private float m_MoveCount = 0.05f;
+
+    private float m_BubbleScale = 0.01f;
 
     private string objectName;
 
     private bool createrFlag = false;
 
-    Color setColor = new Color(1,1,1,1);
-
-    Color resetColor = new Color(1, 1, 1, 0.5f);
-
-    Vector3 playerMove;
-
-    float moveCount=0.05f;
-    
-    private float m_BubbleScale = 0.01f;
-
-    Vector3 test;
-
-    Vector3 te;
-
-    Vector3 tesssss;
-    bool windflag = false;
-
-    bool testflag = false;
-    public float angle;
-
-
-    private Vector3 touchStartPos;
-    private Vector3 touchEndPos;
-
-    string Direction;
-
-
-
-
+    private bool windFlag = false;
+   
     void Start()
     {
 
@@ -83,11 +74,11 @@ public class InputManager : MonoBehaviour
                     {
                         
                         playerMove = player.transform.position;
-                        playerMove.x -= moveCount;
+                        playerMove.x -= m_MoveCount;
                         player.transform.position = playerMove;
                     }
                 
-                    iTween.RotateTo(player, iTween.Hash("y", -90));
+                    iTween.RotateTo(player, iTween.Hash("y", -m_PlayerRotation));
                     player.GetComponent<Animator>().SetBool("Move",true);
 
                         break;
@@ -98,11 +89,11 @@ public class InputManager : MonoBehaviour
                     {
                         
                         playerMove = player.transform.position;
-                        playerMove.x += moveCount;
+                        playerMove.x += m_MoveCount;
                         player.transform.position = playerMove;
                     }
                    
-                    iTween.RotateTo(player, iTween.Hash("y", 90));
+                    iTween.RotateTo(player, iTween.Hash("y", m_PlayerRotation));
                     player.GetComponent<Animator>().SetBool("Move",true);
 
                     break;
@@ -115,7 +106,6 @@ public class InputManager : MonoBehaviour
                     player.GetComponent<Rigidbody>().useGravity = true;
 
                     createManager.GetComponent<CreateManager>().TapBubble(m_BubbleScale);
-                   // windflag = true;
                     break;
                 case "Wind":
                    
@@ -129,9 +119,9 @@ public class InputManager : MonoBehaviour
         if (Input.GetMouseButtonUp(0))
         {
             TapUpReset();
-            if (createManager.GetComponent<CreateManager>().windflagtest)
+            if (createManager.GetComponent<CreateManager>().windFlag)
             {
-                windflag = true;
+                windFlag = true;
             }
         }
     }
@@ -148,46 +138,23 @@ public class InputManager : MonoBehaviour
 
     private void TapVector()
     {
-        if (windflag)
+        if (windFlag)
         {
             if (Input.GetMouseButtonDown(0))
             {
-
-                //test = mainCamera.GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition + mainCamera.transform.forward * 10);
-                test = Input.mousePosition;
-                //test = Vector3.forward;
-                Debug.Log(test);
-                //test.z = 0;
-
-               // test = mainCamera.ScreenToWorldPoint(Input.mousePosition + mainCamera.transform.forward * 10);
-            }
+                DownWind = Input.mousePosition;
+               }
             if (Input.GetMouseButtonUp(0))
             {
+                UpWind = Input.mousePosition;
 
-                //  te = mainCamera.GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition + mainCamera.transform.forward * 10);
-                te = Input.mousePosition;
-                Debug.Log(te);
-                //  angle = Vector3.Angle(test, te);
+                SetWind = (DownWind - UpWind);
+                SetWind.z = 0;
+                SetWind.Normalize();
+                createManager.GetComponent<CreateManager>().TapWind(SetWind);
 
-                //  float dx = te.x - test.x;
-                //float dy = te.y - test.y;
-                //   Vector3 vec = new Vector3(dx, dy).normalized;
-
-                //float rot = Mathf.Atan2(vec.y, vec.x) * 180 / Mathf.PI;
-                //if (rot > 180) rot -= 360;
-                //if (rot < -180) rot += 360;
-                //   angle = Mathf.Atan2(dx, dy);
-                tesssss = (test - te);
-                tesssss.z = 0;
-                tesssss.Normalize();
-                createManager.GetComponent<CreateManager>().TapWind(tesssss);
-
-              //  Debug.Log(rot);
-                windflag = false;
+                windFlag = false;
             }
-        }
-      
+        } 
     }
-
-  
 }

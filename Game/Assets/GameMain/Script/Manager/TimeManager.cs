@@ -4,12 +4,13 @@ using UnityEngine.UI;
 using UnityEngine;
 
 public class TimeManager : MonoBehaviour {
+
     [SerializeField]
     private Text timeText;
+
     [SerializeField]
     private float m_Time;
-
-    int d;
+    
     void Start () {
 		
 	}
@@ -23,7 +24,6 @@ public class TimeManager : MonoBehaviour {
     {
         timeText.text = "Time: " + Mathf.FloorToInt(m_Time);
         m_Time -= Time.deltaTime;
-       
         
     }
 }

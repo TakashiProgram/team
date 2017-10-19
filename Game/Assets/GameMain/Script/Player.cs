@@ -15,6 +15,9 @@ public class Player : MonoBehaviour
     [SerializeField]
     private GameObject[] PlayerHp;
 
+    [SerializeField]
+    private float m_InvincibleTime;
+
     private int m_PlayerDesCount = 0;
 
     private int m_PlayerDesCountMax = 2;
@@ -28,11 +31,9 @@ public class Player : MonoBehaviour
     
     void Update()
     {
-        //float angleDir = transform.eulerAngles.z * (Mathf.PI / 180.0f);
-        //Vector3 dir = new Vector3(Mathf.Cos(InputManager.GetComponent<InputManager>().angle), Mathf.Sin(InputManager.GetComponent<InputManager>().angle), 0.0f);
-
-        //transform.position += dir * 10 * Time.deltaTime;
+       
     }
+
     //playerのダメージ処理
     void DamageSart()
     {
@@ -68,18 +69,13 @@ public class Player : MonoBehaviour
         //ノックバック
         if (collision.gameObject.tag=="Enemy")
         {
-            //StartCoroutine("CreateCube");
+            StartCoroutine("CreateCube");
 
-            //_animator.SetBool("Damage", true);
+            _animator.SetBool("Damage", true);
 
-            //iTween.MoveTo(gameObject, iTween.Hash("position", transform.position - (transform.forward * 1f),
-            //    "time", 1.0f
-            //    ));
-            Debug.Log("wg");
-            float angleDir = transform.eulerAngles.z * (Mathf.PI / 180.0f);
-            Vector3 dir = new Vector3(Mathf.Cos(InputManager.GetComponent<InputManager>().angle), Mathf.Sin(InputManager.GetComponent<InputManager>().angle), 0.0f);
-
-            transform.position += dir *10* Time.deltaTime; 
+            iTween.MoveTo(gameObject, iTween.Hash("position", transform.position - (transform.forward * 1f),
+                "time", 1.0f
+                ));
 
         }
     }
@@ -97,9 +93,6 @@ public class Player : MonoBehaviour
             this.transform.position = this.transform.parent.position;
             
         }
-
-
-        
     }
 
     private void OnTriggerStay(Collider collision)
@@ -117,11 +110,8 @@ public class Player : MonoBehaviour
         gameObject.layer = LayerMask.NameToLayer("PlayerDamage");
        
        
-            yield return new WaitForSeconds(2.0f);
+            yield return new WaitForSeconds(m_InvincibleTime);
         
         gameObject.layer = LayerMask.NameToLayer("Player");
     }
-
-
-
 }
