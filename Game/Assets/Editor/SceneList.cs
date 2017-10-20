@@ -6,8 +6,13 @@ using System.Text;
 using System.Linq;
 using UnityEngine;
 using UnityEditor;
+using UnityEditor.Callbacks;
 using UnityEditorInternal;
 
+enum ExeOrder
+{
+    order_first,order_second,
+}
 /*
  * BuildSceneに追加されたSceneをビルドセッティングへ追加し、そのリストを作成するクラスです。
  */
@@ -40,7 +45,6 @@ public class BuildSettingSceneFile : AssetPostprocessor
         {
           BUILD_DIRECTORY_PATH,BUILD_DIRECTORY_FIRST_PATH,
         };
-
         //変更ファイルが指定したディレクトリ内ならビルド情報を更新する
         if (ExistsDrectryInAssets(assetsList, targetDirectoryNameList))
         {
@@ -66,10 +70,10 @@ public class BuildSettingSceneFile : AssetPostprocessor
     //BUILD_DIRECTORY_PATH・BUILD_DIRECTORY_FIRST_PATH内の情報を参照し、ビルド情報のシーンリストを更新、シーンリストであるSceneNameListを作成します。
     //この関数はエディタ画面のToolsバーから手動実行することができます。
     //※この関数はUnityEditorが開かれたときに自動実行されます。
-    [MenuItem("Tools/Update/Scenes In Build"),InitializeOnLoadMethod]
+    [MenuItem("Tools/Update/Scenes In Build"),DidReloadScripts((int)ExeOrder.order_first)]
     private static void UpdateScenesInBuild()
     {
-
+       
         //sceneファイルの全取得
         List<string> pathList = new List<string>();
         string firstScenePath = "";
@@ -113,12 +117,12 @@ public class BuildSettingSceneFile : AssetPostprocessor
 
         if (!string.IsNullOrEmpty(firstScenePath))
         {
-            Debug.Log("PushBuildSceneTo" + firstScenePath);
+            Debug.Log("PushBuildSceneTo : " + firstScenePath);
             sceneList.Add(new EditorBuildSettingsScene(firstScenePath, true));
         }
         foreach(string path in pathList)
         {
-            Debug.Log("PushBuildSceneTo" + firstScenePath);
+            Debug.Log("PushBuildSceneTo : " + path);
             sceneList.Add(new EditorBuildSettingsScene(path, true));
         }
         EditorBuildSettings.scenes = sceneList.ToArray();
@@ -155,7 +159,7 @@ public static class SceneList {
      * 新たにシーンのリスト情報を作成します。
      * ※この関数はUnityEditorが開かれたときに自動実行されます。 
      */
-    [MenuItem(ITEM_NAME), InitializeOnLoadMethod]
+    [MenuItem(ITEM_NAME),DidReloadScripts((int)ExeOrder.order_second)]
      public static void CreateList()
     {
         if (!CanCreate())
@@ -163,7 +167,7 @@ public static class SceneList {
             return;
         }
         CreateScript();
-        Debug.Log(FILENAME + "Edit Success");
+        Debug.Log(FILENAME + " Edit Success");
        // EditorUtility.DisplayDialog(FILENAME, "作成が完了しました", "OK");
 
     }
