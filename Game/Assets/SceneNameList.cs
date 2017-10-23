@@ -3,4 +3,7 @@
 /// </summary>
 	public enum SceneNameList {
 	None = -1,
+
+	GameMain,
+	Select,
 }

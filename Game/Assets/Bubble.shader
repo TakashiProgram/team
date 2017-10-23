@@ -21,6 +21,7 @@
 		Cull Front
 		ZWrite Off
 		Blend SrcAlpha OneMinusSrcAlpha
+		Lighting Off
 		
 		
 		CGPROGRAM
@@ -32,15 +33,14 @@
 
 		sampler2D _MainTex;
 		sampler2D _NoiseTex;
-		sampler2D _NormalTex;
 		float _CoatTransparency;
 
 		struct Input {
-			float2 uv_MainTex;
+			float2 uv_MainTex:TEXCOORD0;
+			float3 viewDir:TEXCOORD1;
+			float3 worldNormal:TEXCOORD2;
 		};
 
-		half _Glossiness;
-		half _Metallic;
 		fixed4 _Color;
 		half _SpecularPower;
 
@@ -68,10 +68,11 @@
 		void surf (Input IN, inout SurfaceOutput o) {
 			// Albedo comes from a texture tinted by color
 			//unity_DeltaTime使うとカクつくので使用を保留
-			half2 uvOfs = half2(_Time.y, _Time.x);
+			half2 uvOfs = half2(_Time.y, _Time.x)*unity_DeltaTime.z*5;
 			fixed4 c = tex2D (_MainTex, IN.uv_MainTex+uvOfs) * _Color;
+			//c.rgb = c*IN.worldNormal.xyz;
+
 			o.Albedo = c.rgb;
-			
 			o.Alpha = _CoatTransparency;
 		}
 		ENDCG
@@ -81,6 +82,7 @@
 			Cull Back
 			ZWrite Off
 			Blend SrcAlpha OneMinusSrcAlpha
+			Lighting Off
 			
 			CGPROGRAM
 			// Physically based Standard lighting model, and enable shadows on all light types
@@ -94,14 +96,12 @@
 		float _CoatTickness;
 
 		struct Input {
-			float2 uv_MainTex;
-			float3 viewDir;
-			float3 worldNormal;
+			float2 uv_MainTex:TEXCOORD0;
+			float3 viewDir:TEXCOORD1;
+			float3 worldNormal:TEXCOORD2;
 			
 		};
 
-		half _Glossiness;
-		half _Metallic;
 		fixed4 _Color;
 		float _Transparency;
 		half _SpecularPower;
@@ -135,7 +135,7 @@
 		void surf(Input IN, inout SurfaceOutput o) {
 			// Albedo comes from a texture tinted by color
 			//unity_DeltaTime使うとカクつくので使用を保留
-			half2 uvOfs = half2(-_Time.y, -_Time.x);
+			half2 uvOfs = half2(-_Time.y, -_Time.x)*unity_DeltaTime.z*5;
 			fixed4 c = tex2D(_MainTex, IN.uv_MainTex+uvOfs) * _Color;
 			o.Albedo = c.rgb;
 			//float f = max(0,dot(IN.viewDir, IN.worldNormal));
