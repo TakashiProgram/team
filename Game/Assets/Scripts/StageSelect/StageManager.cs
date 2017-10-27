@@ -1,9 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
-using System.Runtime.Serialization.Formatters.Binary;
-//すべてのステージの情報を統括するクラス
+
+///<summary>
+///すべてのステージの情報を統括するクラスです。
+///</summary>
 public class StageManager : MonoBehaviour
 {
 
@@ -24,7 +25,7 @@ public class StageManager : MonoBehaviour
 
 
 
-    // Use this for initialization
+
     void Start()
     {
         m_stagesData = SaveManager.LoadFile();
@@ -68,10 +69,11 @@ public class StageManager : MonoBehaviour
         SaveManager.SaveFile();
     }
 
-
-    //引数に設定されたステージのクリア状況を返す。
-    //true : クリアされている(ランク問わず)
-    //false : クリアされていない
+    ///<summary>
+    ///引数に設定されたステージのクリア状況を返します。
+    ///true : クリアされている(ランク問わず)
+    ///false : クリアされていない
+    ///</summary>
     public bool IsClearStage(SceneNameList _stageName)
     {
         StageStatus target = null;
@@ -97,8 +99,9 @@ public class StageManager : MonoBehaviour
     {
         return m_stagesData;
     }
-
-    //_nameと同一のStageDataをout_dataに格納して返却する
+    ///<summary>
+    ///_nameと同一のStageDataをout_dataに格納して返却します。
+    ///</summary>
     public void GetStageData(string _name, out StageData out_data)
     {
         StageData target = new StageData();
@@ -115,8 +118,9 @@ public class StageManager : MonoBehaviour
         }
         out_data = target;
     }
-
-    //ステージデータの読み込み
+    ///<summary>
+    ///ステージデータの読み込みます。
+    ///</summary>
     private void LoadStagesData() {
         foreach (var stage in m_stages)
         {
