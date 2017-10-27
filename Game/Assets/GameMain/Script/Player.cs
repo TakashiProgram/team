@@ -52,8 +52,8 @@ public class Player : MonoBehaviour
     //playerの移動処理
    void MoveBox()
     {
-        Left.GetComponent<BoxCollider2D>().enabled = true;
-        Right.GetComponent<BoxCollider2D>().enabled = true;
+        Left.GetComponent<CircleCollider2D>().enabled = true;
+        Right.GetComponent<CircleCollider2D>().enabled = true;
     }
 
     //プレイヤーダメージモーション終了

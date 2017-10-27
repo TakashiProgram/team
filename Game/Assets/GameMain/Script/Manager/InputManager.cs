@@ -22,11 +22,11 @@ public class InputManager : MonoBehaviour
     [SerializeField]
     private GameObject m_createManager;
 
-    Vector3 DownWind;
+    private Vector3 m_downWind;
 
-    private readonly Color setColor = new Color(1, 1, 1, 1);
+    private readonly Color m_setColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
 
-    private readonly Color resetColor = new Color(1, 1, 1, 0.5f);
+    private readonly Color m_resetColor = new Color(1.0f, 1.0f, 1.0f, 0.5f);
 
     private const int PLAYER_ROTATION = 90;
     //rayが届く距離
@@ -62,7 +62,7 @@ public class InputManager : MonoBehaviour
             switch (hit.collider.gameObject.name)
                 {
                     case "Left":
-                        m_leftTap.GetComponent<SpriteRenderer>().color = setColor;
+                        m_leftTap.GetComponent<SpriteRenderer>().color = m_setColor;
 
                     if (m_player.GetComponent<Player>().bubbleFlag==false)
                     {
@@ -78,7 +78,7 @@ public class InputManager : MonoBehaviour
                         break;
                     case "Right":
 
-                        m_rightTap.GetComponent<SpriteRenderer>().color = setColor;
+                        m_rightTap.GetComponent<SpriteRenderer>().color = m_setColor;
                     if (m_player.GetComponent<Player>().bubbleFlag==false)
                     {
 
@@ -123,8 +123,8 @@ public class InputManager : MonoBehaviour
     //手を離したら元に戻す
     void TapUpReset()
     {
-        m_leftTap.GetComponent<SpriteRenderer>().color = resetColor;
-        m_rightTap.GetComponent<SpriteRenderer>().color = resetColor;
+        m_leftTap.GetComponent<SpriteRenderer>().color = m_resetColor;
+        m_rightTap.GetComponent<SpriteRenderer>().color = m_resetColor;
         m_player.GetComponent<Animator>().SetBool("Move", false);
        
     }
@@ -135,13 +135,13 @@ public class InputManager : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0))
             {
-                 DownWind = Input.mousePosition;
+                 m_downWind = Input.mousePosition;
                }
             if (Input.GetMouseButtonUp(0))
             {
                 Vector3 UpWind = Input.mousePosition;
 
-              Vector3  SetWind = (DownWind - UpWind);
+              Vector3  SetWind = (m_downWind - UpWind);
                 SetWind.z = 0;
                 SetWind.Normalize();
                 m_createManager.GetComponent<CreateManager>().TapWind(SetWind);
