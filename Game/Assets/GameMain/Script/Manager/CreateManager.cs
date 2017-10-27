@@ -3,29 +3,29 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CreateManager : MonoBehaviour {
+    //m_bubbleの動き
+    public Vector3 m_WingMove;
 
-    public Vector3 WingMove;
-
-    public GameObject BubbleCreateBox;
+    private GameObject m_bubbleCreateBox;
 
     //プレイヤー前方
     [SerializeField]
-    private GameObject front;
+    private GameObject m_playerFront;
+
     [SerializeField]
-    private GameObject Bubble,Wind;
+    private GameObject m_bubble;
 
-    private int m_ScaleMax = 1;
+    [SerializeField]
+    private GameObject m_wind;
 
-    private float m_BubbleScale = 0;
+    private const int SCALE_MAX = 1;
 
-    private bool longPressFlag = false;
+    private float m_bubbleScale;
 
-    public bool windFlag = false;
+    public bool m_windFlag = false;
     
 
     void Start () {
-
-        m_BubbleScale = 0;
 
     }
 	
@@ -36,31 +36,32 @@ public class CreateManager : MonoBehaviour {
     //バブル生成処理
   public  void TapBubble(float scale)
     {
+        //バブルボタンを押された時の処理
         if (Input.GetMouseButtonDown(0))
         {
-            m_BubbleScale = scale;
+            m_bubbleScale = scale;
 
-            Destroy(BubbleCreateBox);
+            Destroy(m_bubbleCreateBox);
 
-            BubbleCreateBox = Instantiate(Bubble, new Vector3(front.transform.position.x, front.transform.position.y, 0), Quaternion.identity);
+            m_bubbleCreateBox = Instantiate(m_bubble, new Vector3(m_playerFront.transform.position.x, m_playerFront.transform.position.y, 0), Quaternion.identity);
             
         }
 
-            m_BubbleScale+=Time.deltaTime;
+            m_bubbleScale+=Time.deltaTime;
 
-            BubbleCreateBox.transform.localScale = new Vector3(m_BubbleScale, m_BubbleScale, m_BubbleScale);
-            if (m_BubbleScale > m_ScaleMax)
+            m_bubbleCreateBox.transform.localScale = new Vector3(m_bubbleScale, m_bubbleScale, m_bubbleScale);
+            if (m_bubbleScale > SCALE_MAX)
             {
-                m_BubbleScale = m_ScaleMax;
-            windFlag = true;
+                m_bubbleScale = SCALE_MAX;
+            m_windFlag = true;
             }
     }
     //風作成
     public void TapWind(Vector3 vector)
     {
-        Instantiate(Wind, BubbleCreateBox.transform.position, Quaternion.identity);
+        Instantiate(m_wind, m_bubbleCreateBox.transform.position, Quaternion.identity);
         
-        WingMove = vector;
+        m_WingMove = vector;
 
     }
 }

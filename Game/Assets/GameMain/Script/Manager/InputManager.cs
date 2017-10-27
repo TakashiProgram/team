@@ -5,42 +5,36 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
-    //ボタン
+   
     [SerializeField]
-    private GameObject leftTap, rightTap;
-    
+    private GameObject m_leftTap;
     [SerializeField]
-    private GameObject player;
+    private GameObject m_rightTap;
 
     [SerializeField]
-    Camera uiCamera, mainCamera;
+    private GameObject m_player;
 
     [SerializeField]
-    private GameObject createManager;
+    private Camera m_mainCamera;
+    [SerializeField]
+    private Camera m_uiCamera;
 
-    Vector3 playerMove;
+    [SerializeField]
+    private GameObject m_createManager;
 
     Vector3 DownWind;
 
-    Vector3 UpWind;
+    private readonly Color setColor = new Color(1, 1, 1, 1);
 
-    Vector3 SetWind;
+    private readonly Color resetColor = new Color(1, 1, 1, 0.5f);
 
-    Color setColor = new Color(1, 1, 1, 1);
+    private const int PLAYER_ROTATION = 90;
+    //rayが届く距離
+    private const float DISTANCE = 10f;
 
-    Color resetColor = new Color(1, 1, 1, 0.5f);
+    private const float MOVE_COUNT = 0.05f;
 
-    private int m_PlayerRotation = 90;
-
-    private float m_Distance = 10f;
-
-    private float m_MoveCount = 0.05f;
-
-    private float m_BubbleScale = 0.01f;
-
-    private string objectName;
-
-    private bool createrFlag = false;
+    private const float BUBBLE_SCALE = 0.01f;
 
     private bool windFlag = false;
    
@@ -61,51 +55,51 @@ public class InputManager : MonoBehaviour
     {
         if (Input.GetMouseButton(0))
         {
-            Ray ray = uiCamera.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
+            Ray ray = m_uiCamera.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
 
-            RaycastHit2D hit = Physics2D.Raycast((Vector2)ray.origin, (Vector2)ray.direction, m_Distance);
+            RaycastHit2D hit = Physics2D.Raycast((Vector2)ray.origin, (Vector2)ray.direction, DISTANCE);
           
             switch (hit.collider.gameObject.name)
                 {
                     case "Left":
-                        leftTap.GetComponent<SpriteRenderer>().color = setColor;
+                        m_leftTap.GetComponent<SpriteRenderer>().color = setColor;
 
-                    if (player.GetComponent<Player>().bubbleFlag==false)
+                    if (m_player.GetComponent<Player>().bubbleFlag==false)
                     {
-                        
-                        playerMove = player.transform.position;
-                        playerMove.x -= m_MoveCount;
-                        player.transform.position = playerMove;
+
+                        Vector3 playerMove = m_player.transform.position;
+                        playerMove.x -= MOVE_COUNT;
+                        m_player.transform.position = playerMove;
                     }
                 
-                    iTween.RotateTo(player, iTween.Hash("y", -m_PlayerRotation));
-                    player.GetComponent<Animator>().SetBool("Move",true);
+                    iTween.RotateTo(m_player, iTween.Hash("y", -PLAYER_ROTATION));
+                    m_player.GetComponent<Animator>().SetBool("Move",true);
 
                         break;
                     case "Right":
 
-                        rightTap.GetComponent<SpriteRenderer>().color = setColor;
-                    if (player.GetComponent<Player>().bubbleFlag==false)
+                        m_rightTap.GetComponent<SpriteRenderer>().color = setColor;
+                    if (m_player.GetComponent<Player>().bubbleFlag==false)
                     {
-                        
-                        playerMove = player.transform.position;
-                        playerMove.x += m_MoveCount;
-                        player.transform.position = playerMove;
+
+                        Vector3 playerMove = m_player.transform.position;
+                        playerMove.x += MOVE_COUNT;
+                        m_player.transform.position = playerMove;
                     }
                    
-                    iTween.RotateTo(player, iTween.Hash("y", m_PlayerRotation));
-                    player.GetComponent<Animator>().SetBool("Move",true);
+                    iTween.RotateTo(m_player, iTween.Hash("y", PLAYER_ROTATION));
+                    m_player.GetComponent<Animator>().SetBool("Move",true);
 
                     break;
                 case "Bubble":
 
-                    player.transform.parent = null;
+                    m_player.transform.parent = null;
 
-                    player.GetComponent<Player>().bubbleFlag=false;
+                    m_player.GetComponent<Player>().bubbleFlag=false;
 
-                    player.GetComponent<Rigidbody>().useGravity = true;
+                    m_player.GetComponent<Rigidbody>().useGravity = true;
 
-                    createManager.GetComponent<CreateManager>().TapBubble(m_BubbleScale);
+                    m_createManager.GetComponent<CreateManager>().TapBubble(BUBBLE_SCALE);
                     break;
                 case "Wind":
                    
@@ -115,11 +109,11 @@ public class InputManager : MonoBehaviour
                     break;
 
             }
-        }
+        }else
         if (Input.GetMouseButtonUp(0))
         {
             TapUpReset();
-            if (createManager.GetComponent<CreateManager>().windFlag)
+            if (m_createManager.GetComponent<CreateManager>().m_windFlag)
             {
                 windFlag = true;
             }
@@ -129,29 +123,28 @@ public class InputManager : MonoBehaviour
     //手を離したら元に戻す
     void TapUpReset()
     {
-        leftTap.GetComponent<SpriteRenderer>().color = resetColor;
-        rightTap.GetComponent<SpriteRenderer>().color = resetColor;
-        player.GetComponent<Animator>().SetBool("Move", false);
-        objectName = null;
+        m_leftTap.GetComponent<SpriteRenderer>().color = resetColor;
+        m_rightTap.GetComponent<SpriteRenderer>().color = resetColor;
+        m_player.GetComponent<Animator>().SetBool("Move", false);
        
     }
-
+    //シャボン玉を生成した後に風を発生させる
     private void TapVector()
     {
         if (windFlag)
         {
             if (Input.GetMouseButtonDown(0))
             {
-                DownWind = Input.mousePosition;
+                 DownWind = Input.mousePosition;
                }
             if (Input.GetMouseButtonUp(0))
             {
-                UpWind = Input.mousePosition;
+                Vector3 UpWind = Input.mousePosition;
 
-                SetWind = (DownWind - UpWind);
+              Vector3  SetWind = (DownWind - UpWind);
                 SetWind.z = 0;
                 SetWind.Normalize();
-                createManager.GetComponent<CreateManager>().TapWind(SetWind);
+                m_createManager.GetComponent<CreateManager>().TapWind(SetWind);
 
                 windFlag = false;
             }

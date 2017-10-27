@@ -23,7 +23,7 @@ public class Bubble : MonoBehaviour {
     }
 	
 	void Update () {
-        this.transform.position+= create.GetComponent<CreateManager>().WingMove * m_BubbleMove * m_Flip * Time.deltaTime;
+        this.transform.position+= create.GetComponent<CreateManager>().m_WingMove * m_BubbleMove * m_Flip * Time.deltaTime;
     }
     private void OnTriggerStay(Collider collision)
     {
