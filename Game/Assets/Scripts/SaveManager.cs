@@ -4,7 +4,9 @@ using UnityEngine;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
-//StageManagerの情報をもとに、セーブファイルを管理するクラスです。
+///<summary>
+///StageManagerの情報をもとに、セーブファイルを管理するクラスです。
+/// </summary>
 public static class SaveManager {
    
     //セーブ情報のすべてを格納する構造体
@@ -16,8 +18,9 @@ public static class SaveManager {
 
     //セーブファイルの名前
     const string FILE_NAME = "/saveData.dat";
-
-    //現在のStageManagerの情報から、セーブデータを作成し、FILE_NAMEの名前で保存します。
+    ///<summary>
+    ///現在のStageManagerの情報から、セーブデータを作成し、FILE_NAMEの名前で保存します。
+    ///</summary>
     public static void SaveFile()
     {
         SaveData save;
@@ -51,7 +54,9 @@ public static class SaveManager {
         }
     }
 
-    //FILE_NAMEのデータからStageDataの情報を取得して返します。
+    /// <summary>
+    /// FILE_NAMEのデータからStageDataの情報を取得して返します。
+    /// </summary>
     public static StageManager.StageData[] LoadFile()
     {
         //FILE_NAMEが存在している場合にローディングを実行

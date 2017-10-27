@@ -1,21 +1,21 @@
 ﻿using System;
 using System.IO;
-using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using UnityEngine;
 using UnityEditor;
 using UnityEditor.Callbacks;
-using UnityEditorInternal;
+
 
 enum ExeOrder
 {
     order_first,order_second,
 }
-/*
- * BuildSceneに追加されたSceneをビルドセッティングへ追加し、そのリストを作成するクラスです。
- */
+
+///<summary>
+///BuildSceneに追加されたSceneをビルドセッティングへ追加し、そのリストを作成するクラスです。
+///</summary>
 public class BuildSettingSceneFile : AssetPostprocessor
 {
     //ビルドするSceneを格納するフォルダのパス
@@ -23,23 +23,28 @@ public class BuildSettingSceneFile : AssetPostprocessor
     //ビルドするSceneを格納するフォルダの最初のシーンを格納するフォルダへのパス
     private const string BUILD_DIRECTORY_FIRST_PATH = "Assets/Scenes/BuildScenes/First";
 
-    //変更されたファイルが指定しているディレクトリ内のファイルであるかどうかを判定します
-    static bool ExistsDrectryInAssets(List<string[]> assetsList,List<string> targetDirectoryNameList)
+
+    ///<summary>
+    ///変更されたファイルが指定しているディレクトリ内のファイルであるかどうかを判定します
+    //////</summary>
+    static bool ExistsDrectryInAssets(List<string[]> _assetsList,List<string> _targetDirectoryNameList)
     {
-        return assetsList
+        return _assetsList
               .Any(assets => assets
               .Select(asset => System.IO.Path.GetDirectoryName(asset))
-              .Intersect(targetDirectoryNameList)
+              .Intersect(_targetDirectoryNameList)
               .Count() > 0);
     }
 
-    //ファイルの情報変更がある場合に実行され、情報変更があったファイルがBUILD_DIRECTORY_PATH・BUILD_DIRECTORY_FIRST_PATHに格納されている場合に
-    //BuildSettingのシーン追加情報・シーンリストを更新します。
-    private static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets,string[] movedFromAssetPaths)
+    ///<summary>
+    ///ファイルの情報変更がある場合に実行され、情報変更があったファイルがBUILD_DIRECTORY_PATH・BUILD_DIRECTORY_FIRST_PATHに格納されている場合に
+    ///BuildSettingのシーン追加情報・シーンリストを更新します。
+    ///</summary>
+    private static void OnPostprocessAllAssets(string[] _importedAssets, string[] _deletedAssets, string[] _movedAssets,string[] _movedFromAssetPaths)
     {
         //変更のあったアセットの名前リスト
         List<string[]> assetsList = new List<string[]>() {
-            importedAssets,deletedAssets,movedAssets,movedFromAssetPaths
+            _importedAssets,_deletedAssets,_movedAssets,_movedFromAssetPaths
         };
         List<string> targetDirectoryNameList = new List<string>()
         {
@@ -53,26 +58,20 @@ public class BuildSettingSceneFile : AssetPostprocessor
         }
     }
 
-    //対象のファイルに格納されているものがあるかを検索します。
-    //true : 空の場合 false : 中身が存在する
-    private static bool EmptyChack(string path,string directory)
-    {
-        string[] directories = Directory.GetDirectories(path);
-        string[] files = Directory.GetFiles(path);
-        if(directories.Length + files.Length == 0)
-        {
-            return true;
-        }
-        return false;
-    }
 
 
-    //BUILD_DIRECTORY_PATH・BUILD_DIRECTORY_FIRST_PATH内の情報を参照し、ビルド情報のシーンリストを更新、シーンリストであるSceneNameListを作成します。
-    //この関数はエディタ画面のToolsバーから手動実行することができます。
-    //※この関数はUnityEditorが開かれたときに自動実行されます。
+    ///<summary>
+    ///BUILD_DIRECTORY_PATH・BUILD_DIRECTORY_FIRST_PATH内の情報を参照し、ビルド情報のシーンリストを更新、シーンリストであるSceneNameListを作成します。
+    ///この関数はエディタ画面のToolsバーから手動実行することができます。
+    ///※この関数はUnityEditorが開かれたときに自動実行されます。
+    ///</summary>
     [MenuItem("Tools/Update/Scenes In Build"),DidReloadScripts((int)ExeOrder.order_first)]
     private static void UpdateScenesInBuild()
     {
+        if (EditorApplication.isPlayingOrWillChangePlaymode)
+        {
+            return;
+        }
        
         //sceneファイルの全取得
         List<string> pathList = new List<string>();
@@ -129,8 +128,10 @@ public class BuildSettingSceneFile : AssetPostprocessor
     }
 }
 
-//ビルドセッティング内のシーンリスト情報から、現在設定されているシーンを参照し
-//列挙型リストを作成するクラスです。
+///<summary>
+///ビルドセッティング内のシーンリスト情報から、現在設定されているシーンを参照し
+///列挙型リストを作成するクラスです。
+///</summary>
 public static class SceneList {
  
     //無効な文字列を管理する固定配列
@@ -154,15 +155,16 @@ public static class SceneList {
                                                                                         //private static readonly string FILENAME_WITHOUT_EXTENSION = Path.GetFileNameWithoutExtension(PATH);   // ファイル名(拡張子なし)
 
 
-    /*
-     *現在のビルドセッティングのシーンリストの情報から
-     * 新たにシーンのリスト情報を作成します。
-     * ※この関数はUnityEditorが開かれたときに自動実行されます。 
-     */
+     ///<summary>
+     ///現在のビルドセッティングのシーンリストの情報から
+     /// 新たにシーンのリスト情報を作成します。
+     /// ※この関数はUnityEditorが開かれたときに自動実行されます。 
+     ///</summary>
     [MenuItem(ITEM_NAME),DidReloadScripts((int)ExeOrder.order_second)]
      public static void CreateList()
     {
-        if (!CanCreate())
+        //スクリプトを作成できる状況にないorゲーム起動時は処理を終了する
+        if (!CanCreate() || EditorApplication.isPlayingOrWillChangePlaymode)
         {
             return;
         }
@@ -172,7 +174,9 @@ public static class SceneList {
 
     }
 
-    //ビルドセッティングのシーンリストを参照してシーンをリスト化したスクリプトを作成します。
+    ///<summary>
+    ///ビルドセッティングのシーンリストを参照してシーンをリスト化したスクリプトを作成します。
+    ///</summary>
     public static void CreateScript()
     {
         StringBuilder builder = new StringBuilder();
@@ -206,16 +210,20 @@ public static class SceneList {
 
     }
 
-    //現在のエディタ情報をもとに現在CreateScriptが実行可能であるかを判定します。
+    ///<summary>
+    ///現在のエディタ情報をもとに現在CreateScriptが実行可能であるかを判定します。
+    ///</summary>
     public static bool CanCreate()
     {
         return !EditorApplication.isPlaying && !Application.isPlaying && !EditorApplication.isCompiling;
     }
 
-    //引数strの中から無効な文字を削除して返却します。
-    public static string RemoveInvalidChars(string str)
+    ///<summary>
+    ///引数strの中から無効な文字を削除して返却します。
+    ///</summary>
+    public static string RemoveInvalidChars(string _str)
     {
-        Array.ForEach(INVALUD_CHARS, c => str = str.Replace(c, string.Empty));
-        return str;
+        Array.ForEach(INVALUD_CHARS, c => _str = _str.Replace(c, string.Empty));
+        return _str;
     }
 }
