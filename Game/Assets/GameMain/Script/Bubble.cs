@@ -5,33 +5,29 @@ using UnityEngine;
 public class Bubble : MonoBehaviour {
 
     [SerializeField]
-    private float m_StartMove, m_SetMove;
-
-    [SerializeField]
-    private GameObject wind;
-
-    private Vector3 Move;
+    private float m_setMove;
 
     private GameObject create;
 
-    private float m_BubbleMove = 1.5f;
+    private const float BUBBLE_MOVE = 1.5f;
 
-    private int m_Flip = -1;
+    private const int INVERTED = -1;
 
     void Start () {
         create = GameObject.Find("CreateManager");
     }
 	
 	void Update () {
-        this.transform.position+= create.GetComponent<CreateManager>().m_WingMove * m_BubbleMove * m_Flip * Time.deltaTime;
+        this.transform.position+= create.GetComponent<CreateManager>().m_WingMove *
+                                  BUBBLE_MOVE * INVERTED * Time.deltaTime;
     }
     private void OnTriggerStay(Collider collision)
     {
         if (collision.gameObject.tag=="Player")
         {
-            Move = this.transform.position;
-            Move.y += m_SetMove * Time.deltaTime;
-            this.transform.position = Move;
+            Vector3 m_move = this.transform.position;
+            m_move.y += m_setMove * Time.deltaTime;
+            this.transform.position = m_move;
         }
     }
 }

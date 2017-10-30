@@ -6,7 +6,7 @@ using UnityEngine;
 public class TimeManager : MonoBehaviour {
 
     [SerializeField]
-    private Text timeText;
+    private Text m_timeText;
 
     [SerializeField]
     private float m_Time;
@@ -15,14 +15,13 @@ public class TimeManager : MonoBehaviour {
 		
 	}
 	
-	// Update is called once per frame
 	void Update () {
         Disable();
 
     }
     private void Disable()
     {
-        timeText.text = "Time: " + Mathf.FloorToInt(m_Time);
+        m_timeText.text = "Time: " + Mathf.FloorToInt(m_Time);
         m_Time -= Time.deltaTime;
         
     }

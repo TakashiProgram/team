@@ -36,7 +36,7 @@ public class InputManager : MonoBehaviour
 
     private const float BUBBLE_SCALE = 0.01f;
 
-    private bool windFlag = false;
+    private bool m_windFlag = false;
    
     void Start()
     {
@@ -64,7 +64,7 @@ public class InputManager : MonoBehaviour
                     case "Left":
                         m_leftTap.GetComponent<SpriteRenderer>().color = m_setColor;
 
-                    if (m_player.GetComponent<Player>().bubbleFlag==false)
+                    if (m_player.GetComponent<Player>().m_bubbleFlag==false)
                     {
 
                         Vector3 playerMove = m_player.transform.position;
@@ -79,7 +79,7 @@ public class InputManager : MonoBehaviour
                     case "Right":
 
                         m_rightTap.GetComponent<SpriteRenderer>().color = m_setColor;
-                    if (m_player.GetComponent<Player>().bubbleFlag==false)
+                    if (m_player.GetComponent<Player>().m_bubbleFlag==false)
                     {
 
                         Vector3 playerMove = m_player.transform.position;
@@ -95,7 +95,7 @@ public class InputManager : MonoBehaviour
 
                     m_player.transform.parent = null;
 
-                    m_player.GetComponent<Player>().bubbleFlag=false;
+                    m_player.GetComponent<Player>().m_bubbleFlag=false;
 
                     m_player.GetComponent<Rigidbody>().useGravity = true;
 
@@ -115,7 +115,7 @@ public class InputManager : MonoBehaviour
             TapUpReset();
             if (m_createManager.GetComponent<CreateManager>().m_windFlag)
             {
-                windFlag = true;
+                m_windFlag = true;
             }
         }
     }
@@ -131,7 +131,7 @@ public class InputManager : MonoBehaviour
     //シャボン玉を生成した後に風を発生させる
     private void TapVector()
     {
-        if (windFlag)
+        if (m_windFlag)
         {
             if (Input.GetMouseButtonDown(0))
             {
@@ -146,7 +146,7 @@ public class InputManager : MonoBehaviour
                 SetWind.Normalize();
                 m_createManager.GetComponent<CreateManager>().TapWind(SetWind);
 
-                windFlag = false;
+                m_windFlag = false;
             }
         } 
     }
