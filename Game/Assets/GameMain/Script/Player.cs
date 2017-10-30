@@ -4,29 +4,32 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    private Animator _animator;
+    public bool m_bubbleFlag = false;
+
+    private Animator m_animator;
 
     [SerializeField]
-    private GameObject UiManager,InputManager;
+    private GameObject m_right;
+    [SerializeField]
+    private GameObject m_left;
 
     [SerializeField]
-    private GameObject Right, Left;
+    private GameObject[] m_hp;
 
     [SerializeField]
-    private GameObject[] PlayerHp;
+    private float INVINCIBLE_TIME;
 
-    [SerializeField]
-    private float m_InvincibleTime;
+    private int m_desCount;
 
-    private int m_PlayerDesCount = 0;
+    private const int DES_COUNT_MAX = 2;
 
-    private int m_PlayerDesCountMax = 2;
+    private const float BACK_TIME = 1.0f;
 
-    public bool bubbleFlag = false;
+    
 
     void Start()
     {
-       _animator= GetComponent<Animator>();
+       m_animator= GetComponent<Animator>();
     }
     
     void Update()
@@ -34,33 +37,33 @@ public class Player : MonoBehaviour
        
     }
 
-    //playerのダメージ処理
-    void DamageSart()
+    //playerのダメージをくらったときに呼ばれる
+    private void Damage()
     {
-        if (m_PlayerDesCount == m_PlayerDesCountMax)
+        if (m_desCount == DES_COUNT_MAX)
         {
             Destroy(gameObject);
         }
-        Left.GetComponent<BoxCollider2D>().enabled = false;
-        Right.GetComponent<BoxCollider2D>().enabled = false;
+        m_left.GetComponent<CircleCollider2D>().enabled = false;
+        m_right.GetComponent<CircleCollider2D>().enabled = false;
 
-        Destroy(PlayerHp[m_PlayerDesCount]);
-        m_PlayerDesCount++;
+        Destroy(m_hp[m_desCount]);
+        m_desCount++;
         
     }
 
-    //playerの移動処理
-   void MoveBox()
+    //playerのダメージ処理が終わった時に呼ばれる
+   private void MoveReturn()
     {
-        Left.GetComponent<CircleCollider2D>().enabled = true;
-        Right.GetComponent<CircleCollider2D>().enabled = true;
+        m_left.GetComponent<CircleCollider2D>().enabled = true;
+        m_right.GetComponent<CircleCollider2D>().enabled = true;
     }
 
-    //プレイヤーダメージモーション終了
+    //playerのダメージモーション処理が終わって呼ばれる
     void DamageEnd()
     {
         
-        _animator.SetBool("Damage", false);
+        m_animator.SetBool("Damage", false);
         
     }
    
@@ -71,20 +74,21 @@ public class Player : MonoBehaviour
         {
             StartCoroutine("CreateCube");
 
-            _animator.SetBool("Damage", true);
+            m_animator.SetBool("Damage", true);
 
-            iTween.MoveTo(gameObject, iTween.Hash("position", transform.position - (transform.forward * 1f),
-                "time", 1.0f
+            iTween.MoveTo(gameObject, iTween.Hash("position", 
+                                                  transform.position - transform.forward,
+                                                  "time", BACK_TIME
                 ));
 
         }
     }
 
     private void OnTriggerEnter(Collider collision)
-    {
+    {//Bubbleとの親子関係
         if (collision.gameObject.tag == "Bubble")
         {
-            bubbleFlag = true;
+            m_bubbleFlag = true;
 
             this.GetComponent<Rigidbody>().useGravity = false;
 
@@ -110,7 +114,7 @@ public class Player : MonoBehaviour
         gameObject.layer = LayerMask.NameToLayer("PlayerDamage");
        
        
-            yield return new WaitForSeconds(m_InvincibleTime);
+            yield return new WaitForSeconds(INVINCIBLE_TIME);
         
         gameObject.layer = LayerMask.NameToLayer("Player");
     }
