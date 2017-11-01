@@ -9,44 +9,29 @@ public class StageManager : MonoBehaviour
 {
 
     //セーブデータ用構造体
-    [System.Serializable]
-    public struct StageData
-    {
-        public string name;
-        public bool ReleaseFlag;
-        public ClearRank rank;
-    }
-   
+
 
     [SerializeField, Tooltip("シーン上に配置されるすべてのステージを格納します。")]
     private GameObject[] m_stages;
-
-    private StageData[] m_stagesData;
+    [SerializeField]
+    private StageData m_stagesData;
 
 
 
 
     void Start()
     {
-        m_stagesData = SaveManager.LoadFile();
-        //セーブファイルが存在していなかった場合はデータをシーンから読み取って保存する
-        if (m_stagesData == null)
+        //アセットのResourcesフォルダから該当のオブジェクトをロード
+        m_stagesData = Resources.Load<StageData>("StagesData");
+        if (m_stagesData.data == null)
         {
-            m_stagesData = new StageData[m_stages.Length];
-
-            for (int i = 0; i < m_stages.Length; i++)
-            {
-                m_stagesData[i].name = m_stages[i].name;
-                m_stagesData[i].ReleaseFlag = m_stages[i].GetComponent<StageStatus>().IsRelease();
-                m_stagesData[i].rank = m_stages[i].GetComponent<StageStatus>().GetRank();
-            }
-            SaveManager.SaveFile();
+            LoadSaveFile();
         }
         else
         {
             LoadStagesData();
         }
-
+        
         //データの設定が終わったらそのデータによるステージ開放の更新をかけていく
         foreach (var stage in m_stages)
         {
@@ -57,16 +42,16 @@ public class StageManager : MonoBehaviour
     
     private void OnApplicationQuit()
     {
-        m_stagesData = new StageData[m_stages.Length];
+        m_stagesData.data = new StageData.Data[m_stages.Length];
 
         for (int i = 0; i < m_stages.Length; i++)
         {
-            m_stagesData[i].name = m_stages[i].name;
-            m_stagesData[i].ReleaseFlag = m_stages[i].GetComponent<StageStatus>().IsRelease();
-            m_stagesData[i].rank = m_stages[i].GetComponent<StageStatus>().GetRank();
+            m_stagesData.data[i].name = m_stages[i].name;
+            m_stagesData.data[i].ReleaseFlag = m_stages[i].GetComponent<StageStatus>().IsRelease();
+            m_stagesData.data[i].rank = m_stages[i].GetComponent<StageStatus>().GetRank();
         }
         //自身が終了するときにステージの全情報を保存する
-        SaveManager.SaveFile();
+        SaveManager.SaveFile(m_stagesData);
     }
 
     ///<summary>
@@ -95,20 +80,16 @@ public class StageManager : MonoBehaviour
 
     }
 
-    public StageData[] GetStagsData()
-    {
-        return m_stagesData;
-    }
     ///<summary>
     ///_nameと同一のStageDataをout_dataに格納して返却します。
     ///</summary>
-    public void GetStageData(string _name, out StageData out_data)
+    public void GetStageData(string _name, out StageData.Data out_data)
     {
-        StageData target = new StageData();
+        StageData.Data target = new StageData.Data();
         target.name = "";
         target.rank = ClearRank.rank_none;
         target.ReleaseFlag = false;
-        foreach (var data in m_stagesData)
+        foreach (var data in m_stagesData.data)
         {
             if (data.name == _name)
             {
@@ -122,9 +103,14 @@ public class StageManager : MonoBehaviour
     ///ステージデータの読み込みます。
     ///</summary>
     private void LoadStagesData() {
+       if(m_stagesData.data == null)
+        {
+            return;
+        }
+
         foreach (var stage in m_stages)
         {
-            foreach (var data in m_stagesData)
+            foreach (var data in m_stagesData.data)
             {
                 if (stage.name == data.name)
                 {
@@ -134,5 +120,23 @@ public class StageManager : MonoBehaviour
         }
     }
 
+    private void LoadSaveFile()
+    {
+        m_stagesData.data = SaveManager.LoadFile();
+        //セーブファイルが存在していなかった場合はデータをシーンから読み取って保存する
+        if (m_stagesData.data == null)
+        {
+
+            m_stagesData.data = new StageData.Data[m_stages.Length];
+
+            for (int i = 0; i < m_stages.Length; i++)
+            {
+                m_stagesData.data[i].name = m_stages[i].name;
+                m_stagesData.data[i].ReleaseFlag = m_stages[i].GetComponent<StageStatus>().IsRelease();
+                m_stagesData.data[i].rank = m_stages[i].GetComponent<StageStatus>().GetRank();
+            }
+            SaveManager.SaveFile(m_stagesData);
+        }
+    }
 
 }
