@@ -13,7 +13,7 @@ public static class SaveManager {
     [System.Serializable]
     public struct SaveData
     {
-        public StageManager.StageData[] stageData;
+        public StageData.Data[] stageData;
     }
 
     //セーブファイルの名前
@@ -21,13 +21,13 @@ public static class SaveManager {
     ///<summary>
     ///現在のStageManagerの情報から、セーブデータを作成し、FILE_NAMEの名前で保存します。
     ///</summary>
-    public static void SaveFile()
+    public static void SaveFile(StageData _data)
     {
         SaveData save;
-        //ステージのデータ分の配列を確保
-        save.stageData = new StageManager.StageData[GameObject.Find("StageManager").GetComponent<StageManager>().GetStagsData().Length];
+
+        save.stageData = new StageData.Data[_data.data.Length];
         //ステージデータを取得
-        StageManager.StageData[] stageData = GameObject.Find("StageManager").GetComponent<StageManager>().GetStagsData();
+        StageData.Data[] stageData = _data.data;
 
         //ステージデータの内容をsaveに格納
        for (int i = 0;i < save.stageData.Length; i++)
@@ -57,13 +57,13 @@ public static class SaveManager {
     /// <summary>
     /// FILE_NAMEのデータからStageDataの情報を取得して返します。
     /// </summary>
-    public static StageManager.StageData[] LoadFile()
+    public static StageData.Data[] LoadFile()
     {
         //FILE_NAMEが存在している場合にローディングを実行
         if (File.Exists(Application.dataPath + FILE_NAME))
         {
             string loadData;
-            StageManager.StageData[] ret;
+            StageData.Data[] ret;
             BinaryFormatter bFormatter = new BinaryFormatter();
             FileStream file = null;
             try

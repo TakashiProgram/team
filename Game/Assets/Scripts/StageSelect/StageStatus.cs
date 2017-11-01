@@ -21,6 +21,7 @@ public class StageStatus : MonoBehaviour {
     private bool m_releaseFlag;
 
     //すべてのステージの情報を統括するStageManager
+    [SerializeField]
     private StageManager m_sMgr;
 
 	// Use this for initialization
