@@ -6,6 +6,8 @@ public class Bubble : MonoBehaviour {
 
     [SerializeField]
     private float m_setMove;
+    
+    private float m_moveDisabled;
 
     [SerializeField]
     private int m_survivalTime;
@@ -17,32 +19,44 @@ public class Bubble : MonoBehaviour {
     private const float BUBBLE_MOVE = 1.5f;
 
     private const int INVERTED = -1;
-  
+
+    private float m_floatingCount = 0;
+
+
 
     void Start () {
         m_createManager = GameObject.Find("CreateManager");
         m_player = GameObject.Find("Player");
 
-        Invoke("DestroyTime", m_survivalTime);
+        
+        m_moveDisabled = m_setMove;
+        Invoke("test", 3);
     }
 	
 	void Update () {
         this.transform.position+= m_createManager.GetComponent<CreateManager>().m_WingMove *
                                   BUBBLE_MOVE * INVERTED * Time.deltaTime;
+
+        Vector3 move = this.transform.position;
+        move.y += m_setMove * m_moveDisabled* m_floatingCount * Time.deltaTime;
+        this.transform.position = move;
     }
     private void OnTriggerStay(Collider collision)
     {
         if (collision.gameObject.tag=="Player")
         {
-            Vector3 m_move = this.transform.position;
-            m_move.y += m_setMove * Time.deltaTime;
-            this.transform.position = m_move;
-        }else
+
+            m_moveDisabled = 0;
+
+           
+        }
+        else
         {
+            m_moveDisabled = m_setMove;
             DestroyTime();
         }
     }
-    private void DestroyTime()
+    public void DestroyTime()
     {
         m_player.transform.parent = null;
         m_player.GetComponent<Player>().m_bubbleFlag = false;
@@ -51,5 +65,14 @@ public class Bubble : MonoBehaviour {
         m_createManager.GetComponent<CreateManager>().m_windFlag = false;
         m_createManager.GetComponent<CreateManager>().m_WingMove = new Vector3(0,0,0);
         Destroy(gameObject);
+    }
+    public void te()
+    {
+        Invoke("DestroyTime", m_survivalTime);
+    }
+
+    private void test()
+    {
+        m_floatingCount = 1;
     }
 }

@@ -103,8 +103,8 @@ public class InputManager : MonoBehaviour
                     m_createManager.GetComponent<CreateManager>().TapBubble(BUBBLE_SCALE);
                     break;
                 case "Wind":
-                   
-
+                    Debug.Log("sgh");
+                    TapVector();
 
 
                     break;
@@ -117,9 +117,12 @@ public class InputManager : MonoBehaviour
             if (m_createManager.GetComponent<CreateManager>().m_windFlag)
             {
                 m_windFlag = true;
-            }else
+               // Invoke(GameObject.Find("Bubble(Clone)").transform.GetComponent<Bubble>().DestroyTime(),1);
+                GameObject.Find("Bubble(Clone)").transform.GetComponent<Bubble>().te();
+            }
+            else
             {
-                Debug.Log("fdsd");
+
                 m_windFlag = false;
             }
         }
