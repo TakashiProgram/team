@@ -36,7 +36,7 @@ public class InputManager : MonoBehaviour
 
     private const float BUBBLE_SCALE = 0.01f;
 
-    private bool m_windFlag = false;
+    public bool m_windFlag = false;
    
     void Start()
     {
@@ -62,7 +62,8 @@ public class InputManager : MonoBehaviour
             switch (hit.collider.gameObject.name)
                 {
                     case "Left":
-                        m_leftTap.GetComponent<SpriteRenderer>().color = m_setColor;
+                    m_windFlag = false;
+                    m_leftTap.GetComponent<SpriteRenderer>().color = m_setColor;
 
                     if (m_player.GetComponent<Player>().m_bubbleFlag==false)
                     {
@@ -77,8 +78,8 @@ public class InputManager : MonoBehaviour
 
                         break;
                     case "Right":
-
-                        m_rightTap.GetComponent<SpriteRenderer>().color = m_setColor;
+                    m_windFlag = false;
+                    m_rightTap.GetComponent<SpriteRenderer>().color = m_setColor;
                     if (m_player.GetComponent<Player>().m_bubbleFlag==false)
                     {
 
@@ -116,6 +117,10 @@ public class InputManager : MonoBehaviour
             if (m_createManager.GetComponent<CreateManager>().m_windFlag)
             {
                 m_windFlag = true;
+            }else
+            {
+                Debug.Log("fdsd");
+                m_windFlag = false;
             }
         }
     }

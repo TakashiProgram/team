@@ -54,7 +54,7 @@ public class CreateManager : MonoBehaviour {
             {
                 m_bubbleScale = SCALE_MAX;
             m_windFlag = true;
-            }
+        }
     }
     //風作成
     public void TapWind(Vector3 vector)
