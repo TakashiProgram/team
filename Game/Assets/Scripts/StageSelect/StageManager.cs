@@ -13,10 +13,8 @@ public class StageManager : MonoBehaviour
 
     [SerializeField, Tooltip("シーン上に配置されるすべてのステージを格納します。")]
     private GameObject[] m_stages;
-    [SerializeField]
+    
     private StageData m_stagesData;
-
-
 
 
     void Start()
