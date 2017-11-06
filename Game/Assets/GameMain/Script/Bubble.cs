@@ -31,12 +31,14 @@ public class Bubble : MonoBehaviour {
         
         m_moveDisabled = m_setMove;
         Invoke("test", 3);
+        m_createManager.GetComponent<CreateManager>().m_WingMove = new Vector3(0, 0, 0);
     }
 	
 	void Update () {
         this.transform.position+= m_createManager.GetComponent<CreateManager>().m_WingMove *
                                   BUBBLE_MOVE * INVERTED * Time.deltaTime;
 
+        //上昇
         Vector3 move = this.transform.position;
         move.y += m_setMove * m_moveDisabled* m_floatingCount * Time.deltaTime;
         this.transform.position = move;
