@@ -36,8 +36,9 @@ public class InputManager : MonoBehaviour
 
     private const float BUBBLE_SCALE = 0.01f;
 
-    public bool m_windFlag = false;
-   
+    public bool m_tapWindFlag = false;
+
+    private bool m_testflag = false;
     void Start()
     {
 
@@ -58,11 +59,18 @@ public class InputManager : MonoBehaviour
             Ray ray = m_uiCamera.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
 
             RaycastHit2D hit = Physics2D.Raycast((Vector2)ray.origin, (Vector2)ray.direction, DISTANCE);
-          
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (hit.collider.gameObject.name=="Bubble")
+                {
+                    m_createManager.GetComponent<CreateManager>().m_createWindFlag = false;
+                    
+                }
+            }
             switch (hit.collider.gameObject.name)
                 {
                     case "Left":
-                    m_windFlag = false;
+                    m_tapWindFlag = false;
                     m_leftTap.GetComponent<SpriteRenderer>().color = m_setColor;
 
                     if (m_player.GetComponent<Player>().m_bubbleFlag==false)
@@ -78,7 +86,7 @@ public class InputManager : MonoBehaviour
 
                         break;
                     case "Right":
-                    m_windFlag = false;
+                    m_tapWindFlag = false;
                     m_rightTap.GetComponent<SpriteRenderer>().color = m_setColor;
                     if (m_player.GetComponent<Player>().m_bubbleFlag==false)
                     {
@@ -93,7 +101,7 @@ public class InputManager : MonoBehaviour
 
                     break;
                 case "Bubble":
-
+                    m_tapWindFlag = false;
                     m_player.transform.parent = null;
 
                     m_player.GetComponent<Player>().m_bubbleFlag=false;
@@ -101,11 +109,20 @@ public class InputManager : MonoBehaviour
                     m_player.GetComponent<Rigidbody>().useGravity = true;
 
                     m_createManager.GetComponent<CreateManager>().TapBubble(BUBBLE_SCALE);
+                    
                     break;
                 case "Wind":
-                    Debug.Log("sgh");
+
                     TapVector();
 
+
+                    break;
+
+                case "Reselt":
+                    
+                    SceneManager.LoadScene("GameMain");
+
+                 
 
                     break;
 
@@ -114,16 +131,17 @@ public class InputManager : MonoBehaviour
         if (Input.GetMouseButtonUp(0))
         {
             TapUpReset();
-            if (m_createManager.GetComponent<CreateManager>().m_windFlag)
+            if (m_createManager.GetComponent<CreateManager>().m_createWindFlag)
             {
-                m_windFlag = true;
-               // Invoke(GameObject.Find("Bubble(Clone)").transform.GetComponent<Bubble>().DestroyTime(),1);
-                GameObject.Find("Bubble(Clone)").transform.GetComponent<Bubble>().te();
+
+               // Invoke("test", 3);
+                m_tapWindFlag = true;
+                GameObject.Find("Bubble(Clone)").transform.GetComponent<Bubble>().Destroy();
             }
             else
             {
 
-                m_windFlag = false;
+                m_tapWindFlag = false;
             }
         }
     }
@@ -139,14 +157,18 @@ public class InputManager : MonoBehaviour
     //シャボン玉を生成した後に風を発生させる
     private void TapVector()
     {
-        if (m_windFlag)
+
+        if (m_tapWindFlag)
         {
             if (Input.GetMouseButtonDown(0))
             {
                  m_downWind = Input.mousePosition;
-               }
-            if (Input.GetMouseButtonUp(0))
+                m_testflag = true;
+
+               }else
+            if (Input.GetMouseButtonUp(0) && m_testflag)
             {
+
                 Vector3 UpWind = Input.mousePosition;
 
               Vector3  SetWind = (m_downWind - UpWind);
@@ -154,8 +176,11 @@ public class InputManager : MonoBehaviour
                 SetWind.Normalize();
                 m_createManager.GetComponent<CreateManager>().TapWind(SetWind);
 
-                m_windFlag = false;
+               // m_tapWindFlag = false;
+                m_testflag = false;
             }
         } 
     }
+
+  
 }

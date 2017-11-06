@@ -6,6 +6,8 @@ public class CreateManager : MonoBehaviour {
     //m_bubbleの動き
     public Vector3 m_WingMove;
 
+    public bool m_createWindFlag = false;
+
     private GameObject m_bubbleCreateBox;
 
     //プレイヤー前方
@@ -21,8 +23,6 @@ public class CreateManager : MonoBehaviour {
     private const int SCALE_MAX = 1;
 
     private float m_bubbleScale;
-
-    public bool m_windFlag = false;
     
 
     void Start () {
@@ -30,11 +30,11 @@ public class CreateManager : MonoBehaviour {
     }
 	
 	void Update () {
-		
+        Debug.Log("createFlag"+m_createWindFlag);
 	}
 
     //バブル生成処理
-  public  void TapBubble(float scale)
+  public void TapBubble(float scale)
     {
         //バブルボタンを押された時の処理
         if (Input.GetMouseButtonDown(0))
@@ -53,7 +53,7 @@ public class CreateManager : MonoBehaviour {
             if (m_bubbleScale > SCALE_MAX)
             {
                 m_bubbleScale = SCALE_MAX;
-            m_windFlag = true;
+            m_createWindFlag = true;
         }
     }
     //風作成

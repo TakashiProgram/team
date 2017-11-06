@@ -16,9 +16,13 @@ public class Bubble : MonoBehaviour {
 
     private GameObject m_player;
 
+    private Vector3 m_move;
+
     private const float BUBBLE_MOVE = 1.5f;
 
     private const int INVERTED = -1;
+
+    private const int RISING_TIME = 3;
 
     private float m_floatingCount = 0;
 
@@ -30,17 +34,19 @@ public class Bubble : MonoBehaviour {
 
         
         m_moveDisabled = m_setMove;
-        Invoke("test", 3);
+        Invoke("Rising", RISING_TIME);
         m_createManager.GetComponent<CreateManager>().m_WingMove = new Vector3(0, 0, 0);
     }
 	
 	void Update () {
-        this.transform.position+= m_createManager.GetComponent<CreateManager>().m_WingMove *
-                                  BUBBLE_MOVE * INVERTED * Time.deltaTime;
+        m_move = m_createManager.GetComponent<CreateManager>().m_WingMove;
+        //風によって動く方向が変わる
+        this.transform.position+= m_move * BUBBLE_MOVE * INVERTED * Time.deltaTime;
 
         //上昇
         Vector3 move = this.transform.position;
-        move.y += m_setMove * m_moveDisabled* m_floatingCount * Time.deltaTime;
+         move.y += /*m_setMove **/ m_moveDisabled* m_floatingCount * Time.deltaTime;
+      //  move.y = 1 * Time.deltaTime;
         this.transform.position = move;
     }
     private void OnTriggerStay(Collider collision)
@@ -49,7 +55,6 @@ public class Bubble : MonoBehaviour {
         {
 
             m_moveDisabled = 0;
-
            
         }
         else
@@ -58,22 +63,22 @@ public class Bubble : MonoBehaviour {
             DestroyTime();
         }
     }
+
     public void DestroyTime()
     {
         m_player.transform.parent = null;
         m_player.GetComponent<Player>().m_bubbleFlag = false;
 
         m_player.GetComponent<Rigidbody>().useGravity = true;
-        m_createManager.GetComponent<CreateManager>().m_windFlag = false;
-        m_createManager.GetComponent<CreateManager>().m_WingMove = new Vector3(0,0,0);
+        m_createManager.GetComponent<CreateManager>().m_createWindFlag = false;
         Destroy(gameObject);
     }
-    public void te()
+    public void Destroy()
     {
         Invoke("DestroyTime", m_survivalTime);
     }
 
-    private void test()
+    private void Rising()
     {
         m_floatingCount = 1;
     }
