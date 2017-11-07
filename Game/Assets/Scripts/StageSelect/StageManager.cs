@@ -33,7 +33,7 @@ public class StageManager : MonoBehaviour
         //データの設定が終わったらそのデータによるステージ開放の更新をかけていく
         foreach (var stage in m_stages)
         {
-            stage.GetComponent<StageStatus>().Check();
+            stage.GetComponent<StageChanger>().Check();
         }
     }
 
@@ -45,8 +45,8 @@ public class StageManager : MonoBehaviour
         for (int i = 0; i < m_stages.Length; i++)
         {
             m_stagesData.data[i].name = m_stages[i].name;
-            m_stagesData.data[i].ReleaseFlag = m_stages[i].GetComponent<StageStatus>().IsRelease();
-            m_stagesData.data[i].rank = m_stages[i].GetComponent<StageStatus>().GetRank();
+            m_stagesData.data[i].ReleaseFlag = m_stages[i].GetComponent<StageChanger>().IsRelease();
+            m_stagesData.data[i].rank = m_stages[i].GetComponent<StageChanger>().GetRank();
         }
         //自身が終了するときにステージの全情報を保存する
         SaveManager.SaveFile(m_stagesData);
@@ -59,12 +59,12 @@ public class StageManager : MonoBehaviour
     ///</summary>
     public bool IsClearStage(SceneNameList _stageName)
     {
-        StageStatus target = null;
+        StageChanger target = null;
         foreach (var stage in m_stages)
         {
-            if (stage.GetComponent<StageStatus>().GetChangeTarget() == _stageName)
+            if (stage.GetComponent<StageChanger>().GetChangeTarget() == _stageName)
             {
-                target = stage.GetComponent<StageStatus>();
+                target = stage.GetComponent<StageChanger>();
                 break;
             }
         }
@@ -112,7 +112,7 @@ public class StageManager : MonoBehaviour
             {
                 if (stage.name == data.name)
                 {
-                    stage.GetComponent<StageStatus>().SetRank(data.rank);
+                    stage.GetComponent<StageChanger>().SetRank(data.rank);
                 }
             }
         }
@@ -130,8 +130,8 @@ public class StageManager : MonoBehaviour
             for (int i = 0; i < m_stages.Length; i++)
             {
                 m_stagesData.data[i].name = m_stages[i].name;
-                m_stagesData.data[i].ReleaseFlag = m_stages[i].GetComponent<StageStatus>().IsRelease();
-                m_stagesData.data[i].rank = m_stages[i].GetComponent<StageStatus>().GetRank();
+                m_stagesData.data[i].ReleaseFlag = m_stages[i].GetComponent<StageChanger>().IsRelease();
+                m_stagesData.data[i].rank = m_stages[i].GetComponent<StageChanger>().GetRank();
             }
             SaveManager.SaveFile(m_stagesData);
         }
