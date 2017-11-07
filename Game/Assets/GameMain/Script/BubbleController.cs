@@ -65,13 +65,12 @@ public class BubbleController : MonoBehaviour {
         if(b>=1.0f)
         {
             Destroy(gameObject);
-            //Time.timeScale=1.0f;
+            //Time.timeScale=1.0f;//テスト用コード
         }
     }
     //浮いている時の処理（特に何もしない）
     void FloatingUpdate()
     {
-        Debug.Log("浮遊中");
         //回転させてみる
         Quaternion q = Quaternion.Euler(_euler*Time.deltaTime);
         transform.rotation = q * transform.rotation;
@@ -94,7 +93,14 @@ public class BubbleController : MonoBehaviour {
     {
         _burstTime = burstTime;
         ChangeState(BubbleState.burst);
-        //Time.timeScale = 0.1f;
+        gameObject.GetComponent<SphereCollider>().enabled =  false;
+        //Time.timeScale = 0.1f;//テスト用コード
+    }
+    public void Burst()
+    {
+        ChangeState(BubbleState.burst);
+        gameObject.GetComponent<SphereCollider>().enabled = false;
+        //Time.timeScale = 0.1f;//テスト用コード
     }
 
     private void OnCollisionEnter(Collision col)
@@ -108,7 +114,8 @@ public class BubbleController : MonoBehaviour {
                 hitpos.w = 1;
                 _material.SetVector("_HitPosition", hitpos);
 
-                Burst(_burstTime);
+                //Burst(_burstTime);
+                Burst();
             }
             //とりあえず何か当たったら止まるようにしとく（テスト用
             //GetComponent<Rigidbody>().isKinematic = true;
@@ -126,7 +133,8 @@ public class BubbleController : MonoBehaviour {
             hitpos.w = 1;
             _material.SetVector("_HitPosition", hitpos);
 
-            Burst(_burstTime);
+            //Burst(_burstTime);
+            Burst();
             //とりあえず何か当たったら止まるようにしとく（テスト用
             //GetComponent<Rigidbody>().isKinematic = true;
         }
