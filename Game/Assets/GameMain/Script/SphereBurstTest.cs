@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class SphereBurstTest : MonoBehaviour {
+    
     Material _material;
     //オブジェクトとのヒット位置（ワールド座標系）
     Vector3 _hitPosition;
+    //バブルの状態
+
+
 	// Use this for initialization
 	void Start () {
         _material = GetComponent<Renderer>().material;
@@ -24,7 +28,7 @@ public class SphereBurstTest : MonoBehaviour {
              * 設定した座標に一番近いColliderオブジェクトの座標を返す
              *
              */
-            _hitPosition = col.ClosestPointOnBounds(this.transform.position);
+            _hitPosition = col.ClosestPointOnBounds(transform.position);
             Debug.Log(_hitPosition);
             Vector4 hitPos = new Vector4(_hitPosition.x,_hitPosition.y,_hitPosition.z,1);
             _material.SetVector("_HitPosition", hitPos);
@@ -48,4 +52,5 @@ public class SphereBurstTest : MonoBehaviour {
         //とりあえず何か当たったら止まるようにしとく（テスト用
         GetComponent<Rigidbody>().isKinematic = true;
     }
+    
 }
