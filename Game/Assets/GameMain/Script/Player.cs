@@ -25,11 +25,11 @@ public class Player : MonoBehaviour
 
     private const float BACK_TIME = 1.0f;
 
-    
-
+    private GameObject rrr;
     void Start()
     {
        m_animator= GetComponent<Animator>();
+       
     }
     
     void Update()
@@ -89,13 +89,11 @@ public class Player : MonoBehaviour
         if (collision.gameObject.tag == "Bubble")
         {
             m_bubbleFlag = true;
-
             this.GetComponent<Rigidbody>().useGravity = false;
+           
+            this.transform.position = GameObject.Find("Bubble(Clone)").transform.position;
+       
 
-            transform.parent = GameObject.Find("Bubble(Clone)").transform;
-
-            this.transform.position = this.transform.parent.position;
-            
         }
     }
 
@@ -103,8 +101,10 @@ public class Player : MonoBehaviour
     {
         if (collision.gameObject.tag == "Bubble")
         {
-           
-            this.transform.position = this.transform.parent.position;
+            Vector3 tet = GameObject.Find("Bubble(Clone)").transform.position;
+           // this.transform.position = GameObject.Find("Bubble(Clone)").transform.position;
+            this.transform.position = new Vector3(tet.x, tet.y-0.5f, tet.z);
+            
         }
     }
 

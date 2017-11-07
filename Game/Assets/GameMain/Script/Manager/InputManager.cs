@@ -136,7 +136,7 @@ public class InputManager : MonoBehaviour
 
                // Invoke("test", 3);
                 m_tapWindFlag = true;
-                GameObject.Find("Bubble(Clone)").transform.GetComponent<Bubble>().Destroy();
+                GameObject.Find("Bubble(Clone)").transform.GetComponent<Bubble>().DestroyTime();
             }
             else
             {

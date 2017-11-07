@@ -65,12 +65,13 @@ public class BubbleController : MonoBehaviour {
         if(b>=1.0f)
         {
             Destroy(gameObject);
-            //Time.timeScale=1.0f;//テスト用コード
+            //Time.timeScale=1.0f;
         }
     }
     //浮いている時の処理（特に何もしない）
     void FloatingUpdate()
     {
+        Debug.Log("浮遊中");
         //回転させてみる
         Quaternion q = Quaternion.Euler(_euler*Time.deltaTime);
         transform.rotation = q * transform.rotation;
@@ -93,19 +94,12 @@ public class BubbleController : MonoBehaviour {
     {
         _burstTime = burstTime;
         ChangeState(BubbleState.burst);
-        gameObject.GetComponent<SphereCollider>().enabled =  false;
-        //Time.timeScale = 0.1f;//テスト用コード
-    }
-    public void Burst()
-    {
-        ChangeState(BubbleState.burst);
-        gameObject.GetComponent<SphereCollider>().enabled = false;
-        //Time.timeScale = 0.1f;//テスト用コード
+        //Time.timeScale = 0.1f;
     }
 
     private void OnCollisionEnter(Collision col)
     {
-        if (col.gameObject.tag == "Damage")
+        if (col.gameObject.tag != "Player")
         {
             foreach (ContactPoint point in col.contacts)
             {
@@ -114,8 +108,7 @@ public class BubbleController : MonoBehaviour {
                 hitpos.w = 1;
                 _material.SetVector("_HitPosition", hitpos);
 
-                //Burst(_burstTime);
-                Burst();
+                Burst(_burstTime);
             }
             //とりあえず何か当たったら止まるようにしとく（テスト用
             //GetComponent<Rigidbody>().isKinematic = true;
@@ -123,7 +116,7 @@ public class BubbleController : MonoBehaviour {
     }
     private void OnTriggerEnter(Collider col)
     {
-        if (col.gameObject.tag == "Damage")
+        if (col.gameObject.tag != "Player")
         {
             /*Collider.ClosestPointOnBounds(Vector3) 返り値Vector3
              * 設定した座標に一番近いColliderオブジェクトの座標を返す
@@ -133,8 +126,7 @@ public class BubbleController : MonoBehaviour {
             hitpos.w = 1;
             _material.SetVector("_HitPosition", hitpos);
 
-            //Burst(_burstTime);
-            Burst();
+            Burst(_burstTime);
             //とりあえず何か当たったら止まるようにしとく（テスト用
             //GetComponent<Rigidbody>().isKinematic = true;
         }

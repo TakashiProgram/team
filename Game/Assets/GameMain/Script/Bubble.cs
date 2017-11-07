@@ -16,6 +16,8 @@ public class Bubble : MonoBehaviour {
 
     private GameObject m_player;
 
+    private GameObject rrr;
+
     private Vector3 m_move;
 
     private const float BUBBLE_MOVE = 1.5f;
@@ -32,8 +34,7 @@ public class Bubble : MonoBehaviour {
         m_createManager = GameObject.Find("CreateManager");
         m_player = GameObject.Find("Player");
 
-        
-        m_moveDisabled = m_setMove;
+     //   m_moveDisabled = m_setMove;
         Invoke("Rising", RISING_TIME);
         m_createManager.GetComponent<CreateManager>().m_WingMove = new Vector3(0, 0, 0);
     }
@@ -41,13 +42,20 @@ public class Bubble : MonoBehaviour {
 	void Update () {
         m_move = m_createManager.GetComponent<CreateManager>().m_WingMove;
         //風によって動く方向が変わる
-        this.transform.position+= m_move * BUBBLE_MOVE * INVERTED * Time.deltaTime;
+        this.transform.position += m_move * BUBBLE_MOVE * INVERTED * Time.deltaTime;
+        
+        // this.gameObject.GetComponent<Rigidbody>().velocity= m_move * BUBBLE_MOVE * INVERTED;
 
         //上昇
-        Vector3 move = this.transform.position;
-         move.y += /*m_setMove **/ m_moveDisabled* m_floatingCount * Time.deltaTime;
-      //  move.y = 1 * Time.deltaTime;
-        this.transform.position = move;
+        //Vector3 move = this.transform.position;
+        //   move.y += /*m_setMove **/ m_moveDisabled* m_floatingCount * Time.deltaTime;
+        //  move.y = 1 * Time.deltaTime;
+        //this.transform.position = move;
+
+        this.gameObject.GetComponent<Rigidbody>().velocity = new Vector3(0,
+                                                                         m_floatingCount,
+                                                                         0);
+
     }
     private void OnTriggerStay(Collider collision)
     {
@@ -55,31 +63,33 @@ public class Bubble : MonoBehaviour {
         {
 
             m_moveDisabled = 0;
-           
+            m_player.transform.position += this.transform.position;
+
         }
         else
         {
             m_moveDisabled = m_setMove;
-            DestroyTime();
+            Destroy();
         }
     }
 
-    public void DestroyTime()
+    public void Destroy()
     {
         m_player.transform.parent = null;
         m_player.GetComponent<Player>().m_bubbleFlag = false;
 
         m_player.GetComponent<Rigidbody>().useGravity = true;
         m_createManager.GetComponent<CreateManager>().m_createWindFlag = false;
-        Destroy(gameObject);
+         Destroy(gameObject);
+        this.GetComponent<BubbleController>().Burst(0.1f);
     }
-    public void Destroy()
+    public void DestroyTime()
     {
-        Invoke("DestroyTime", m_survivalTime);
+        Invoke("Destroy", m_survivalTime);
     }
 
     private void Rising()
     {
-        m_floatingCount = 1;
+        m_floatingCount =0.5f;
     }
 }

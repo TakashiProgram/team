@@ -20,7 +20,7 @@ public class CreateManager : MonoBehaviour {
     [SerializeField]
     private GameObject m_wind;
 
-    private const int SCALE_MAX = 1;
+    private const float SCALE_MAX = 0.7f;
 
     private float m_bubbleScale;
     
