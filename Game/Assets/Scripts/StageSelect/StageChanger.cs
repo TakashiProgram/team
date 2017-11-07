@@ -5,7 +5,7 @@ public enum ClearRank
     rank_none = 0,rank_D,rank_C,rank_B,rank_A,rank_S
 }
 
-public class StageStatus : MonoBehaviour {
+public class StageChanger : MonoBehaviour {
    
    
     [SerializeField, Tooltip("移動先のステージ")]
@@ -78,6 +78,15 @@ public class StageStatus : MonoBehaviour {
     {
         m_releaseFlag = true;
     }
+
+    /// <summary>
+    /// 設定されているシーンをロードしそのシーンへ移動します。
+    /// </summary>
+    public void ChangeScene()
+    {
+        StartCoroutine(SceneChanger.LoadSceneAtListAsync(m_changeTarget));
+    }
+
     ///<summary>
     ///ステージ開放のチェック用関数です。
     ///</summary>
@@ -94,6 +103,12 @@ public class StageStatus : MonoBehaviour {
         }
         return false;
 
+    }
+
+
+    private void OnCollisionEnter(Collision _coll)
+    {
+        ChangeScene();
     }
 
 }
