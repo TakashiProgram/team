@@ -20,7 +20,8 @@ public class Bubble : MonoBehaviour {
 
     private Vector3 m_move;
 
-    private const float BUBBLE_MOVE = 1.5f;
+    [SerializeField]
+    private  float m_bubbleMove;
 
     private const int INVERTED = -1;
 
@@ -42,7 +43,7 @@ public class Bubble : MonoBehaviour {
 	void Update () {
         m_move = m_createManager.GetComponent<CreateManager>().m_WingMove;
         //風によって動く方向が変わる
-        this.transform.position += m_move * BUBBLE_MOVE * INVERTED * Time.deltaTime;
+        this.transform.position += m_move * m_bubbleMove * INVERTED * Time.deltaTime;
         
         // this.gameObject.GetComponent<Rigidbody>().velocity= m_move * BUBBLE_MOVE * INVERTED;
 
