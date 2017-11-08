@@ -108,7 +108,7 @@ public class BubbleController : MonoBehaviour {
                 hitpos.w = 1;
                 _material.SetVector("_HitPosition", hitpos);
 
-                Burst(_burstTime);
+              //  Burst(_burstTime);
             }
             //とりあえず何か当たったら止まるようにしとく（テスト用
             //GetComponent<Rigidbody>().isKinematic = true;
@@ -126,7 +126,7 @@ public class BubbleController : MonoBehaviour {
             hitpos.w = 1;
             _material.SetVector("_HitPosition", hitpos);
 
-            Burst(_burstTime);
+         //   Burst(_burstTime);
             //とりあえず何か当たったら止まるようにしとく（テスト用
             //GetComponent<Rigidbody>().isKinematic = true;
         }

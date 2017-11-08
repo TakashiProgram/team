@@ -17,6 +17,9 @@ public class Player : MonoBehaviour
     private GameObject[] m_hp;
 
     [SerializeField]
+    private GameObject m_createManager;
+
+    [SerializeField]
     private float INVINCIBLE_TIME;
 
     private int m_desCount;
@@ -88,11 +91,14 @@ public class Player : MonoBehaviour
     {//Bubbleとの親子関係
         if (collision.gameObject.tag == "Bubble")
         {
-            m_bubbleFlag = true;
-            this.GetComponent<Rigidbody>().useGravity = false;
-           
-            this.transform.position = GameObject.Find("Bubble(Clone)").transform.position;
-       
+            if (m_createManager.GetComponent<CreateManager>().m_createWindFlag)
+            {
+                m_bubbleFlag = true;
+                this.GetComponent<Rigidbody>().useGravity = false;
+                transform.parent = GameObject.Find("BubbleStart").transform;
+                //this.transform.position = GameObject.Find("Bubble(Clone)").transform.position;
+
+            }
 
         }
     }
@@ -101,10 +107,14 @@ public class Player : MonoBehaviour
     {
         if (collision.gameObject.tag == "Bubble")
         {
-            Vector3 tet = GameObject.Find("Bubble(Clone)").transform.position;
-           // this.transform.position = GameObject.Find("Bubble(Clone)").transform.position;
-            this.transform.position = new Vector3(tet.x, tet.y-0.5f, tet.z);
-            
+            if (m_createManager.GetComponent<CreateManager>().m_createWindFlag)
+            {
+                Vector3 tet = GameObject.Find("Bubble(Clone)").transform.position;
+                Vector3 localpos = this.transform.localPosition;
+                // this.transform.position = GameObject.Find("Bubble(Clone)").transform.position;
+                this.transform.position = new Vector3(tet.x, tet.y - 0.5f, tet.z);
+                //this.transform.position = this.transform.localPosition;
+            } 
         }
     }
 

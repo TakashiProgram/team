@@ -30,7 +30,7 @@ public class CreateManager : MonoBehaviour {
     }
 	
 	void Update () {
-        Debug.Log("createFlag"+m_createWindFlag);
+        
 	}
 
     //バブル生成処理

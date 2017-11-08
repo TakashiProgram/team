@@ -10,6 +10,8 @@ public class InputManager : MonoBehaviour
     private GameObject m_leftTap;
     [SerializeField]
     private GameObject m_rightTap;
+    [SerializeField]
+    private GameObject m_bubbleTap;
 
     [SerializeField]
     private GameObject m_player;
@@ -59,6 +61,8 @@ public class InputManager : MonoBehaviour
             Ray ray = m_uiCamera.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
 
             RaycastHit2D hit = Physics2D.Raycast((Vector2)ray.origin, (Vector2)ray.direction, DISTANCE);
+
+
             if (Input.GetMouseButtonDown(0))
             {
                 if (hit.collider.gameObject.name=="Bubble")
@@ -70,38 +74,48 @@ public class InputManager : MonoBehaviour
             switch (hit.collider.gameObject.name)
                 {
                     case "Left":
-                    m_tapWindFlag = false;
-                    m_leftTap.GetComponent<SpriteRenderer>().color = m_setColor;
-
-                    if (m_player.GetComponent<Player>().m_bubbleFlag==false)
+                    if (m_testflag==false)
                     {
+                        m_tapWindFlag = false;
+                        m_leftTap.GetComponent<SpriteRenderer>().color = m_setColor;
 
-                        Vector3 playerMove = m_player.transform.position;
-                        playerMove.x -= MOVE_COUNT;
-                        m_player.transform.position = playerMove;
+                        if (m_player.GetComponent<Player>().m_bubbleFlag == false)
+                        {
+
+                            Vector3 playerMove = m_player.transform.position;
+                            playerMove.x -= MOVE_COUNT;
+                            m_player.transform.position = playerMove;
+                        }
+
+                        iTween.RotateTo(m_player, iTween.Hash("y", -PLAYER_ROTATION));
+                        m_player.GetComponent<Animator>().SetBool("Move", true);
+
                     }
-                
-                    iTween.RotateTo(m_player, iTween.Hash("y", -PLAYER_ROTATION));
-                    m_player.GetComponent<Animator>().SetBool("Move",true);
 
-                        break;
+                    break;
                     case "Right":
-                    m_tapWindFlag = false;
-                    m_rightTap.GetComponent<SpriteRenderer>().color = m_setColor;
-                    if (m_player.GetComponent<Player>().m_bubbleFlag==false)
+                    if (m_testflag == false)
                     {
+                        m_tapWindFlag = false;
+                        m_rightTap.GetComponent<SpriteRenderer>().color = m_setColor;
+                        if (m_player.GetComponent<Player>().m_bubbleFlag == false)
+                        {
 
-                        Vector3 playerMove = m_player.transform.position;
-                        playerMove.x += MOVE_COUNT;
-                        m_player.transform.position = playerMove;
+                            Vector3 playerMove = m_player.transform.position;
+                            playerMove.x += MOVE_COUNT;
+                            m_player.transform.position = playerMove;
+                        }
+
+                        iTween.RotateTo(m_player, iTween.Hash("y", PLAYER_ROTATION));
+                        m_player.GetComponent<Animator>().SetBool("Move", true);
+
                     }
-                   
-                    iTween.RotateTo(m_player, iTween.Hash("y", PLAYER_ROTATION));
-                    m_player.GetComponent<Animator>().SetBool("Move",true);
 
                     break;
                 case "Bubble":
                     m_tapWindFlag = false;
+                    m_bubbleTap.GetComponent<SpriteRenderer>().color = m_setColor;
+                  //  TapUpReset();
                     m_player.transform.parent = null;
 
                     m_player.GetComponent<Player>().m_bubbleFlag=false;
@@ -112,9 +126,9 @@ public class InputManager : MonoBehaviour
                     
                     break;
                 case "Wind":
-
+                    TapUpReset();
                     TapVector();
-
+                    m_testflag = true;
 
                     break;
 
@@ -140,8 +154,12 @@ public class InputManager : MonoBehaviour
             }
             else
             {
-
-                m_tapWindFlag = false;
+                if (GameObject.Find("Bubble(Clone)")!=null)
+                {
+                    GameObject.Find("Bubble(Clone)").transform.GetComponent<Bubble>().DestroyTime();
+                }
+              //  
+                //m_tapWindFlag = false;
             }
         }
     }
@@ -151,7 +169,9 @@ public class InputManager : MonoBehaviour
     {
         m_leftTap.GetComponent<SpriteRenderer>().color = m_resetColor;
         m_rightTap.GetComponent<SpriteRenderer>().color = m_resetColor;
+        m_bubbleTap.GetComponent<SpriteRenderer>().color = m_resetColor;
         m_player.GetComponent<Animator>().SetBool("Move", false);
+        m_testflag = false;
        
     }
     //シャボン玉を生成した後に風を発生させる
@@ -163,10 +183,10 @@ public class InputManager : MonoBehaviour
             if (Input.GetMouseButtonDown(0))
             {
                  m_downWind = Input.mousePosition;
-                m_testflag = true;
+              //  m_testflag = true;
 
                }else
-            if (Input.GetMouseButtonUp(0) && m_testflag)
+            if (Input.GetMouseButtonUp(0) /*&& m_testflag*/)
             {
 
                 Vector3 UpWind = Input.mousePosition;
@@ -177,7 +197,7 @@ public class InputManager : MonoBehaviour
                 m_createManager.GetComponent<CreateManager>().TapWind(SetWind);
 
                // m_tapWindFlag = false;
-                m_testflag = false;
+              //  m_testflag = false;
             }
         } 
     }

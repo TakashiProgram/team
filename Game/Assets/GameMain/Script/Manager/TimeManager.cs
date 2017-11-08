@@ -10,13 +10,21 @@ public class TimeManager : MonoBehaviour {
 
     [SerializeField]
     private float m_Time;
-    
+
+    [SerializeField]
+    private GameObject m_player;
+
     void Start () {
 		
 	}
 	
 	void Update () {
         Disable();
+        if (m_Time<=0)
+        {
+            m_Time = 0;
+            Destroy(m_player);
+        }
 
     }
     private void Disable()

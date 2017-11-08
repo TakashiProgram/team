@@ -28,14 +28,17 @@ public class Bubble : MonoBehaviour {
     private const int RISING_TIME = 3;
 
     private float m_floatingCount = 0;
-
-
-
+    
     void Start () {
         m_createManager = GameObject.Find("CreateManager");
         m_player = GameObject.Find("Player");
 
-     //   m_moveDisabled = m_setMove;
+        // testobj = GameObject.Find("testobj");
+        //  transform.parent = GameObject.Find("t").transform;
+
+        transform.parent = GameObject.Find("BubbleStart").transform;
+        //this.GetComponent<Collider>().isTrigger = false;
+        //   m_moveDisabled = m_setMove;
         Invoke("Rising", RISING_TIME);
         m_createManager.GetComponent<CreateManager>().m_WingMove = new Vector3(0, 0, 0);
     }
@@ -43,7 +46,7 @@ public class Bubble : MonoBehaviour {
 	void Update () {
         m_move = m_createManager.GetComponent<CreateManager>().m_WingMove;
         //風によって動く方向が変わる
-        this.transform.position += m_move * m_bubbleMove * INVERTED * Time.deltaTime;
+        this.transform.parent.position += m_move * m_bubbleMove * INVERTED * Time.deltaTime;
         
         // this.gameObject.GetComponent<Rigidbody>().velocity= m_move * BUBBLE_MOVE * INVERTED;
 
@@ -62,12 +65,22 @@ public class Bubble : MonoBehaviour {
     {
         if (collision.gameObject.tag=="Player")
         {
+            if (m_createManager.GetComponent<CreateManager>().m_createWindFlag)
+            {
 
-            m_moveDisabled = 0;
-            m_player.transform.position += this.transform.position;
+                m_moveDisabled = 0;
+              //  m_player.transform.position += m_move * m_bubbleMove * INVERTED * Time.deltaTime;
+            }
+            else
+            {
+                Destroy();
+            }
+            
 
         }
-        else
+       else if(collision.gameObject.tag == "Enemy")
+        {
+        }else
         {
             m_moveDisabled = m_setMove;
             Destroy();
@@ -82,7 +95,7 @@ public class Bubble : MonoBehaviour {
         m_player.GetComponent<Rigidbody>().useGravity = true;
         m_createManager.GetComponent<CreateManager>().m_createWindFlag = false;
          Destroy(gameObject);
-        this.GetComponent<BubbleController>().Burst(0.1f);
+       // this.GetComponent<BubbleController>().Burst(0.1f);
     }
     public void DestroyTime()
     {
