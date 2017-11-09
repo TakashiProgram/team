@@ -18,7 +18,7 @@ public class BubbleTestFactory : MonoBehaviour {
 	void Update () {
 
         ++_frame;
-        if(_frame%20==0)
+        if(_frame%120==0)
         {
             Vector3 randpos = new Vector3(Random.Range(-5, 5), 10, Random.Range(-5, 5));
             randpos = new Vector3(Random.Range(-5, 5), Random.Range(0, 5), 0);
