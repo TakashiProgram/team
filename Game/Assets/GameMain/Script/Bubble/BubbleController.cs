@@ -20,6 +20,8 @@ public class BubbleController : MonoBehaviour {
     [SerializeField] float _burstTime;
     //破裂開始からの経過フレーム
     int _burstFrame;
+    //破裂率
+    float _burstRate;
 
     //浮遊中の回転成分
     Vector3 _euler;
@@ -28,6 +30,7 @@ public class BubbleController : MonoBehaviour {
 
 	void Start ()
     {
+        _burstRate = 0.0f;
         _material = GetComponent<Renderer>().material;
 
         _currentStateFrame = 0;
@@ -59,10 +62,11 @@ public class BubbleController : MonoBehaviour {
      */
     void BurstUpdate()
     {
-        //++_currentStateFrame;
-        float b = Math.Min((_currentStateFrame * Time.deltaTime) / _burstTime, 1.0f);
-        _material.SetFloat("_BurstRatio", b);
-        if(b>=1.0f)
+        _burstRate = Math.Min(_burstRate + ((1.0f / _burstTime) * Time.deltaTime), 1.0f);
+        //float b = Math.Min((_currentStateFrame * Time.deltaTime) / _burstTime, 1.0f);
+        _material.SetFloat("_BurstRatio",_burstRate);
+        Debug.Log("_burstRate = " + _burstRate);
+        if(_burstRate>=1.0f)
         {
             Destroy(gameObject);
             //Time.timeScale=1.0f;
@@ -89,12 +93,25 @@ public class BubbleController : MonoBehaviour {
         ChangeState(BubbleState.floating);
     }
 
+    void Float()
+    {
+        float minRange = 30.0f;
+        float maxRange = 40.0f;
+        _euler = new Vector3(UnityEngine.Random.Range(minRange, maxRange), UnityEngine.Random.Range(minRange, maxRange), UnityEngine.Random.Range(minRange, maxRange));
+        ChangeState(BubbleState.floating);
+    }
+
     //破裂処理に遷移 burstTime:破裂にかかる時間
     public void Burst(float burstTime)
     {
         _burstTime = burstTime;
         ChangeState(BubbleState.burst);
         //Time.timeScale = 0.1f;
+    }
+    public void Burst()
+    {
+        //_burstTime
+        ChangeState(BubbleState.burst);
     }
 
     private void OnCollisionEnter(Collision col)
@@ -108,7 +125,7 @@ public class BubbleController : MonoBehaviour {
                 hitpos.w = 1;
                 _material.SetVector("_HitPosition", hitpos);
 
-              //  Burst(_burstTime);
+                Burst(_burstTime);
             }
             //とりあえず何か当たったら止まるようにしとく（テスト用
             //GetComponent<Rigidbody>().isKinematic = true;
@@ -126,7 +143,7 @@ public class BubbleController : MonoBehaviour {
             hitpos.w = 1;
             _material.SetVector("_HitPosition", hitpos);
 
-         //   Burst(_burstTime);
+            Burst(_burstTime);
             //とりあえず何か当たったら止まるようにしとく（テスト用
             //GetComponent<Rigidbody>().isKinematic = true;
         }
