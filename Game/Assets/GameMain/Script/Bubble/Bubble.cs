@@ -94,12 +94,12 @@ public class Bubble : MonoBehaviour {
 
         m_player.GetComponent<Rigidbody>().useGravity = true;
         m_createManager.GetComponent<CreateManager>().m_createWindFlag = false;
-         Destroy(gameObject);
-       // this.GetComponent<BubbleController>().Burst(0.1f);
+       //  Destroy(gameObject);
+        this.GetComponent<BubbleController>().Burst(0.2f);
     }
     public void DestroyTime()
     {
-        Invoke("Destroy", m_survivalTime);
+        Invoke("Death", m_survivalTime);
     }
 
     private void Rising()
