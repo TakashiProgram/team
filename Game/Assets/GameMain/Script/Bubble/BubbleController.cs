@@ -37,11 +37,11 @@ public class BubbleController : MonoBehaviour {
         //連想配列にステートごとの処理追加
         _stateAction.Add(BubbleState.floating, FloatingUpdate);
         _stateAction.Add(BubbleState.burst, BurstUpdate);
+        _stateAction.Add(BubbleState.spawn, SpawnUpdate);
 
         //最初のステートを決定
-        float minRange = 30.0f;
-        float maxRange = 40.0f;
-        Float(new Vector3(UnityEngine.Random.Range(minRange, maxRange), UnityEngine.Random.Range(minRange, maxRange), UnityEngine.Random.Range(minRange, maxRange)));
+        ChangeState(BubbleState.spawn);
+        _material.SetFloat("_Fluffy", 0.01f);
 	}
 	
 	void Update ()
@@ -86,17 +86,27 @@ public class BubbleController : MonoBehaviour {
         _euler.z = Mathf.Max(5.0f, _euler.z - 2.0f * Time.deltaTime);
     }
 
-    //浮遊状態へ遷移　rot:浮遊中の初期回転成分
-    void Float(Vector3 rot)
+    //生成途中の処理
+    void SpawnUpdate()
     {
+        //特に何もしない
+    }
+
+    //浮遊状態へ遷移　rot:浮遊中の初期回転成分
+    public void BubbleFloat(Vector3 rot)
+    {
+        _material.SetFloat("_Fluffy", 0.03f);
         _euler = rot;
         ChangeState(BubbleState.floating);
     }
 
-    void Float()
+    public void BubbleFloat()
     {
+        //バブルの柔らかさ
+        _material.SetFloat("_Fluffy", 0.03f);
+        //適当に回転成分決める
         float minRange = 30.0f;
-        float maxRange = 40.0f;
+        float maxRange = 50.0f;
         _euler = new Vector3(UnityEngine.Random.Range(minRange, maxRange), UnityEngine.Random.Range(minRange, maxRange), UnityEngine.Random.Range(minRange, maxRange));
         ChangeState(BubbleState.floating);
     }
@@ -104,13 +114,22 @@ public class BubbleController : MonoBehaviour {
     //破裂処理に遷移 burstTime:破裂にかかる時間
     public void Burst(float burstTime)
     {
+
         _burstTime = burstTime;
         ChangeState(BubbleState.burst);
         //Time.timeScale = 0.1f;
     }
-    public void Burst()
+    //引数無しならBubbleControllerに設定された破裂時間を使用する
+    public void Burst(Collision col)
     {
-        //_burstTime
+        foreach (ContactPoint point in col.contacts)
+        {
+            //w要素は1にしておく
+            Vector4 hitpos = point.point;
+            hitpos.w = 1;
+            _material.SetVector("_HitPosition", hitpos);
+            
+        }
         ChangeState(BubbleState.burst);
     }
 
