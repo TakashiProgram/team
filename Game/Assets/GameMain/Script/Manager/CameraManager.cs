@@ -16,10 +16,11 @@ public class CameraManager : MonoBehaviour {
     private const float FIXED = -4.75f;
 
     private const int SET_POS_Y = 2;
-
+   
     void Start () {
         //最初にカメラがプレイヤーに付いていく(デバック用)
         this.transform.position = new Vector3(m_player.transform.position.x, m_player.transform.position.y, FIXED);
+
     }
 	
 	void Update () {

@@ -40,7 +40,7 @@ public class InputManager : MonoBehaviour
 
     public bool m_tapWindFlag = false;
 
-    private bool m_testflag = false;
+    public bool m_testflag = false;
     void Start()
     {
 
@@ -172,7 +172,8 @@ public class InputManager : MonoBehaviour
         m_bubbleTap.GetComponent<SpriteRenderer>().color = m_resetColor;
         m_player.GetComponent<Animator>().SetBool("Move", false);
         m_testflag = false;
-       
+       // m_testflag = false;
+
     }
     //シャボン玉を生成した後に風を発生させる
     private void TapVector()
@@ -197,7 +198,7 @@ public class InputManager : MonoBehaviour
                 m_createManager.GetComponent<CreateManager>().TapWind(SetWind);
 
                // m_tapWindFlag = false;
-              //  m_testflag = false;
+                m_testflag = false;
             }
         } 
     }

@@ -28,6 +28,8 @@ public class Player : MonoBehaviour
 
     private const float BACK_TIME = 1.0f;
 
+    private Vector3 m_formerPosition;
+
     private GameObject rrr;
     void Start()
     {
@@ -37,7 +39,20 @@ public class Player : MonoBehaviour
     
     void Update()
     {
-       
+      //  Debug.Log(m_formerPosition);
+        if (this.transform.position.y<-10)
+        {
+            this.transform.position = m_formerPosition;
+        }
+
+        if (Physics.CheckSphere(transform.position, 10))
+        {
+            //audioSource.Play();
+         //   Debug.Log("当たっている");
+        }else
+        {
+           // Debug.Log("離れている");
+        }
     }
 
     //playerのダメージをくらったときに呼ばれる
@@ -45,6 +60,7 @@ public class Player : MonoBehaviour
     {
         if (m_desCount == DES_COUNT_MAX)
         {
+
             Destroy(gameObject);
         }
         m_left.GetComponent<CircleCollider2D>().enabled = false;
@@ -93,6 +109,7 @@ public class Player : MonoBehaviour
         {
             if (m_createManager.GetComponent<CreateManager>().m_createWindFlag)
             {
+               
                 m_bubbleFlag = true;
                 this.GetComponent<Rigidbody>().useGravity = false;
                 transform.parent = GameObject.Find("BubbleStart").transform;
@@ -116,6 +133,11 @@ public class Player : MonoBehaviour
                 //this.transform.position = this.transform.localPosition;
             } 
         }
+    }
+
+    public void Resurrection(Vector3 pos)
+    {
+        m_formerPosition = pos;
     }
 
     //無敵時間

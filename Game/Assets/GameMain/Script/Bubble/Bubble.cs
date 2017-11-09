@@ -73,7 +73,7 @@ public class Bubble : MonoBehaviour {
             }
             else
             {
-                Destroy();
+                Death();
             }
             
 
@@ -83,11 +83,11 @@ public class Bubble : MonoBehaviour {
         }else
         {
             m_moveDisabled = m_setMove;
-            Destroy();
+            Death();
         }
     }
 
-    public void Destroy()
+    public void Death()
     {
         m_player.transform.parent = null;
         m_player.GetComponent<Player>().m_bubbleFlag = false;

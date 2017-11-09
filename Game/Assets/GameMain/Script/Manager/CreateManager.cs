@@ -59,9 +59,13 @@ public class CreateManager : MonoBehaviour {
     //風作成
     public void TapWind(Vector3 vector)
     {
-        Instantiate(m_wind, m_bubbleCreateBox.transform.position, Quaternion.identity);
-        
-        m_WingMove = vector;
+        if (GameObject.Find("Bubble(Clone)") != null)
+        {
+            Instantiate(m_wind, m_bubbleCreateBox.transform.position, Quaternion.identity);
+
+            m_WingMove = vector;
+        }
+            
 
     }
 }
