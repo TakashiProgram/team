@@ -25,7 +25,7 @@ public class test : MonoBehaviour {
             return;
 
          var radius = transform.lossyScale.x * 0.5f;
-        Debug.Log(radius);
+
         var isHit = Physics.SphereCast(transform.position, radius, transform.forward * 10, out hit);
         if (isHit)
         {
@@ -33,7 +33,7 @@ public class test : MonoBehaviour {
             Gizmos.DrawWireSphere(transform.position + transform.forward * (hit.distance), radius);
             teds = true;
             
-            Debug.Log("当たり");
+
         }
         else
         {

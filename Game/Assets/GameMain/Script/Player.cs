@@ -42,7 +42,8 @@ public class Player : MonoBehaviour
     
     void Update()
     {
-      //  Debug.Log(m_formerPosition);
+        Debug.Log(m_formerPosition);
+       // Debug.Log(this.transform.position + "player");
         if (this.transform.position.y<-10)
         {
             this.transform.position = m_formerPosition;
@@ -112,6 +113,7 @@ public class Player : MonoBehaviour
         {
             if (m_createManager.GetComponent<CreateManager>().m_createWindFlag)
             {
+                m_formerPosition = this.transform.position;
                 m_bubblePos.transform.GetComponent<test>().isEnable = false;
                 m_bubbleFlag = true;
                 this.GetComponent<Rigidbody>().useGravity = false;
@@ -129,6 +131,7 @@ public class Player : MonoBehaviour
         {
             if (m_createManager.GetComponent<CreateManager>().m_createWindFlag)
             {
+               // m_formerPosition = this.transform.position;
                 Vector3 tet = GameObject.Find("Bubble(Clone)").transform.position;
                 Vector3 localpos = this.transform.localPosition;
                 // this.transform.position = GameObject.Find("Bubble(Clone)").transform.position;
@@ -137,6 +140,14 @@ public class Player : MonoBehaviour
             } 
         }
     }
+
+    private void OnCollisionExit(Collider collision)
+    {
+        if (collision.gameObject.tag == "Bubble")
+        {
+            m_bubblePos.transform.GetComponent<test>().isEnable = true;
+        }
+        }
 
     public void Resurrection(Vector3 pos)
     {

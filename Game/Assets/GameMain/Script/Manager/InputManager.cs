@@ -85,7 +85,7 @@ public class InputManager : MonoBehaviour
 
                         if (m_player.GetComponent<Player>().m_bubbleFlag == false)
                         {
-                            m_bubblePos.transform.GetComponent<test>().isEnable = true;
+                           // m_bubblePos.transform.GetComponent<test>().isEnable = true;
                             Vector3 playerMove = m_player.transform.position;
                             playerMove.x -= MOVE_COUNT;
                             m_player.transform.position = playerMove;
@@ -105,7 +105,7 @@ public class InputManager : MonoBehaviour
                         m_rightTap.GetComponent<SpriteRenderer>().color = m_setColor;
                         if (m_player.GetComponent<Player>().m_bubbleFlag == false)
                         {
-                            m_bubblePos.transform.GetComponent<test>().isEnable = true;
+                       //     m_bubblePos.transform.GetComponent<test>().isEnable = true;
                             Vector3 playerMove = m_player.transform.position;
                             playerMove.x += MOVE_COUNT;
                             m_player.transform.position = playerMove;
@@ -156,6 +156,7 @@ public class InputManager : MonoBehaviour
                // Invoke("test", 3);
                 m_tapWindFlag = true;
                 GameObject.Find("Bubble(Clone)").transform.GetComponent<Bubble>().DestroyTime();
+
             }
             else
             {

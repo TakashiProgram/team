@@ -133,7 +133,7 @@ public class BubbleController : MonoBehaviour {
         ChangeState(BubbleState.burst);
     }
 
-    private void OnCollisionEnter(Collision col)
+   /* private void OnCollisionEnter(Collision col)
     {
         if (col.gameObject.tag != "Player")
         {
@@ -149,15 +149,15 @@ public class BubbleController : MonoBehaviour {
             //とりあえず何か当たったら止まるようにしとく（テスト用
             //GetComponent<Rigidbody>().isKinematic = true;
         }
-    }
-    private void OnTriggerEnter(Collider col)
+    }*/
+  /*  private void OnTriggerEnter(Collider col)
     {
         if (col.gameObject.tag != "Player")
         {
             /*Collider.ClosestPointOnBounds(Vector3) 返り値Vector3
              * 設定した座標に一番近いColliderオブジェクトの座標を返す
              * Vector4型に代入するとw要素は０になってるので1にしておく
-             */
+           //  
             Vector4 hitpos = col.ClosestPointOnBounds(transform.position);
             hitpos.w = 1;
             _material.SetVector("_HitPosition", hitpos);
@@ -166,5 +166,5 @@ public class BubbleController : MonoBehaviour {
             //とりあえず何か当たったら止まるようにしとく（テスト用
             //GetComponent<Rigidbody>().isKinematic = true;
         }
-    }
+    }*/
 }

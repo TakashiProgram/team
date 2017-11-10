@@ -61,7 +61,7 @@ public class Bubble : MonoBehaviour {
                                                                          0);
 
     }
-    private void OnTriggerStay(Collider collision)
+    private void OnCollisionStay(Collision collision)
     {
         if (collision.gameObject.tag=="Player")
         {
@@ -73,6 +73,15 @@ public class Bubble : MonoBehaviour {
             }
             else
             {
+                //渋谷君がきてから
+                //foreach (ContactPoint point in collision.contacts)
+                //{
+                //    //w要素は1にしておく
+                //    Vector4 hitpos = point.point;
+                //    hitpos.w = 1;
+                //    gameObject.transform.GetComponent<BubbleController>().SetVector("_HitPosition", hitpos);
+
+                //}
                 Death();
             }
             
@@ -83,6 +92,14 @@ public class Bubble : MonoBehaviour {
         }else
         {
             m_moveDisabled = m_setMove;
+            //foreach (ContactPoint point in collision.contacts)
+            //{
+            //    //w要素は1にしておく
+            //    Vector4 hitpos = point.point;
+            //    hitpos.w = 1;
+            //    gameObject.transform.GetComponent<BubbleController>().SetVector("_HitPosition", hitpos);
+
+            //}
             Death();
         }
     }
@@ -94,11 +111,14 @@ public class Bubble : MonoBehaviour {
 
         m_player.GetComponent<Rigidbody>().useGravity = true;
         m_createManager.GetComponent<CreateManager>().m_createWindFlag = false;
-       //  Destroy(gameObject);
+         Destroy(gameObject);
+
+        
         this.GetComponent<BubbleController>().Burst(0.2f);
     }
     public void DestroyTime()
     {
+        
         Invoke("Death", m_survivalTime);
     }
 
