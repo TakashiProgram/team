@@ -69,8 +69,8 @@ public class BubbleController : MonoBehaviour {
         Debug.Log("_burstRate = " + _burstRate);
         if(_burstRate>=1.0f)
         {
+
             Destroy(gameObject);
-            //Time.timeScale=1.0f;
         }
     }
     //浮いている時の処理（特に何もしない）
@@ -134,6 +134,7 @@ public class BubbleController : MonoBehaviour {
         ChangeState(BubbleState.burst);
     }
 
+    //引数無し　時間経過で破裂する時等に呼ばれる
     public void Burst()
     {
         ChangeState(BubbleState.burst);
