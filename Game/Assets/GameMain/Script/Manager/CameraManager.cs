@@ -12,9 +12,9 @@ public class CameraManager : MonoBehaviour {
 
     [SerializeField]
     private GameObject m_player;
-
+    //playerのz軸を変更しない
     private const float FIXED = -4.75f;
-
+    //playerの高さを調整
     private const int SET_POS_Y = 2;
    
     void Start () {

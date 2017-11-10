@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class test : MonoBehaviour {
-
+public class HitGround : MonoBehaviour {
 
     RaycastHit hit;
 
-   
     public bool isEnable = true;
 
     [SerializeField]
@@ -17,14 +15,14 @@ public class test : MonoBehaviour {
 
     private void Update()
     {
-        
+
     }
     void OnDrawGizmos()
     {
         if (isEnable == false)
             return;
 
-         var radius = transform.lossyScale.x * 0.5f;
+        var radius = transform.lossyScale.x * 0.5f;
 
         var isHit = Physics.SphereCast(transform.position, radius, transform.forward * 10, out hit);
         if (isHit)
@@ -32,7 +30,7 @@ public class test : MonoBehaviour {
             Gizmos.DrawRay(transform.position, transform.forward * hit.distance);
             Gizmos.DrawWireSphere(transform.position + transform.forward * (hit.distance), radius);
             teds = true;
-            
+
 
         }
         else
@@ -44,10 +42,10 @@ public class test : MonoBehaviour {
                 this.transform.parent.GetComponent<Player>().Resurrection(pos);
                 teds = false;
             }
-            
+
 
             Debug.Log("外れ");
-            
+
         }
     }
 }

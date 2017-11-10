@@ -16,31 +16,27 @@ public class Bubble : MonoBehaviour {
 
     private GameObject m_player;
 
-    private GameObject rrr;
-
     private Vector3 m_move;
+
+    private float m_floatingCount = 0;
 
     [SerializeField]
     private  float m_bubbleMove;
-
-    private const int INVERTED = -1;
-
+    //スワイプでbubbleを動かしたときに反対の値
+    private  int INVERTED = -1;
+    //自動で上昇が発動するまでの時間
     private const int RISING_TIME = 3;
 
-    private float m_floatingCount = 0;
+    
     
     void Start () {
         m_createManager = GameObject.Find("CreateManager");
         m_player = GameObject.Find("Player");
 
-        // testobj = GameObject.Find("testobj");
-        //  transform.parent = GameObject.Find("t").transform;
-
         transform.parent = GameObject.Find("BubbleStart").transform;
-        //this.GetComponent<Collider>().isTrigger = false;
-        //   m_moveDisabled = m_setMove;
         Invoke("Rising", RISING_TIME);
         m_createManager.GetComponent<CreateManager>().m_WingMove = new Vector3(0, 0, 0);
+        INVERTED = -1;
     }
 	
 	void Update () {
@@ -48,20 +44,13 @@ public class Bubble : MonoBehaviour {
         //風によって動く方向が変わる
         this.transform.parent.position += m_move * m_bubbleMove * INVERTED * Time.deltaTime;
         
-        // this.gameObject.GetComponent<Rigidbody>().velocity= m_move * BUBBLE_MOVE * INVERTED;
-
-        //上昇
-        //Vector3 move = this.transform.position;
-        //   move.y += /*m_setMove **/ m_moveDisabled* m_floatingCount * Time.deltaTime;
-        //  move.y = 1 * Time.deltaTime;
-        //this.transform.position = move;
-
+      //上昇
         this.gameObject.GetComponent<Rigidbody>().velocity = new Vector3(0,
                                                                          m_floatingCount,
                                                                          0);
 
     }
-    private void OnCollisionStay(Collision collision)
+    private void OnTriggerStay(Collider collision)
     {
         if (collision.gameObject.tag=="Player")
         {
@@ -69,7 +58,6 @@ public class Bubble : MonoBehaviour {
             {
 
                 m_moveDisabled = 0;
-              //  m_player.transform.position += m_move * m_bubbleMove * INVERTED * Time.deltaTime;
             }
             else
             {
@@ -82,6 +70,7 @@ public class Bubble : MonoBehaviour {
                 //    gameObject.transform.GetComponent<BubbleController>().SetVector("_HitPosition", hitpos);
 
                 //}
+                Debug.Log("test");
                 Death();
             }
             
@@ -89,6 +78,7 @@ public class Bubble : MonoBehaviour {
         }
        else if(collision.gameObject.tag == "Enemy")
         {
+
         }else
         {
             m_moveDisabled = m_setMove;
@@ -100,9 +90,58 @@ public class Bubble : MonoBehaviour {
             //    gameObject.transform.GetComponent<BubbleController>().SetVector("_HitPosition", hitpos);
 
             //}
+            Debug.Log("test");
             Death();
         }
     }
+
+
+    //仮
+    //private void OnCollisionStay(Collision collision)
+    //{
+    //    if (collision.gameObject.tag == "Player")
+    //    {
+    //        if (m_createManager.GetComponent<CreateManager>().m_createWindFlag)
+    //        {
+
+    //            m_moveDisabled = 0;
+    //        }
+    //        else
+    //        {
+    //            //渋谷君がきてから
+    //            //foreach (ContactPoint point in collision.contacts)
+    //            //{
+    //            //    //w要素は1にしておく
+    //            //    Vector4 hitpos = point.point;
+    //            //    hitpos.w = 1;
+    //            //    gameObject.transform.GetComponent<BubbleController>().SetVector("_HitPosition", hitpos);
+
+    //            //}
+    //            Debug.Log("test");
+    //            Death(collision);
+    //        }
+
+
+    //    }
+    //    else if (collision.gameObject.tag == "Enemy")
+    //    {
+
+    //    }
+    //    else
+    //    {
+    //        m_moveDisabled = m_setMove;
+    //        //foreach (ContactPoint point in collision.contacts)
+    //        //{
+    //        //    //w要素は1にしておく
+    //        //    Vector4 hitpos = point.point;
+    //        //    hitpos.w = 1;
+    //        //    gameObject.transform.GetComponent<BubbleController>().SetVector("_HitPosition", hitpos);
+
+    //        //}
+    //        Debug.Log("test");
+    //        Death(collision);
+    //    }
+    //}
 
     public void Death()
     {
@@ -111,10 +150,11 @@ public class Bubble : MonoBehaviour {
 
         m_player.GetComponent<Rigidbody>().useGravity = true;
         m_createManager.GetComponent<CreateManager>().m_createWindFlag = false;
-         Destroy(gameObject);
+        INVERTED = INVERTED * -1;
+         //Destroy(gameObject);
 
-        
-        this.GetComponent<BubbleController>().Burst(0.2f);
+
+        this.GetComponent<BubbleController>().Burst();
     }
     public void DestroyTime()
     {

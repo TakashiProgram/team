@@ -33,22 +33,18 @@ public class InputManager : MonoBehaviour
 
     private readonly Color m_resetColor = new Color(1.0f, 1.0f, 1.0f, 0.5f);
 
+    private bool m_tapWindFlag = false;
+
+    private bool m_stopWindFlag = false;
+    //playerの回転
     private const int PLAYER_ROTATION = 90;
     //rayが届く距離
     private const float DISTANCE = 10f;
-
+    //playerのスピード
     private const float MOVE_COUNT = 0.05f;
-
+    //bubbleの大きさの変化の値
     private const float BUBBLE_SCALE = 0.01f;
 
-    public bool m_tapWindFlag = false;
-
-    public bool m_testflag = false;
-    void Start()
-    {
-
-    }
-    
     void Update()
     {
         TapVector();
@@ -77,7 +73,7 @@ public class InputManager : MonoBehaviour
             switch (hit.collider.gameObject.name)
                 {
                     case "Left":
-                    if (m_testflag==false)
+                    if (m_stopWindFlag==false)
                     {
                         
                         m_tapWindFlag = false;
@@ -85,7 +81,6 @@ public class InputManager : MonoBehaviour
 
                         if (m_player.GetComponent<Player>().m_bubbleFlag == false)
                         {
-                           // m_bubblePos.transform.GetComponent<test>().isEnable = true;
                             Vector3 playerMove = m_player.transform.position;
                             playerMove.x -= MOVE_COUNT;
                             m_player.transform.position = playerMove;
@@ -98,14 +93,13 @@ public class InputManager : MonoBehaviour
 
                     break;
                     case "Right":
-                    if (m_testflag == false)
+                    if (m_stopWindFlag == false)
                     {
                         
                         m_tapWindFlag = false;
                         m_rightTap.GetComponent<SpriteRenderer>().color = m_setColor;
                         if (m_player.GetComponent<Player>().m_bubbleFlag == false)
                         {
-                       //     m_bubblePos.transform.GetComponent<test>().isEnable = true;
                             Vector3 playerMove = m_player.transform.position;
                             playerMove.x += MOVE_COUNT;
                             m_player.transform.position = playerMove;
@@ -120,7 +114,6 @@ public class InputManager : MonoBehaviour
                 case "Bubble":
                     m_tapWindFlag = false;
                     m_bubbleTap.GetComponent<SpriteRenderer>().color = m_setColor;
-                  //  TapUpReset();
                     m_player.transform.parent = null;
 
                     m_player.GetComponent<Player>().m_bubbleFlag=false;
@@ -133,16 +126,15 @@ public class InputManager : MonoBehaviour
                 case "Wind":
                     TapUpReset();
                     TapVector();
-                    m_testflag = true;
+                    m_stopWindFlag = true;
 
                     break;
-
+                    //デバック用
                 case "Reselt":
                     
                     SceneManager.LoadScene("GameMain");
 
                  
-
                     break;
 
             }
@@ -152,8 +144,7 @@ public class InputManager : MonoBehaviour
             TapUpReset();
             if (m_createManager.GetComponent<CreateManager>().m_createWindFlag)
             {
-
-               // Invoke("test", 3);
+                
                 m_tapWindFlag = true;
                 GameObject.Find("Bubble(Clone)").transform.GetComponent<Bubble>().DestroyTime();
 
@@ -164,8 +155,6 @@ public class InputManager : MonoBehaviour
                 {
                     GameObject.Find("Bubble(Clone)").transform.GetComponent<Bubble>().DestroyTime();
                 }
-              //  
-                //m_tapWindFlag = false;
             }
         }
     }
@@ -177,8 +166,7 @@ public class InputManager : MonoBehaviour
         m_rightTap.GetComponent<SpriteRenderer>().color = m_resetColor;
         m_bubbleTap.GetComponent<SpriteRenderer>().color = m_resetColor;
         m_player.GetComponent<Animator>().SetBool("Move", false);
-        m_testflag = false;
-       // m_testflag = false;
+        m_stopWindFlag = false;
 
     }
     //シャボン玉を生成した後に風を発生させる
@@ -190,10 +178,9 @@ public class InputManager : MonoBehaviour
             if (Input.GetMouseButtonDown(0))
             {
                  m_downWind = Input.mousePosition;
-              //  m_testflag = true;
 
                }else
-            if (Input.GetMouseButtonUp(0) /*&& m_testflag*/)
+            if (Input.GetMouseButtonUp(0))
             {
 
                 Vector3 UpWind = Input.mousePosition;
@@ -202,9 +189,8 @@ public class InputManager : MonoBehaviour
                 SetWind.z = 0;
                 SetWind.Normalize();
                 m_createManager.GetComponent<CreateManager>().TapWind(SetWind);
-
-               // m_tapWindFlag = false;
-                m_testflag = false;
+                
+                m_stopWindFlag = false;
             }
         } 
     }
