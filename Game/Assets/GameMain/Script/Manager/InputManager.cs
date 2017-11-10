@@ -112,16 +112,18 @@ public class InputManager : MonoBehaviour
 
                     break;
                 case "Bubble":
-                    m_tapWindFlag = false;
-                    m_bubbleTap.GetComponent<SpriteRenderer>().color = m_setColor;
-                    m_player.transform.parent = null;
+                    if (m_stopWindFlag == false)
+                    {
+                        m_tapWindFlag = false;
+                        m_bubbleTap.GetComponent<SpriteRenderer>().color = m_setColor;
+                        m_player.transform.parent = null;
 
-                    m_player.GetComponent<Player>().m_bubbleFlag=false;
+                        m_player.GetComponent<Player>().m_bubbleFlag = false;
 
-                    m_player.GetComponent<Rigidbody>().useGravity = true;
+                        m_player.GetComponent<Rigidbody>().useGravity = true;
 
-                    m_createManager.GetComponent<CreateManager>().TapBubble(BUBBLE_SCALE);
-                    
+                        m_createManager.GetComponent<CreateManager>().TapBubble(BUBBLE_SCALE);
+                    }
                     break;
                 case "Wind":
                     TapUpReset();

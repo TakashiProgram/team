@@ -27,8 +27,9 @@ public class Bubble : MonoBehaviour {
     //自動で上昇が発動するまでの時間
     private const int RISING_TIME = 3;
 
-    
-    
+
+    private int t = 1;
+
     void Start () {
         m_createManager = GameObject.Find("CreateManager");
         m_player = GameObject.Find("Player");
@@ -90,62 +91,15 @@ public class Bubble : MonoBehaviour {
             //    gameObject.transform.GetComponent<BubbleController>().SetVector("_HitPosition", hitpos);
 
             //}
+            t = -1;
             Debug.Log("test");
             Death();
         }
     }
 
-
-    //仮
-    //private void OnCollisionStay(Collision collision)
-    //{
-    //    if (collision.gameObject.tag == "Player")
-    //    {
-    //        if (m_createManager.GetComponent<CreateManager>().m_createWindFlag)
-    //        {
-
-    //            m_moveDisabled = 0;
-    //        }
-    //        else
-    //        {
-    //            //渋谷君がきてから
-    //            //foreach (ContactPoint point in collision.contacts)
-    //            //{
-    //            //    //w要素は1にしておく
-    //            //    Vector4 hitpos = point.point;
-    //            //    hitpos.w = 1;
-    //            //    gameObject.transform.GetComponent<BubbleController>().SetVector("_HitPosition", hitpos);
-
-    //            //}
-    //            Debug.Log("test");
-    //            Death(collision);
-    //        }
-
-
-    //    }
-    //    else if (collision.gameObject.tag == "Enemy")
-    //    {
-
-    //    }
-    //    else
-    //    {
-    //        m_moveDisabled = m_setMove;
-    //        //foreach (ContactPoint point in collision.contacts)
-    //        //{
-    //        //    //w要素は1にしておく
-    //        //    Vector4 hitpos = point.point;
-    //        //    hitpos.w = 1;
-    //        //    gameObject.transform.GetComponent<BubbleController>().SetVector("_HitPosition", hitpos);
-
-    //        //}
-    //        Debug.Log("test");
-    //        Death(collision);
-    //    }
-    //}
-
     public void Death()
     {
-        INVERTED = INVERTED * -1;
+        INVERTED = INVERTED * t;
         this.GetComponent<BubbleController>().Burst();
         //if (gameObject!=null)
         //{
@@ -158,7 +112,7 @@ public class Bubble : MonoBehaviour {
     }
     public void DestroyTime()
     {
-        
+        t = 1;
         Invoke("Death", m_survivalTime);
     }
 
