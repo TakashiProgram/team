@@ -20,9 +20,10 @@ public class CreateManager : MonoBehaviour {
     [SerializeField]
     private GameObject m_wind;
 
-    private const float SCALE_MAX = 0.7f;
-
     private float m_bubbleScale;
+
+    //m_bubbleの最大scale
+    private const float SCALE_MAX = 0.7f;
     
 
     void Start () {
@@ -65,7 +66,5 @@ public class CreateManager : MonoBehaviour {
 
             m_WingMove = vector;
         }
-            
-
     }
 }

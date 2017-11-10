@@ -27,13 +27,12 @@ public class Player : MonoBehaviour
 
     private int m_desCount;
 
-    private const int DES_COUNT_MAX = 2;
+    private const int DEATH_COUNT_MAX = 2; 
 
     private const float BACK_TIME = 1.0f;
 
     private Vector3 m_formerPosition;
-
-    private GameObject rrr;
+    
     void Start()
     {
        m_animator= GetComponent<Animator>();
@@ -42,27 +41,16 @@ public class Player : MonoBehaviour
     
     void Update()
     {
-        Debug.Log(m_formerPosition);
-       // Debug.Log(this.transform.position + "player");
         if (this.transform.position.y<-10)
         {
             this.transform.position = m_formerPosition;
-        }
-
-        if (Physics.CheckSphere(transform.position, 10))
-        {
-            //audioSource.Play();
-         //   Debug.Log("当たっている");
-        }else
-        {
-           // Debug.Log("離れている");
         }
     }
 
     //playerのダメージをくらったときに呼ばれる
     private void Damage()
     {
-        if (m_desCount == DES_COUNT_MAX)
+        if (m_desCount == DEATH_COUNT_MAX)
         {
 
             Destroy(gameObject);
@@ -114,11 +102,10 @@ public class Player : MonoBehaviour
             if (m_createManager.GetComponent<CreateManager>().m_createWindFlag)
             {
                 m_formerPosition = this.transform.position;
-                m_bubblePos.transform.GetComponent<test>().isEnable = false;
+                m_bubblePos.transform.GetComponent<HitGround>().isEnable = false;
                 m_bubbleFlag = true;
                 this.GetComponent<Rigidbody>().useGravity = false;
                 transform.parent = GameObject.Find("BubbleStart").transform;
-                //this.transform.position = GameObject.Find("Bubble(Clone)").transform.position;
 
             }
 
@@ -131,21 +118,18 @@ public class Player : MonoBehaviour
         {
             if (m_createManager.GetComponent<CreateManager>().m_createWindFlag)
             {
-               // m_formerPosition = this.transform.position;
                 Vector3 tet = GameObject.Find("Bubble(Clone)").transform.position;
                 Vector3 localpos = this.transform.localPosition;
-                // this.transform.position = GameObject.Find("Bubble(Clone)").transform.position;
                 this.transform.position = new Vector3(tet.x, tet.y - 0.5f, tet.z);
-                //this.transform.position = this.transform.localPosition;
             } 
         }
     }
 
-    private void OnCollisionExit(Collider collision)
+    private void OnTriggerExit(Collider collision)
     {
         if (collision.gameObject.tag == "Bubble")
         {
-            m_bubblePos.transform.GetComponent<test>().isEnable = true;
+            m_bubblePos.transform.GetComponent<HitGround>().isEnable = true;
         }
         }
 
