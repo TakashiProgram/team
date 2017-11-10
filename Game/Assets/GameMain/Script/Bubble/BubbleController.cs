@@ -69,7 +69,7 @@ public class BubbleController : MonoBehaviour {
         Debug.Log("_burstRate = " + _burstRate);
         if(_burstRate>=1.0f)
         {
-
+            gameObject.GetComponent<Bubble>().ParentRelease();
             Destroy(gameObject);
         }
     }

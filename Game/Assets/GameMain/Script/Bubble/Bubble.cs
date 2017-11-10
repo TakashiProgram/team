@@ -145,7 +145,7 @@ public class Bubble : MonoBehaviour {
 
     public void Death()
     {
-
+        INVERTED = INVERTED * -1;
         this.GetComponent<BubbleController>().Burst();
         //if (gameObject!=null)
         //{
@@ -174,6 +174,6 @@ public class Bubble : MonoBehaviour {
 
         m_player.GetComponent<Rigidbody>().useGravity = true;
         m_createManager.GetComponent<CreateManager>().m_createWindFlag = false;
-        INVERTED = INVERTED * -1;
+        
     }
 }
