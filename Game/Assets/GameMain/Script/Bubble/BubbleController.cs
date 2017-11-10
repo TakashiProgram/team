@@ -42,6 +42,7 @@ public class BubbleController : MonoBehaviour {
         //最初のステートを決定
         ChangeState(BubbleState.spawn);
         _material.SetFloat("_Fluffy", 0.01f);
+        _material.SetVector("_HitPosition", new Vector4(0, 0, 0, 0));
 	}
 	
 	void Update ()
@@ -133,21 +134,16 @@ public class BubbleController : MonoBehaviour {
         ChangeState(BubbleState.burst);
     }
 
+    public void Burst()
+    {
+        ChangeState(BubbleState.burst);
+    }
+
     private void OnCollisionEnter(Collision col)
     {
         if (col.gameObject.tag != "Player")
         {
-            foreach (ContactPoint point in col.contacts)
-            {
-                //w要素は1にしておく
-                Vector4 hitpos = point.point;
-                hitpos.w = 1;
-                _material.SetVector("_HitPosition", hitpos);
-
-                Burst(_burstTime);
-            }
-            //とりあえず何か当たったら止まるようにしとく（テスト用
-            //GetComponent<Rigidbody>().isKinematic = true;
+            Burst(col);
         }
     }
     private void OnTriggerEnter(Collider col)
