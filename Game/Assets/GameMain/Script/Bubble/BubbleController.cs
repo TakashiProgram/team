@@ -152,7 +152,7 @@ public class BubbleController : MonoBehaviour {
         ChangeState(BubbleState.burst);
         //とりあえず動かないようにする
         //gameObject.GetComponent<Rigidbody>().isKinematic = true;
-        gameObject.GetComponent<Collider>().isTrigger = false;
+        //gameObject.GetComponent<Collider>().isTrigger = false;
     }
 
     private void OnCollisionEnter(Collision col)

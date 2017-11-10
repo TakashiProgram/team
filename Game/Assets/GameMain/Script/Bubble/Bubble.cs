@@ -145,16 +145,16 @@ public class Bubble : MonoBehaviour {
 
     public void Death()
     {
-        m_player.transform.parent = null;
-        m_player.GetComponent<Player>().m_bubbleFlag = false;
 
-        m_player.GetComponent<Rigidbody>().useGravity = true;
-        m_createManager.GetComponent<CreateManager>().m_createWindFlag = false;
-        INVERTED = INVERTED * -1;
+        this.GetComponent<BubbleController>().Burst();
+        //if (gameObject!=null)
+        //{
+           
+        //}
+       
          //Destroy(gameObject);
 
 
-        this.GetComponent<BubbleController>().Burst();
     }
     public void DestroyTime()
     {
@@ -165,5 +165,15 @@ public class Bubble : MonoBehaviour {
     private void Rising()
     {
         m_floatingCount =0.5f;
+    }
+
+    public void ParentRelease()
+    {
+        m_player.transform.parent = null;
+        m_player.GetComponent<Player>().m_bubbleFlag = false;
+
+        m_player.GetComponent<Rigidbody>().useGravity = true;
+        m_createManager.GetComponent<CreateManager>().m_createWindFlag = false;
+        INVERTED = INVERTED * -1;
     }
 }
