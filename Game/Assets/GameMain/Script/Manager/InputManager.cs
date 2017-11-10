@@ -24,6 +24,9 @@ public class InputManager : MonoBehaviour
     [SerializeField]
     private GameObject m_createManager;
 
+    [SerializeField]
+    private GameObject m_bubblePos;
+
     private Vector3 m_downWind;
 
     private readonly Color m_setColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
@@ -76,12 +79,13 @@ public class InputManager : MonoBehaviour
                     case "Left":
                     if (m_testflag==false)
                     {
+                        
                         m_tapWindFlag = false;
                         m_leftTap.GetComponent<SpriteRenderer>().color = m_setColor;
 
                         if (m_player.GetComponent<Player>().m_bubbleFlag == false)
                         {
-
+                            m_bubblePos.transform.GetComponent<test>().isEnable = true;
                             Vector3 playerMove = m_player.transform.position;
                             playerMove.x -= MOVE_COUNT;
                             m_player.transform.position = playerMove;
@@ -96,11 +100,12 @@ public class InputManager : MonoBehaviour
                     case "Right":
                     if (m_testflag == false)
                     {
+                        
                         m_tapWindFlag = false;
                         m_rightTap.GetComponent<SpriteRenderer>().color = m_setColor;
                         if (m_player.GetComponent<Player>().m_bubbleFlag == false)
                         {
-
+                            m_bubblePos.transform.GetComponent<test>().isEnable = true;
                             Vector3 playerMove = m_player.transform.position;
                             playerMove.x += MOVE_COUNT;
                             m_player.transform.position = playerMove;

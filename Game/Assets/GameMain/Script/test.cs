@@ -7,17 +7,22 @@ public class test : MonoBehaviour {
 
     RaycastHit hit;
 
-    [SerializeField]
-    bool isEnable = false;
+   
+    public bool isEnable = true;
 
     [SerializeField]
     private Vector3 pos;
 
     bool teds;
+
+    private void Update()
+    {
+        
+    }
     void OnDrawGizmos()
     {
-        //if (isEnable == false)
-          //  return;
+        if (isEnable == false)
+            return;
 
          var radius = transform.lossyScale.x * 0.5f;
         Debug.Log(radius);

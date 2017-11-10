@@ -20,6 +20,9 @@ public class Player : MonoBehaviour
     private GameObject m_createManager;
 
     [SerializeField]
+    private GameObject m_bubblePos;
+
+    [SerializeField]
     private float INVINCIBLE_TIME;
 
     private int m_desCount;
@@ -109,7 +112,7 @@ public class Player : MonoBehaviour
         {
             if (m_createManager.GetComponent<CreateManager>().m_createWindFlag)
             {
-               
+                m_bubblePos.transform.GetComponent<test>().isEnable = false;
                 m_bubbleFlag = true;
                 this.GetComponent<Rigidbody>().useGravity = false;
                 transform.parent = GameObject.Find("BubbleStart").transform;
