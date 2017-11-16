@@ -9,7 +9,8 @@ public class BubbleController : MonoBehaviour {
         none,
         spawn,//生成途中（膨らませている時）の状態
         floating,//浮かんでいる状態
-        burst//破裂中の状態
+        burst,//破裂中の状態
+        vibrate,//振動中の状態
     }
     Dictionary<BubbleState, Action> _stateAction =new Dictionary<BubbleState, Action>();
     Action _currentAct;
@@ -23,6 +24,10 @@ public class BubbleController : MonoBehaviour {
     //破裂率
     float _burstRate;
 
+    //生成されてからシャボンが震える時間
+    [SerializeField] float _vibrateTime;
+    float _vibrateRate;
+
     //浮遊中の回転成分
     Vector3 _euler;
 
@@ -31,6 +36,7 @@ public class BubbleController : MonoBehaviour {
 	void Start ()
     {
         _burstRate = 0.0f;
+        _vibrateRate = 1.0f;
         _material = GetComponent<Renderer>().material;
 
         _currentStateFrame = 0;
@@ -38,11 +44,13 @@ public class BubbleController : MonoBehaviour {
         _stateAction.Add(BubbleState.floating, FloatingUpdate);
         _stateAction.Add(BubbleState.burst, BurstUpdate);
         _stateAction.Add(BubbleState.spawn, SpawnUpdate);
+        _stateAction.Add(BubbleState.vibrate, VibrationUpdate);
 
         //最初のステートを決定
         ChangeState(BubbleState.spawn);
         _material.SetFloat("_Fluffy", 0.01f);
         _material.SetVector("_HitPosition", new Vector4(0, 0, 0, 0));
+        _material.SetFloat("_VibrateRate", 0.0f);
 	}
 	
 	void Update ()
@@ -64,9 +72,7 @@ public class BubbleController : MonoBehaviour {
     void BurstUpdate()
     {
         _burstRate = Math.Min(_burstRate + ((1.0f / _burstTime) * Time.deltaTime), 1.0f);
-        //float b = Math.Min((_currentStateFrame * Time.deltaTime) / _burstTime, 1.0f);
         _material.SetFloat("_BurstRatio",_burstRate);
-        Debug.Log("_burstRate = " + _burstRate);
         if(_burstRate>=1.0f)
         {
             gameObject.GetComponent<Bubble>().ParentRelease();
@@ -76,10 +82,16 @@ public class BubbleController : MonoBehaviour {
     //浮いている時の処理（特に何もしない）
     void FloatingUpdate()
     {
+        //Vibrateのテスト用コード
+        //if(_currentStateFrame>60)
+        //{
+        //    BubbleVibrate();
+        //}
+
         Debug.Log("浮遊中");
         //回転させてみる
         Quaternion q = Quaternion.Euler(_euler*Time.deltaTime);
-        transform.rotation = q * transform.rotation;
+        //transform.rotation = q * transform.rotation;
 
         //一旦保留
         _euler.x = Mathf.Max(5.0f, _euler.x - 2.0f * Time.deltaTime);
@@ -91,6 +103,25 @@ public class BubbleController : MonoBehaviour {
     void SpawnUpdate()
     {
         //特に何もしない
+    }
+
+    //振動中の処理
+    void VibrationUpdate()
+    {
+        _vibrateRate = Mathf.Max(0.0f, _vibrateRate - ((1.0f / _vibrateTime) * Time.deltaTime));
+        _material.SetFloat("_VibrateRate", _vibrateRate);
+        if(_vibrateRate<=0.0f)
+        {
+            ChangeState(BubbleState.floating);
+        }
+    }
+    //バブルを振動状態に遷移させる
+    public void BubbleVibrate()
+    {
+        _vibrateRate = 1.0f;
+        _material.SetFloat("_VibrateRate", _vibrateRate);
+
+        ChangeState(BubbleState.vibrate);
     }
 
     //浮遊状態へ遷移　rot:浮遊中の初期回転成分
@@ -158,16 +189,16 @@ public class BubbleController : MonoBehaviour {
 
     private void OnCollisionEnter(Collision col)
     {
-        if (col.gameObject.tag != "Player")
-        {
-            Burst(col);
-        }
+        //if (col.gameObject.tag != "Player")
+        //{
+        //    Burst(col);
+        //}
     }
     private void OnTriggerEnter(Collider col)
     {
-        if (col.gameObject.tag != "Player")
-        {
-            Burst(col);
-        }
+        //if (col.gameObject.tag != "Player")
+        //{
+        //    Burst(col);
+        //}
     }
 }
