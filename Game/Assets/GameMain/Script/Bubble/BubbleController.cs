@@ -47,7 +47,7 @@ public class BubbleController : MonoBehaviour {
         _stateAction.Add(BubbleState.vibrate, VibrationUpdate);
 
         //最初のステートを決定
-        ChangeState(BubbleState.spawn);
+        ChangeState(BubbleState.vibrate);
         _material.SetFloat("_Fluffy", 0.01f);
         _material.SetVector("_HitPosition", new Vector4(0, 0, 0, 0));
         _material.SetFloat("_VibrateRate", 0.0f);
@@ -83,10 +83,10 @@ public class BubbleController : MonoBehaviour {
     void FloatingUpdate()
     {
         //Vibrateのテスト用コード
-        //if(_currentStateFrame>60)
-        //{
-        //    BubbleVibrate();
-        //}
+        if (_currentStateFrame > 60)
+        {
+            BubbleVibrate();
+        }
 
         Debug.Log("浮遊中");
         //回転させてみる
@@ -120,7 +120,7 @@ public class BubbleController : MonoBehaviour {
     {
         _vibrateRate = 1.0f;
         _material.SetFloat("_VibrateRate", _vibrateRate);
-
+        //Time.timeScale = 0.1f;
         ChangeState(BubbleState.vibrate);
     }
 

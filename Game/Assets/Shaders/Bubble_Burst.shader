@@ -9,6 +9,8 @@ Shader "Custom/Bubble_Burst" {
 		_Fluffy("Fluffy",Range(0.01,0.5)) = 0.01
 		_VibrateRate("VibrateRate",Range(0.0,1.0)) = 0.0
 
+		_VibrateTest("VibrateTest",Range(0.0,15.0))=1.0
+
 		//前面ポリゴン不透明度
 		_Transparency("Transparency_Back",Range(0,1))=1.0
 		//_CoatTickness("CoatTickness",Range(0,1))=0.1
@@ -56,6 +58,7 @@ Shader "Custom/Bubble_Burst" {
 		float4 _HitPosition;
 		half _Fluffy;
 		half _VibrateRate;
+		half _VibrateTest;
 
 		half4 LightingSpecular(SurfaceOutput s, half3 lightDir, half3 viewDir, half atten)
 		{
@@ -96,13 +99,13 @@ Shader "Custom/Bubble_Burst" {
 			
 			//X→Z→X→Z
 			//Time.w(t*3)でも遅すぎるので適当に調整
-			half vib = 1.0 - ((cos(_Time.w*15) + 1.0)*0.5);
+			half vib = 1.0 - ((cos(_Time.w*_VibrateTest) + 1.0)*0.5);
 			//vib = 1.0 - (pow(vib, 3));
 			half3 vibrateOfs = float3(normal.x*vib, normal.y*(1.0 - vib), 0)*_VibrateRate;
 			//0.0～1.0でオフセットすると大きすぎるので調整
 			v.vertex.xyz += vibrateOfs*0.2;
 			//sin波（-1.0～1.0）だと大きすぎるので調整
-			v.vertex.x += sin(_Time.w * 15)*0.2f*_VibrateRate;
+			//v.vertex.x += sin(_Time.w * 15)*0.2f*_VibrateRate;
 
 		}
 		void surf (Input IN, inout SurfaceOutput o) {
@@ -148,6 +151,7 @@ Shader "Custom/Bubble_Burst" {
 		float4 _HitPosition;
 		half _Fluffy;
 		half _VibrateRate;
+		half _VibrateTest;
 
 		struct Input {
 			float2 uv_MainTex:TEXCOORD0;
@@ -199,13 +203,13 @@ Shader "Custom/Bubble_Burst" {
 
 			//X→Z→X→Z
 			//Time.w(t*3)でも遅すぎるので適当に調整
-			half vib = 1.0 - ((cos(_Time.w * 15) + 1.0)*0.5);
+			half vib = 1.0 - ((cos(_Time.w * _VibrateTest) + 1.0)*0.5);
 			//vib = 1.0 - (pow(vib, 3));
 			half3 vibrateOfs = float3(normal.x*vib, normal.y*(1.0 - vib), 0)*_VibrateRate;
 			//0.0～1.0でオフセットすると大きすぎるので調整
 			v.vertex.xyz += vibrateOfs*0.2;
 			//sin波（-1.0～1.0）だと大きすぎるので調整
-			v.vertex.x += sin(_Time.w * 15)*0.2f*_VibrateRate;
+			//v.vertex.x += sin(_Time.w * 15)*0.2f*_VibrateRate;
 		}
 
 		void surf(Input IN, inout SurfaceOutput o) {
