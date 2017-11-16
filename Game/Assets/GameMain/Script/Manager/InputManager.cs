@@ -17,8 +17,6 @@ public class InputManager : MonoBehaviour
     private GameObject m_player;
 
     [SerializeField]
-    private Camera m_mainCamera;
-    [SerializeField]
     private Camera m_uiCamera;
 
     [SerializeField]
@@ -44,6 +42,8 @@ public class InputManager : MonoBehaviour
     private const float MOVE_COUNT = 0.05f;
     //bubbleの大きさの変化の値
     private const float BUBBLE_SCALE = 0.01f;
+
+    private int m_flip = 1;
 
     void Update()
     {
@@ -73,6 +73,7 @@ public class InputManager : MonoBehaviour
             switch (hit.collider.gameObject.name)
                 {
                     case "Left":
+                    m_flip = -1;
                     if (m_stopWindFlag==false)
                     {
                         
@@ -93,6 +94,7 @@ public class InputManager : MonoBehaviour
 
                     break;
                     case "Right":
+                    m_flip = 1;
                     if (m_stopWindFlag == false)
                     {
                         
@@ -122,7 +124,7 @@ public class InputManager : MonoBehaviour
 
                         m_player.GetComponent<Rigidbody>().useGravity = true;
 
-                        m_createManager.GetComponent<CreateManager>().TapBubble(BUBBLE_SCALE);
+                        m_createManager.GetComponent<CreateManager>().TapBubble(BUBBLE_SCALE, m_flip);
                     }
                     break;
                 case "Wind":
@@ -148,15 +150,9 @@ public class InputManager : MonoBehaviour
             {
                 
                 m_tapWindFlag = true;
-                GameObject.Find("Bubble(Clone)").transform.GetComponent<Bubble>().DestroyTime();
 
-            }
-            else
-            {
-                if (GameObject.Find("Bubble(Clone)")!=null)
-                {
-                    GameObject.Find("Bubble(Clone)").transform.GetComponent<Bubble>().DestroyTime();
-                }
+                GameObject.Find("Bubble").transform.GetComponent<Bubble>().DestroyTime();
+
             }
         }
     }
@@ -196,6 +192,4 @@ public class InputManager : MonoBehaviour
             }
         } 
     }
-
-  
 }
