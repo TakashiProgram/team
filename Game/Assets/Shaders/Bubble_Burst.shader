@@ -1,10 +1,13 @@
-﻿Shader "Custom/Bubble_Burst" {
+﻿// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
+
+Shader "Custom/Bubble_Burst" {
 	Properties {
 		_Color ("Color", Color) = (1,1,1,1)
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
 		_NoiseTex("NoiseTex",2D) = "white"{}
 		_BurstRatio("BurstRatio",Range(0,1)) = 0
 		_Fluffy("Fluffy",Range(0.01,0.5)) = 0.01
+		_VibrateRate("VibrateRate",Range(0.0,1.0)) = 0.0
 
 		//前面ポリゴン不透明度
 		_Transparency("Transparency_Back",Range(0,1))=1.0
@@ -52,6 +55,7 @@
 		half _BurstRatio;
 		float4 _HitPosition;
 		half _Fluffy;
+		half _VibrateRate;
 
 		half4 LightingSpecular(SurfaceOutput s, half3 lightDir, half3 viewDir, half atten)
 		{
@@ -88,6 +92,18 @@
 			half3 ofs = float3(normal.x*sin(_Time.w*3)*_Fluffy, normal.y*sin(_Time.w * 3+0.25)*_Fluffy, normal.z*sin(_Time.z*3+0.5)*_Fluffy);
 			
 			v.vertex.xyz += ofs;
+
+			
+			//X→Z→X→Z
+			//Time.w(t*3)でも遅すぎるので適当に調整
+			half vib = 1.0 - ((cos(_Time.w*15) + 1.0)*0.5);
+			//vib = 1.0 - (pow(vib, 3));
+			half3 vibrateOfs = float3(normal.x*vib, normal.y*(1.0 - vib), 0)*_VibrateRate;
+			//0.0～1.0でオフセットすると大きすぎるので調整
+			v.vertex.xyz += vibrateOfs*0.2;
+			//sin波（-1.0～1.0）だと大きすぎるので調整
+			v.vertex.x += sin(_Time.w * 15)*0.2f*_VibrateRate;
+
 		}
 		void surf (Input IN, inout SurfaceOutput o) {
 			half hitDist = 0;
@@ -131,6 +147,7 @@
 		float _CoatTickness;
 		float4 _HitPosition;
 		half _Fluffy;
+		half _VibrateRate;
 
 		struct Input {
 			float2 uv_MainTex:TEXCOORD0;
@@ -179,6 +196,16 @@
 			half3 ofs = float3(normal.x*sin(_Time.w*3)*_Fluffy, normal.y*sin(_Time.w * 3 + 0.25)*_Fluffy, normal.z*sin(_Time.z*3 + 0.5)*_Fluffy);
 			
 			v.vertex.xyz += ofs;
+
+			//X→Z→X→Z
+			//Time.w(t*3)でも遅すぎるので適当に調整
+			half vib = 1.0 - ((cos(_Time.w * 15) + 1.0)*0.5);
+			//vib = 1.0 - (pow(vib, 3));
+			half3 vibrateOfs = float3(normal.x*vib, normal.y*(1.0 - vib), 0)*_VibrateRate;
+			//0.0～1.0でオフセットすると大きすぎるので調整
+			v.vertex.xyz += vibrateOfs*0.2;
+			//sin波（-1.0～1.0）だと大きすぎるので調整
+			v.vertex.x += sin(_Time.w * 15)*0.2f*_VibrateRate;
 		}
 
 		void surf(Input IN, inout SurfaceOutput o) {
