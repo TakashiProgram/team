@@ -6,12 +6,10 @@ public class HitGround : MonoBehaviour {
 
     RaycastHit hit;
 
-    public bool isEnable = true;
-
     [SerializeField]
     private Vector3 pos;
 
-    bool teds;
+    private bool m_groundFlag;
 
     private void Update()
     {
@@ -19,9 +17,7 @@ public class HitGround : MonoBehaviour {
     }
     void OnDrawGizmos()
     {
-        if (isEnable == false)
-            return;
-
+       
         var radius = transform.lossyScale.x * 0.5f;
 
         var isHit = Physics.SphereCast(transform.position, radius, transform.forward * 10, out hit);
@@ -29,23 +25,19 @@ public class HitGround : MonoBehaviour {
         {
             Gizmos.DrawRay(transform.position, transform.forward * hit.distance);
             Gizmos.DrawWireSphere(transform.position + transform.forward * (hit.distance), radius);
-            teds = true;
+            m_groundFlag = true;
 
 
         }
         else
         {
-            if (teds)
+            if (m_groundFlag)
             {
                 Gizmos.DrawRay(transform.position, transform.forward * 100);
                 pos = this.transform.parent.position;
                 this.transform.parent.GetComponent<Player>().Resurrection(pos);
-                teds = false;
+                m_groundFlag = false;
             }
-
-
-            Debug.Log("外れ");
-
         }
     }
 }

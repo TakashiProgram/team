@@ -32,6 +32,7 @@ public class TimeManager : MonoBehaviour {
             m_Time = 0;
             range = 0;
             Destroy(m_player);
+            //ここでコンテニュー画面を呼ぶ
         }
 
     }

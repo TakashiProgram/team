@@ -23,27 +23,25 @@ public class Bubble : MonoBehaviour {
     [SerializeField]
     private  float m_bubbleMove;
     //スワイプでbubbleを動かしたときに反対の値
-    private  int INVERTED = -1;
+    private int m_inverted = -1;
     //自動で上昇が発動するまでの時間
     private const int RISING_TIME = 3;
-
-
-    private int t = 1;
-
+    
     void Start () {
         m_createManager = GameObject.Find("CreateManager");
         m_player = GameObject.Find("Player");
 
-        transform.parent = GameObject.Find("BubbleStart").transform;
+        transform.parent.parent = GameObject.Find("BubbleStart").transform;
+       
         Invoke("Rising", RISING_TIME);
         m_createManager.GetComponent<CreateManager>().m_WingMove = new Vector3(0, 0, 0);
-        INVERTED = -1;
+        m_inverted = -1;
     }
 	
 	void Update () {
         m_move = m_createManager.GetComponent<CreateManager>().m_WingMove;
         //風によって動く方向が変わる
-        this.transform.parent.position += m_move * m_bubbleMove * INVERTED * Time.deltaTime;
+        this.transform.parent.parent.position += m_move * m_bubbleMove * m_inverted * Time.deltaTime;
         
       //上昇
         this.gameObject.GetComponent<Rigidbody>().velocity = new Vector3(0,
@@ -57,68 +55,39 @@ public class Bubble : MonoBehaviour {
         {
             if (m_createManager.GetComponent<CreateManager>().m_createWindFlag)
             {
-
                 m_moveDisabled = 0;
-            }
-            else
-            {
-                //渋谷君がきてから
-                //foreach (ContactPoint point in collision.contacts)
-                //{
-                //    //w要素は1にしておく
-                //    Vector4 hitpos = point.point;
-                //    hitpos.w = 1;
-                //    gameObject.transform.GetComponent<BubbleController>().SetVector("_HitPosition", hitpos);
-
-                //}
-                Debug.Log("test");
+            }else{
+              
                 Death();
             }
             
 
+        }else if(collision.gameObject.tag == "Enemy")
+        {
+            m_inverted *= -1;
         }
-       else if(collision.gameObject.tag == "Enemy")
+        else
         {
-
-        }else
-        {
+            m_inverted *= -1;
             m_moveDisabled = m_setMove;
-            //foreach (ContactPoint point in collision.contacts)
-            //{
-            //    //w要素は1にしておく
-            //    Vector4 hitpos = point.point;
-            //    hitpos.w = 1;
-            //    gameObject.transform.GetComponent<BubbleController>().SetVector("_HitPosition", hitpos);
-
-            //}
-            t = -1;
-            Debug.Log("test");
+           
             Death();
         }
     }
 
     public void Death()
     {
-        INVERTED = INVERTED * t;
         this.GetComponent<BubbleController>().Burst();
-        //if (gameObject!=null)
-        //{
-           
-        //}
-       
-         //Destroy(gameObject);
-
-
+        
     }
     public void DestroyTime()
     {
-        t = 1;
         Invoke("Death", m_survivalTime);
     }
 
     private void Rising()
     {
-        m_floatingCount =0.5f;
+        m_floatingCount = 0.5f;
     }
 
     public void ParentRelease()
