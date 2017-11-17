@@ -18,7 +18,7 @@ public class HitGround : MonoBehaviour {
     void OnDrawGizmos()
     {
        
-        var radius = transform.lossyScale.x * 0.5f;
+        var radius = transform.lossyScale.x * 0.1f;
 
         var isHit = Physics.SphereCast(transform.position, radius, transform.forward * 10, out hit);
         if (isHit)

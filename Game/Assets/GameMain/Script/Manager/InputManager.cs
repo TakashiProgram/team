@@ -31,7 +31,7 @@ public class InputManager : MonoBehaviour
 
     private readonly Color m_resetColor = new Color(1.0f, 1.0f, 1.0f, 0.5f);
 
-    private bool m_tapWindFlag = false;
+    public bool m_tapWindFlag = false;
 
     private bool m_stopWindFlag = false;
     //playerの回転
@@ -44,6 +44,7 @@ public class InputManager : MonoBehaviour
     private const float BUBBLE_SCALE = 0.01f;
 
     private int m_flip = 1;
+    
 
     void Update()
     {
@@ -78,7 +79,8 @@ public class InputManager : MonoBehaviour
                     {
                         
                         m_tapWindFlag = false;
-                        m_leftTap.GetComponent<SpriteRenderer>().color = m_setColor;
+                        //変更点
+                        hit.collider.GetComponent<SpriteRenderer>().color = m_setColor;
 
                         if (m_player.GetComponent<Player>().m_bubbleFlag == false)
                         {
@@ -99,7 +101,8 @@ public class InputManager : MonoBehaviour
                     {
                         
                         m_tapWindFlag = false;
-                        m_rightTap.GetComponent<SpriteRenderer>().color = m_setColor;
+                        //変更点
+                        hit.collider.GetComponent<SpriteRenderer>().color = m_setColor;
                         if (m_player.GetComponent<Player>().m_bubbleFlag == false)
                         {
                             Vector3 playerMove = m_player.transform.position;
@@ -113,11 +116,14 @@ public class InputManager : MonoBehaviour
                     }
 
                     break;
-                case "Bubble":
+                case "BubbleTap":
+
                     if (m_stopWindFlag == false)
                     {
+                      //  Enemy.m_releaseFlag = true;
                         m_tapWindFlag = false;
-                        m_bubbleTap.GetComponent<SpriteRenderer>().color = m_setColor;
+                        //変更点
+                        hit.collider.GetComponent<SpriteRenderer>().color = m_setColor;
                         m_player.transform.parent = null;
 
                         m_player.GetComponent<Player>().m_bubbleFlag = false;
@@ -153,6 +159,8 @@ public class InputManager : MonoBehaviour
 
                 GameObject.Find("Bubble").transform.GetComponent<Bubble>().DestroyTime();
 
+
+                GameObject.Find("Bubble").transform.GetComponent<BubbleController>().BubbleVibrate();
             }
         }
     }

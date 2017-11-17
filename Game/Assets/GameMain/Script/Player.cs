@@ -91,7 +91,8 @@ public class Player : MonoBehaviour
                 
                 m_bubbleFlag = true;
                 this.GetComponent<Rigidbody>().useGravity = false;
-                transform.parent = GameObject.Find("BubbleStart").transform;
+                //ここ変更
+                transform.parent = collision.transform.parent;
 
             }
 
@@ -99,7 +100,7 @@ public class Player : MonoBehaviour
         if (collision.gameObject.tag == "Enemy")
         {
             StartCoroutine("CreateCube");
-
+            Debug.Log("fdcn");
 
             if (m_desCount == DEATH_COUNT_MAX)
             {
@@ -129,10 +130,11 @@ public class Player : MonoBehaviour
         {
             if (m_createManager.GetComponent<CreateManager>().m_createWindFlag)
             {
-
-                Vector3 bubblePos = GameObject.Find("Bubble").transform.position;
+                
+                Vector3 bubblePos = collision.transform.position;
 
                 this.transform.position = new Vector3(bubblePos.x, bubblePos.y - 0.5f, bubblePos.z);
+
             } 
         }
     }

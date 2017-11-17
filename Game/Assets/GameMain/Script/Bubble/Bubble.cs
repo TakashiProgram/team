@@ -26,7 +26,14 @@ public class Bubble : MonoBehaviour {
     private int m_inverted = -1;
     //自動で上昇が発動するまでの時間
     private const int RISING_TIME = 3;
-    
+
+
+    private bool testFlag = false;
+
+    private readonly Vector3 m_smallerScale = new Vector3(0.2f, 0.2f, 0.2f);
+
+
+    Collider col;
     void Start () {
         m_createManager = GameObject.Find("CreateManager");
         m_player = GameObject.Find("Player");
@@ -36,6 +43,7 @@ public class Bubble : MonoBehaviour {
         Invoke("Rising", RISING_TIME);
         m_createManager.GetComponent<CreateManager>().m_WingMove = new Vector3(0, 0, 0);
         m_inverted = -1;
+        testFlag = false;
     }
 	
 	void Update () {
@@ -47,16 +55,20 @@ public class Bubble : MonoBehaviour {
         this.gameObject.GetComponent<Rigidbody>().velocity = new Vector3(0,
                                                                          m_floatingCount,
                                                                          0);
-
+        
     }
     private void OnTriggerStay(Collider collision)
     {
         if (collision.gameObject.tag=="Player")
         {
+            //バブルが最大かどうか
             if (m_createManager.GetComponent<CreateManager>().m_createWindFlag)
             {
                 m_moveDisabled = 0;
-            }else{
+                testFlag = true;
+            }
+            //最大じゃない時に当たると破裂
+            else{
               
                 Death();
             }
@@ -64,13 +76,33 @@ public class Bubble : MonoBehaviour {
 
         }else if(collision.gameObject.tag == "Enemy")
         {
-            m_inverted *= -1;
+            if (testFlag)
+            {
+                //バブルにプレイヤーが乗っている時の処理
+                m_inverted *= -1;
+                Debug.Log("esrfdb");
+                Death();
+            }else
+            {
+                
+                m_createManager.GetComponent<CreateManager>().m_WingMove = new Vector3(0, 0, 0);
+                
+                collision.GetComponent<Rigidbody>().useGravity = false;
+                 collision.transform.position = this.transform.position;
+
+                collision.transform.localScale = m_smallerScale;
+
+                col = collision;
+
+
+            }
+           
         }
         else
         {
             m_inverted *= -1;
             m_moveDisabled = m_setMove;
-           
+
             Death();
         }
     }
@@ -94,9 +126,16 @@ public class Bubble : MonoBehaviour {
     {
         m_player.transform.parent = null;
         m_player.GetComponent<Player>().m_bubbleFlag = false;
-
+        col.GetComponent<Rigidbody>().useGravity = true;
+        col.transform.parent = null;
+        col.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
         m_player.GetComponent<Rigidbody>().useGravity = true;
         m_createManager.GetComponent<CreateManager>().m_createWindFlag = false;
         
+    }
+    //敵にBubbleが当たった時（プレイヤーはいない）
+    public void Enemy()
+    {
+
     }
 }

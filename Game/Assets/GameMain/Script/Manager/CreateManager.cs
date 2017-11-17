@@ -21,10 +21,12 @@ public class CreateManager : MonoBehaviour {
     private GameObject m_wind;
 
     private float m_bubbleScale;
+    
 
     //m_bubbleの最大scale
     private const float SCALE_MAX = 0.7f;
 
+    
     void Start () {
 
     }
@@ -37,6 +39,8 @@ public class CreateManager : MonoBehaviour {
     {
         if (Input.GetMouseButtonDown(0))
         {
+           
+           
             m_bubbleScale = scale;
             Destroy(m_bubbleCreateBox);
             m_bubbleCreateBox = Instantiate(m_bubble, new Vector3(m_playerFront.transform.position.x, m_playerFront.transform.position.y, 0), Quaternion.identity);
@@ -50,6 +54,7 @@ public class CreateManager : MonoBehaviour {
             {
                 m_bubbleScale = SCALE_MAX;
                 m_bubbleScale *= flip;
+
             m_createWindFlag = true;
         }
     }
@@ -60,7 +65,6 @@ public class CreateManager : MonoBehaviour {
 
         {
             Instantiate(m_wind, m_bubbleCreateBox.transform.position, Quaternion.identity);
-
             m_WingMove = vector;
         }
     }
