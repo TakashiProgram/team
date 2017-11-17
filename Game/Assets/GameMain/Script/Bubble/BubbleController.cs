@@ -87,10 +87,10 @@ public class BubbleController : MonoBehaviour {
     void FloatingUpdate()
     {
         //Vibrateのテスト用コード
-        if (_currentStateFrame > 60)
-        {
-            BubbleVibrate();
-        }
+        //if (_currentStateFrame > 60)
+        //{
+        //    BubbleVibrate();
+        //}
 
 
         //回転させてみる
