@@ -27,6 +27,8 @@ public class BubbleController : MonoBehaviour {
     //生成されてからシャボンが震える時間
     [SerializeField] float _vibrateTime;
     float _vibrateRate;
+    //シェーダに渡して使うタイマ　振動の制御に使う
+    float _vibrateTimer;
 
     //浮遊中の回転成分
     Vector3 _euler;
@@ -38,6 +40,7 @@ public class BubbleController : MonoBehaviour {
         _burstRate = 0.0f;
         _vibrateRate = 1.0f;
         _material = GetComponent<Renderer>().material;
+        _vibrateTimer = 0.0f;
 
         _currentStateFrame = 0;
         //連想配列にステートごとの処理追加
@@ -47,10 +50,11 @@ public class BubbleController : MonoBehaviour {
         _stateAction.Add(BubbleState.vibrate, VibrationUpdate);
 
         //最初のステートを決定
-        ChangeState(BubbleState.vibrate);
+        ChangeState(BubbleState.spawn);
         _material.SetFloat("_Fluffy", 0.01f);
         _material.SetVector("_HitPosition", new Vector4(0, 0, 0, 0));
         _material.SetFloat("_VibrateRate", 0.0f);
+        _material.SetVector("_WindVector", new Vector4(1, 0, 0, 1));
 	}
 	
 	void Update ()
@@ -88,7 +92,7 @@ public class BubbleController : MonoBehaviour {
             BubbleVibrate();
         }
 
-        Debug.Log("浮遊中");
+
         //回転させてみる
         Quaternion q = Quaternion.Euler(_euler*Time.deltaTime);
         //transform.rotation = q * transform.rotation;
@@ -108,6 +112,8 @@ public class BubbleController : MonoBehaviour {
     //振動中の処理
     void VibrationUpdate()
     {
+        _vibrateTimer += Time.deltaTime;
+        _material.SetFloat("_VibrateTimer", _vibrateTimer);
         _vibrateRate = Mathf.Max(0.0f, _vibrateRate - ((1.0f / _vibrateTime) * Time.deltaTime));
         _material.SetFloat("_VibrateRate", _vibrateRate);
         if(_vibrateRate<=0.0f)
@@ -119,8 +125,22 @@ public class BubbleController : MonoBehaviour {
     public void BubbleVibrate()
     {
         _vibrateRate = 1.0f;
+        _vibrateTimer = 0.0f;
         _material.SetFloat("_VibrateRate", _vibrateRate);
+        _material.SetFloat("_VibrateTimer", _vibrateTimer);
+
         //Time.timeScale = 0.1f;
+        ChangeState(BubbleState.vibrate);
+    }
+    //受け取った風のベクトルによって振動ベクトルも変える
+    public void BubbleVibrate(Vector3 windVec)
+    {
+        _vibrateRate = 1.0f;
+        _vibrateTimer = 0.0f;
+        _material.SetFloat("_VibrateRate", _vibrateRate);
+        _material.SetFloat("_VibrateTimer", _vibrateTimer);
+
+        _material.SetVector("_WindVector", new Vector4(windVec.x, windVec.y, windVec.z, 1));
         ChangeState(BubbleState.vibrate);
     }
 

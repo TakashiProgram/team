@@ -8,15 +8,17 @@ Shader "Custom/Bubble_Burst" {
 		_BurstRatio("BurstRatio",Range(0,1)) = 0
 		_Fluffy("Fluffy",Range(0.01,0.5)) = 0.01
 		_VibrateRate("VibrateRate",Range(0.0,1.0)) = 0.0
+		_VibrateTimer("VibrateTimer",Float) = 0.0
 
-		_VibrateTest("VibrateTest",Range(0.0,15.0))=1.0
+		_VibrateTest("VibrateTest",Range(0.0,15.0)) = 1.0
+		_WindVector("WindVector",Vector) = (1,0,0,1)
 
 		//前面ポリゴン不透明度
 		_Transparency("Transparency_Back",Range(0,1))=1.0
 		//_CoatTickness("CoatTickness",Range(0,1))=0.1
 		//背面ポリゴン不透明度
 		_CoatTransparency("Transparency_Front",Range(0,1))=1.0
-		_SpecularPower("SpecularPower",Range(0,80))=1
+		_SpecularPower("SpecularPower",Range(0,160))=1
 
 		_HitPosition("HitPosition",Vector) = (0,0,0,0)
 		//_HitTimer("HitTimer",Range(0,1))=0
@@ -59,6 +61,8 @@ Shader "Custom/Bubble_Burst" {
 		half _Fluffy;
 		half _VibrateRate;
 		half _VibrateTest;
+		float4 _WindVector;
+		half _VibrateTimer;
 
 		half4 LightingSpecular(SurfaceOutput s, half3 lightDir, half3 viewDir, half atten)
 		{
@@ -70,7 +74,7 @@ Shader "Custom/Bubble_Burst" {
 
 			half nh = abs(dot(-s.Normal, h));// max(0, dot(-s.Normal, h));
 			nh = pow(nh, 2);
-			half spec = pow(nh, _SpecularPower+20);
+			half spec = pow(nh, _SpecularPower);
 
 			half alpha = max(0, pow(nh, _SpecularPower - 40));
 
@@ -96,16 +100,37 @@ Shader "Custom/Bubble_Burst" {
 			
 			v.vertex.xyz += ofs;
 
-			
-			//X→Z→X→Z
 			//Time.w(t*3)でも遅すぎるので適当に調整
-			half vib = 1.0 - ((cos(_Time.w*_VibrateTest) + 1.0)*0.5);
-			//vib = 1.0 - (pow(vib, 3));
+			//Time.wの部分をスクリプトで制御するタイマに変えれば振動状態に遷移する度に０から始められる
+			//後で検証
+
+			half vib = 1.0 - ((cos(_VibrateTimer*3*_VibrateTest) + 1.0)*0.5);
+			//風を受けた方向に応じて震えさせる
+			//Vectorに掛けるので平行移動成分消す
+			float4x4 matr = unity_WorldToObject;
+			matr._14 = matr._24 = matr._34 = 0.0f;
+
+			//内積結果が０の時の区別が出来ないので2回に分ける
+			half3 windVec =  normalize(mul(matr, _WindVector).xyz);
+			half wdotn = dot(windVec, normal);
+			v.vertex.xyz += windVec*wdotn*vib*0.2f*_VibrateRate;
+
+			half3 wc = cross( windVec, half3(0, 0, 1));
+			half wcdotn = dot(wc, normal);
+			v.vertex.xyz += wc*wcdotn*(1.0f-vib)*0.2f*_VibrateRate;
+
+			//テクスチャ使って凸凹のテスト
+			float2 uvOfs = {_Time.y,0};
+			float value = tex2Dlod(_NoiseTex, float4(v.texcoord.xy+uvOfs, 0, 0)).r;
+			v.vertex.xyz += normal*value*_VibrateRate*0.2f;
+			
+			//X→Y→X→Y
 			half3 vibrateOfs = float3(normal.x*vib, normal.y*(1.0 - vib), 0)*_VibrateRate;
 			//0.0～1.0でオフセットすると大きすぎるので調整
-			v.vertex.xyz += vibrateOfs*0.2;
+			//v.vertex.xyz += vibrateOfs*0.2;
 			//sin波（-1.0～1.0）だと大きすぎるので調整
-			//v.vertex.x += sin(_Time.w * 15)*0.2f*_VibrateRate;
+			//v.vertex.x += sin(_Time.w * _VibrateTest)*0.2f*_VibrateRate;
+			v.vertex.xyz += windVec*sin(_VibrateTimer*3*_VibrateTest)*0.1f*_VibrateRate;
 
 		}
 		void surf (Input IN, inout SurfaceOutput o) {
@@ -122,7 +147,7 @@ Shader "Custom/Bubble_Burst" {
 
 			// Albedo comes from a texture tinted by color
 			//unity_DeltaTime使うとカクつくので使用を保留
-			half2 uvOfs = half2(_Time.y, _Time.x)*unity_DeltaTime.z;
+			half2 uvOfs = half2(_Time.y, _Time.x)*0.05f;//*unity_DeltaTime.z;
 			fixed4 c = tex2D (_MainTex, IN.uv_MainTex+uvOfs) * _Color;
 
 			o.Albedo = c.rgb;
@@ -152,6 +177,8 @@ Shader "Custom/Bubble_Burst" {
 		half _Fluffy;
 		half _VibrateRate;
 		half _VibrateTest;
+		float4 _WindVector;
+		half _VibrateTimer;
 
 		struct Input {
 			float2 uv_MainTex:TEXCOORD0;
@@ -201,15 +228,36 @@ Shader "Custom/Bubble_Burst" {
 			
 			v.vertex.xyz += ofs;
 
-			//X→Z→X→Z
+
 			//Time.w(t*3)でも遅すぎるので適当に調整
-			half vib = 1.0 - ((cos(_Time.w * _VibrateTest) + 1.0)*0.5);
-			//vib = 1.0 - (pow(vib, 3));
+			half vib = 1.0 - ((cos(_VibrateTimer*3 * _VibrateTest) + 1.0)*0.5);
+
+			//風を受けた方向に応じて震えさせる
+			//Vectorに掛けるので平行移動成分消す
+			float4x4 matr = unity_WorldToObject;
+			matr._14 = matr._24 = matr._34 = 0.0f;
+			half3 windVec = normalize(mul(matr, _WindVector).xyz);
+			half wdotn = abs(dot(windVec, normal));
+			v.vertex.xyz += windVec*wdotn*vib*0.1f*_VibrateRate;
+
+			half3 wc = cross(windVec, half3(0, 0, 1));
+			half wcdotn = dot(wc, normal);
+			v.vertex.xyz += wc*wcdotn*(1.0f - vib)*0.2f*_VibrateRate;
+
+			//テクスチャ使って凸凹のテスト
+			float2 uvOfs = { _Time.y,0 };
+			float value = tex2Dlod(_NoiseTex, float4(v.texcoord.xy + uvOfs, 0, 0)).r;
+			v.vertex.xyz += normal*value*_VibrateRate*0.2f;
+
+			//v.vertex.xy += float2(normal.x*(vib - wdotn), normal.y*(vib - wdotn));
+
+			//X→Z→X→Z
 			half3 vibrateOfs = float3(normal.x*vib, normal.y*(1.0 - vib), 0)*_VibrateRate;
 			//0.0～1.0でオフセットすると大きすぎるので調整
-			v.vertex.xyz += vibrateOfs*0.2;
+			//v.vertex.xyz += vibrateOfs*0.2;
 			//sin波（-1.0～1.0）だと大きすぎるので調整
-			//v.vertex.x += sin(_Time.w * 15)*0.2f*_VibrateRate;
+			//v.vertex.x += sin(_Time.w * _VibrateTest)*0.2f*_VibrateRate;
+			v.vertex.xyz += windVec*sin(_VibrateTimer*3*_VibrateTest)*0.1f*_VibrateRate;
 		}
 
 		void surf(Input IN, inout SurfaceOutput o) {
@@ -225,7 +273,7 @@ Shader "Custom/Bubble_Burst" {
 			clip(1.0 - (((1.0 - hitDist) + f)*0.5 + t));
 			// Albedo comes from a texture tinted by color
 			//unity_DeltaTime使うとカクつくので使用を保留
-			half2 uvOfs = half2(-_Time.y, -_Time.x)*unity_DeltaTime.z;
+			half2 uvOfs = half2(-_Time.y, -_Time.x)*0.05f;//*unity_DeltaTime.z;
 			fixed4 c = tex2D(_MainTex, IN.uv_MainTex+uvOfs) * _Color;
 			o.Albedo = c.rgb;
 			o.Alpha = _Transparency;
