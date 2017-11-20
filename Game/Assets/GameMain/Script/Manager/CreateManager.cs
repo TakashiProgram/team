@@ -50,13 +50,22 @@ public class CreateManager : MonoBehaviour {
             m_bubbleScale+=Time.deltaTime* flip;
 
             m_bubbleCreateBox.transform.localScale = new Vector3(m_bubbleScale, m_bubbleScale, m_bubbleScale);
-            if (m_bubbleScale > SCALE_MAX || m_bubbleScale<-SCALE_MAX)
-            {
-                m_bubbleScale = SCALE_MAX;
-                m_bubbleScale *= flip;
-
+        if (m_bubbleScale >= SCALE_MAX || m_bubbleScale <= -SCALE_MAX)
+        {
+            m_bubbleScale = SCALE_MAX;
+            m_bubbleScale *= flip;
+            Debug.Log("dvb");
             m_createWindFlag = true;
         }
+        //float a = Mathf.Abs(m_bubbleScale);
+        //Debug.Log(a);
+        //if (a > SCALE_MAX)
+        //{
+        //    m_bubbleScale = SCALE_MAX*flip;
+        //    //  m_bubbleScale *= flip;
+        //    Debug.Log("wfdvb");
+        //    m_createWindFlag = true;
+        //}
     }
     //風作成
     public void TapWind(Vector3 vector)

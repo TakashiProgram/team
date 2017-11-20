@@ -32,6 +32,8 @@ public class Bubble : MonoBehaviour {
 
     private readonly Vector3 m_smallerScale = new Vector3(0.2f, 0.2f, 0.2f);
 
+    private bool m_enemyFlag = false;
+
 
     Collider col;
     void Start () {
@@ -44,6 +46,7 @@ public class Bubble : MonoBehaviour {
         m_createManager.GetComponent<CreateManager>().m_WingMove = new Vector3(0, 0, 0);
         m_inverted = -1;
         testFlag = false;
+
     }
 	
 	void Update () {
@@ -55,7 +58,8 @@ public class Bubble : MonoBehaviour {
         this.gameObject.GetComponent<Rigidbody>().velocity = new Vector3(0,
                                                                          m_floatingCount,
                                                                          0);
-        
+
+      
     }
     private void OnTriggerStay(Collider collision)
     {
@@ -71,6 +75,7 @@ public class Bubble : MonoBehaviour {
             else{
               
                 Death();
+
             }
             
 
@@ -93,19 +98,22 @@ public class Bubble : MonoBehaviour {
                 collision.transform.localScale = m_smallerScale;
 
                 col = collision;
-
+                m_enemyFlag = true;
 
             }
            
         }
         else
         {
+            Debug.Log(collision.gameObject.name);
             m_inverted *= -1;
             m_moveDisabled = m_setMove;
 
             Death();
+
         }
     }
+
 
     public void Death()
     {
@@ -115,6 +123,7 @@ public class Bubble : MonoBehaviour {
     public void DestroyTime()
     {
         Invoke("Death", m_survivalTime);
+        
     }
 
     private void Rising()
@@ -126,9 +135,14 @@ public class Bubble : MonoBehaviour {
     {
         m_player.transform.parent = null;
         m_player.GetComponent<Player>().m_bubbleFlag = false;
-        col.GetComponent<Rigidbody>().useGravity = true;
-        col.transform.parent = null;
-        col.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+        if (m_enemyFlag)
+        {
+            col.GetComponent<Rigidbody>().useGravity = true;
+            col.transform.parent = null;
+            col.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+            m_enemyFlag = false;
+        }
+      
         m_player.GetComponent<Rigidbody>().useGravity = true;
         m_createManager.GetComponent<CreateManager>().m_createWindFlag = false;
         

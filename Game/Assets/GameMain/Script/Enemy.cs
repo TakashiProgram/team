@@ -24,10 +24,11 @@ public class Enemy : MonoBehaviour {
 	void Update () {
        
         //ほかのフラグに変更
-        if (m_inputManager.GetComponent<InputManager>().m_tapWindFlag == false)
+        if (m_inputManager.GetComponent<InputManager>().m_floatEnemyFlag == false)
         {
             this.GetComponent<Rigidbody>().useGravity = true;
             this.transform.localScale = m_scale;
+            m_inputManager.GetComponent<InputManager>().m_floatEnemyFlag = true;
         }
      
     }

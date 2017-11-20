@@ -34,6 +34,8 @@ public class InputManager : MonoBehaviour
     public bool m_tapWindFlag = false;
 
     private bool m_stopWindFlag = false;
+
+    public bool m_floatEnemyFlag = false;
     //playerの回転
     private const int PLAYER_ROTATION = 90;
     //rayが届く距離
@@ -65,7 +67,7 @@ public class InputManager : MonoBehaviour
 
             if (Input.GetMouseButtonDown(0))
             {
-                if (hit.collider.gameObject.name=="Bubble")
+                if (hit.collider.gameObject.name=="BubbleTap")
                 {
                     m_createManager.GetComponent<CreateManager>().m_createWindFlag = false;
                     
@@ -122,6 +124,7 @@ public class InputManager : MonoBehaviour
                     {
                       //  Enemy.m_releaseFlag = true;
                         m_tapWindFlag = false;
+                        m_floatEnemyFlag = false;
                         //変更点
                         hit.collider.GetComponent<SpriteRenderer>().color = m_setColor;
                         m_player.transform.parent = null;
