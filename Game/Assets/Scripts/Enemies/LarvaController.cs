@@ -19,7 +19,7 @@ public class LarvaController : MonoBehaviour {
 
     private float m_turnArea;
 
-    Animator m_animator;
+    private Animator m_animator;
 
 	void Start () {
         if (m_movePoint.start != null && m_movePoint.end != null)
@@ -43,7 +43,18 @@ public class LarvaController : MonoBehaviour {
     public void MoveBegin()
     {
         GetComponent<Rigidbody>().velocity = new Vector3(0, GetComponent<Rigidbody>().velocity.y, 0);
-        Debug.Log("(m_target.Peek() - transform.position).magnitude = " + (m_target.Peek() - transform.position).magnitude);
+
+        Vector3 targetVec;
+        targetVec = m_target.Peek() - transform.position;
+        targetVec.Normalize();
+
+        float rad = Vector3.Dot(transform.forward, targetVec);
+        rad = Mathf.Acos(rad);
+        rad = rad * 180.0f / Mathf.PI;
+        if (rad >= 120)
+        {
+            m_animator.Play("Rot");
+        }
     }
 
     public void Move()
@@ -53,6 +64,7 @@ public class LarvaController : MonoBehaviour {
 
         Vector3 targetLen = m_target.Peek() - transform.position;
         targetLen.y = 0;
+       
         if (targetLen.magnitude < m_turnArea)
         {
             UpdateTargetPoint();
@@ -77,18 +89,14 @@ public class LarvaController : MonoBehaviour {
     {
         //前回のターゲット角度と更新したターゲット角度を計算
         //前回と更新時のターゲットへ向かうベクトルの角度差が一定以上なら振り向きアニメーションへ移行するように命令
-        Vector3 oldTargetVec, nowTargetVec;
-        oldTargetVec = m_target.Peek() - transform.position;
-        oldTargetVec.Normalize();
-
+        Vector3 targetVec;
         m_target.Enqueue(m_target.Dequeue());
-        nowTargetVec = m_target.Peek() - transform.position;
-        nowTargetVec.Normalize();
+        targetVec = m_target.Peek() - transform.position;
+        targetVec.Normalize();
 
-        float rad = Vector3.Dot(oldTargetVec, nowTargetVec);
+        float rad = Vector3.Dot(transform.forward, targetVec);
         rad = Mathf.Acos(rad);
         rad = rad * 180.0f / Mathf.PI;
-        Debug.Log("rad = " + rad);
         Debug.Log("UpdateTarget");
       
         if (rad >= 120)
@@ -96,6 +104,39 @@ public class LarvaController : MonoBehaviour {
             m_animator.SetBool("isTurn", true);
         }
     }
-
     
+
+    private void OnTriggerEnter(Collider _coll)
+    {
+        if(_coll.tag == "Bubble")
+        {
+            m_animator.Play("Dwon");
+            GetComponent<Rigidbody>().velocity = Vector3.zero;
+            m_animator.SetBool("isInBubble", true);
+
+            GetComponent<Rigidbody>().useGravity = false;
+            transform.parent = _coll.transform;
+            transform.localPosition = Vector3.zero;
+        }else
+        {
+            m_animator.SetBool("isGround", true);
+            m_animator.Play("Move");
+        }
+    }
+
+    private void OnTriggerExit(Collider _coll)
+    {
+        if (_coll.tag == "Bubble")
+        {
+            m_animator.SetBool("isInBubble", true);
+            m_animator.SetBool("isGround", false);
+            return;
+        }else if(_coll.tag != "Player")
+        {
+            m_animator.SetBool("isGround", false);
+        }
+
+        
+    }
+
 }
