@@ -120,7 +120,7 @@ Shader "Custom/Bubble_Burst" {
 			v.vertex.xyz += wc*wcdotn*(1.0f-vib)*0.2f*_VibrateRate;
 
 			//テクスチャ使って凸凹のテスト
-			float2 uvOfs = {_Time.y,0};
+			float2 uvOfs = {_Time.z,_Time.y};
 			float value = tex2Dlod(_NoiseTex, float4(v.texcoord.xy+uvOfs, 0, 0)).r;
 			v.vertex.xyz += normal*value*_VibrateRate*0.2f;
 			

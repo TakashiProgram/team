@@ -50,11 +50,11 @@ public class BubbleController : MonoBehaviour {
         _stateAction.Add(BubbleState.vibrate, VibrationUpdate);
 
         //最初のステートを決定
-        ChangeState(BubbleState.spawn);
+        ChangeState(BubbleState.vibrate);
         _material.SetFloat("_Fluffy", 0.01f);
         _material.SetVector("_HitPosition", new Vector4(0, 0, 0, 0));
         _material.SetFloat("_VibrateRate", 0.0f);
-        _material.SetVector("_WindVector", new Vector4(1, 0, 0, 1));
+        //_material.SetVector("_WindVector", new Vector4(1, 0, 0, 1));
 	}
 	
 	void Update ()
@@ -87,10 +87,10 @@ public class BubbleController : MonoBehaviour {
     void FloatingUpdate()
     {
         //Vibrateのテスト用コード
-        //if (_currentStateFrame > 60)
-        //{
-        //    BubbleVibrate();
-        //}
+        if (_currentStateFrame > 60)
+        {
+            BubbleVibrate();
+        }
 
 
         //回転させてみる
@@ -129,7 +129,7 @@ public class BubbleController : MonoBehaviour {
         _material.SetFloat("_VibrateRate", _vibrateRate);
         _material.SetFloat("_VibrateTimer", _vibrateTimer);
 
-        //Time.timeScale = 0.1f;
+        Time.timeScale = 0.1f;
         ChangeState(BubbleState.vibrate);
     }
     //受け取った風のベクトルによって振動ベクトルも変える
