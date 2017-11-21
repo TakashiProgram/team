@@ -4,29 +4,25 @@ using UnityEngine;
 
 public class HitGround : MonoBehaviour {
 
-    RaycastHit hit;
+    private RaycastHit hit;
 
     [SerializeField]
     private Vector3 pos;
 
     private bool m_groundFlag;
 
-    private void Update()
-    {
-
-    }
     void OnDrawGizmos()
     {
        
         var radius = transform.lossyScale.x * 0.1f;
 
         var isHit = Physics.SphereCast(transform.position, radius, transform.forward * 10, out hit);
+        //地面に当たっているかどうか
         if (isHit)
         {
             Gizmos.DrawRay(transform.position, transform.forward * hit.distance);
             Gizmos.DrawWireSphere(transform.position + transform.forward * (hit.distance), radius);
             m_groundFlag = true;
-
 
         }
         else

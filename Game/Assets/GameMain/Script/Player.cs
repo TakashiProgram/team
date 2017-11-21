@@ -21,11 +21,7 @@ public class Player : MonoBehaviour
 
     [SerializeField]
     private GameObject m_mainCamera;
-
-    [SerializeField]
-    private GameObject m_bubblePos;
     
-
     [SerializeField]
     private float m_invincibleTime;
 
@@ -36,7 +32,10 @@ public class Player : MonoBehaviour
     private const int DEATH_COUNT_MAX = 2; 
 
     private const float BACK_TIME = 1.0f;
-    
+
+    private const float HOLE_POS_Y = -10;
+
+
     void Start()
     {
        m_animator= GetComponent<Animator>();
@@ -46,12 +45,22 @@ public class Player : MonoBehaviour
     void Update()
     {
         //落ちる前に保持したpositionをplayerに入れる
-        if (this.transform.position.y<=-10)
+        if (this.transform.position.y <= HOLE_POS_Y)
         {
             this.transform.position = m_formerPosition;
+            Destroy(m_hp[m_desCount]);
+           
+            if (m_desCount == DEATH_COUNT_MAX)
+            {
+                m_animator.SetBool("Death", true);
+                m_mainCamera.GetComponent<CameraManager>().Death();
+                Destroy(m_hp[DEATH_COUNT_MAX]);
+
+            }
+            m_desCount++;
         }
     }
-
+    //この下三つはアニメーション時に呼ばれるときの処理
     //playerのダメージをくらったときにHPを減少させて
     //0になったらplayerは死ぬ
     private void Damage()
@@ -83,7 +92,7 @@ public class Player : MonoBehaviour
     private void OnTriggerEnter(Collider collision)
     {
         //Bubbleに当たった瞬間しかいらない処理
-        if (collision.gameObject.tag == "Bubble")
+        if (collision.gameObject.tag == "Bubble"&& collision.GetComponent<Bubble>().m_switchingObject.tag=="Player")
         {
             if (m_createManager.GetComponent<CreateManager>().m_createWindFlag)
             {
@@ -91,29 +100,33 @@ public class Player : MonoBehaviour
                 
                 m_bubbleFlag = true;
                 this.GetComponent<Rigidbody>().useGravity = false;
-                //ここ変更
+
                 transform.parent = collision.transform.parent;
 
             }
 
         }
+      
+    }
+    private void OnCollisionEnter(Collision collision)
+    {
         if (collision.gameObject.tag == "Enemy")
         {
-            StartCoroutine("CreateCube");
-            Debug.Log("fdcn");
+            StartCoroutine("InvincibleTime");
+
 
             if (m_desCount == DEATH_COUNT_MAX)
             {
                 m_animator.SetBool("Death", true);
                 m_mainCamera.GetComponent<CameraManager>().Death();
                 Destroy(m_hp[DEATH_COUNT_MAX]);
-                
+
             }
             else
             {
                 m_animator.SetBool("Damage", true);
             }
-            
+
 
             iTween.MoveTo(gameObject, iTween.Hash("position",
                                                   transform.position - transform.forward,
@@ -122,11 +135,10 @@ public class Player : MonoBehaviour
 
         }
     }
-
     private void OnTriggerStay(Collider collision)
     {
         //Bubbleと同じ動きをする
-        if (collision.gameObject.tag == "Bubble")
+        if (collision.gameObject.tag == "Bubble" && collision.GetComponent<Bubble>().m_switchingObject.tag == "Player")
         {
             if (m_createManager.GetComponent<CreateManager>().m_createWindFlag)
             {
@@ -147,7 +159,7 @@ public class Player : MonoBehaviour
     }
 
     //無敵時間
-    IEnumerator CreateCube()
+    IEnumerator InvincibleTime()
     {
         gameObject.layer = LayerMask.NameToLayer("PlayerDamage");
        
