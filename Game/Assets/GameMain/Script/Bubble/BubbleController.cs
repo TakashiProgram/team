@@ -54,7 +54,7 @@ public class BubbleController : MonoBehaviour {
         _material.SetFloat("_Fluffy", 0.01f);
         _material.SetVector("_HitPosition", new Vector4(0, 0, 0, 0));
         _material.SetFloat("_VibrateRate", 0.0f);
-        _material.SetVector("_WindVector", new Vector4(1, 0, 0, 1));
+        //_material.SetVector("_WindVector", new Vector4(1, 0, 0, 1));
 	}
 	
 	void Update ()
@@ -210,14 +210,24 @@ public class BubbleController : MonoBehaviour {
     {
         //if (col.gameObject.tag != "Player")
         //{
-        //    Burst(col);
+        //    foreach (ContactPoint point in col.contacts)
+        //    {
+        //        Vector3 hitpos = point.point;
+
+        //        Vector3 tempWind = gameObject.transform.position - hitpos;
+        //        BubbleVibrate(tempWind);
+
+        //    }
         //}
     }
     private void OnTriggerEnter(Collider col)
     {
         //if (col.gameObject.tag != "Player")
         //{
-        //    Burst(col);
+        //    Vector3 hitpos = col.ClosestPointOnBounds(transform.position);
+
+        //    Vector3 tempWind = gameObject.transform.position - hitpos;
+        //    BubbleVibrate(tempWind);
         //}
     }
 }
