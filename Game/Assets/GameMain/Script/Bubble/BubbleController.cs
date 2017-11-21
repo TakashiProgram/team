@@ -50,7 +50,7 @@ public class BubbleController : MonoBehaviour {
         _stateAction.Add(BubbleState.vibrate, VibrationUpdate);
 
         //最初のステートを決定
-        ChangeState(BubbleState.vibrate);
+        ChangeState(BubbleState.spawn);
         _material.SetFloat("_Fluffy", 0.01f);
         _material.SetVector("_HitPosition", new Vector4(0, 0, 0, 0));
         _material.SetFloat("_VibrateRate", 0.0f);
@@ -87,10 +87,10 @@ public class BubbleController : MonoBehaviour {
     void FloatingUpdate()
     {
         //Vibrateのテスト用コード
-        if (_currentStateFrame > 60)
-        {
-            BubbleVibrate();
-        }
+        //if (_currentStateFrame > 60)
+        //{
+        //    BubbleVibrate();
+        //}
 
 
         //回転させてみる
@@ -129,7 +129,7 @@ public class BubbleController : MonoBehaviour {
         _material.SetFloat("_VibrateRate", _vibrateRate);
         _material.SetFloat("_VibrateTimer", _vibrateTimer);
 
-        Time.timeScale = 0.1f;
+        //Time.timeScale = 0.1f;
         ChangeState(BubbleState.vibrate);
     }
     //受け取った風のベクトルによって振動ベクトルも変える
@@ -211,14 +211,24 @@ public class BubbleController : MonoBehaviour {
     {
         //if (col.gameObject.tag != "Player")
         //{
-        //    Burst(col);
+        //    foreach (ContactPoint point in col.contacts)
+        //    {
+        //        Vector3 hitpos = point.point;
+
+        //        Vector3 tempWind = gameObject.transform.position - hitpos;
+        //        BubbleVibrate(tempWind);
+
+        //    }
         //}
     }
     private void OnTriggerEnter(Collider col)
     {
         //if (col.gameObject.tag != "Player")
         //{
-        //    Burst(col);
+        //    Vector3 hitpos = col.ClosestPointOnBounds(transform.position);
+
+        //    Vector3 tempWind = gameObject.transform.position - hitpos;
+        //    BubbleVibrate(tempWind);
         //}
     }
 }

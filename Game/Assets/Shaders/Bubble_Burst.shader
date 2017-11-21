@@ -110,18 +110,25 @@ Shader "Custom/Bubble_Burst" {
 			float4x4 matr = unity_WorldToObject;
 			matr._14 = matr._24 = matr._34 = 0.0f;
 
+			//half m = sin(_VibrateTimer * 3 * _VibrateTest);
 			//内積結果が０の時の区別が出来ないので2回に分ける
 			half3 windVec =  normalize(mul(matr, _WindVector).xyz);
 			half wdotn = dot(windVec, normal);
-			v.vertex.xyz += windVec*wdotn*vib*0.2f*_VibrateRate;
+			v.vertex.xyz += windVec*wdotn*vib*0.1f*_VibrateRate;
 
+			//half3 temp = cross(half3(0, 1, 0), windVec);
+			//half3 wc = cross(windVec, temp);
+			//カメラ方向固定なので2回計算する必要は無い
+			//風と垂直な方向には多めにオフセットさせる
 			half3 wc = cross( windVec, half3(0, 0, 1));
 			half wcdotn = dot(wc, normal);
-			v.vertex.xyz += wc*wcdotn*(1.0f-vib)*0.2f*_VibrateRate;
+			v.vertex.xyz += wc*wcdotn*(1.0f-vib)*0.15f*_VibrateRate;
 
+			//half3 localHitPos=mul(unity_)
 			//テクスチャ使って凸凹のテスト
-			float2 uvOfs = {_Time.z,_Time.y};
+			float2 uvOfs = {_Time.y,_Time.y};
 			float value = tex2Dlod(_NoiseTex, float4(v.texcoord.xy+uvOfs, 0, 0)).r;
+			value = value - 0.5f;
 			v.vertex.xyz += normal*value*_VibrateRate*0.2f;
 			
 			//X→Y→X→Y
@@ -198,6 +205,7 @@ Shader "Custom/Bubble_Burst" {
 			half3 nlh = normalize(lightDir + s.Normal);
 			diff = max(0, dot(viewDir, nlh));
 			diff = 1.0 - diff;
+			//キャラが中に入った時顔付近が見えづらいので調整
 			diff = pow(diff, 3);
 
 
@@ -222,7 +230,7 @@ Shader "Custom/Bubble_Burst" {
 			half a = 1.0 - ((cos(_BurstRatio*PI * 3) + 1.0)*0.3);
 			//half f = abs(sin(_BurstRatio*5))*0.5;
 			v.vertex.xyz += normalize(v.normal)*a*b;// *b*0.3;//
-			//ふよふよする感じに頂点を動かす
+			//ふわふわする感じに頂点を動かす
 			half3 normal = normalize(v.normal);
 			half3 ofs = float3(normal.x*sin(_Time.w*3)*_Fluffy, normal.y*sin(_Time.w * 3 + 0.25)*_Fluffy, normal.z*sin(_Time.z*3 + 0.5)*_Fluffy);
 			
@@ -242,11 +250,12 @@ Shader "Custom/Bubble_Burst" {
 
 			half3 wc = cross(windVec, half3(0, 0, 1));
 			half wcdotn = dot(wc, normal);
-			v.vertex.xyz += wc*wcdotn*(1.0f - vib)*0.2f*_VibrateRate;
+			v.vertex.xyz += wc*wcdotn*(1.0f - vib)*0.15f*_VibrateRate;
 
 			//テクスチャ使って凸凹のテスト
-			float2 uvOfs = { _Time.y,0 };
+			float2 uvOfs = { _Time.y,_Time.y };
 			float value = tex2Dlod(_NoiseTex, float4(v.texcoord.xy + uvOfs, 0, 0)).r;
+			value = value - 0.5f;
 			v.vertex.xyz += normal*value*_VibrateRate*0.2f;
 
 			//v.vertex.xy += float2(normal.x*(vib - wdotn), normal.y*(vib - wdotn));
