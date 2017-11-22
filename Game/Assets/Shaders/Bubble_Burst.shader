@@ -22,6 +22,7 @@ Shader "Custom/Bubble_Burst" {
 
 		_HitPosition("HitPosition",Vector) = (0,0,0,0)
 		//_HitTimer("HitTimer",Range(0,1))=0
+
 	}
 	SubShader {
 		Tags { "RenderType"="Transparent"
@@ -64,6 +65,7 @@ Shader "Custom/Bubble_Burst" {
 		float4 _WindVector;
 		half _VibrateTimer;
 
+
 		half4 LightingSpecular(SurfaceOutput s, half3 lightDir, half3 viewDir, half atten)
 		{
 			half3 h = normalize(lightDir + viewDir);
@@ -92,6 +94,7 @@ Shader "Custom/Bubble_Burst" {
 			const float PI = 3.14159;
 			half b = pow(_BurstRatio, 2);
 			//そのままだと大きすぎるので適当に調整
+			//cos(0)～cos(3PI)までで1.5周期=拡大→縮小→拡大
 			half a = 1.0 - ((cos(_BurstRatio*PI*3) + 1.0)*0.3);
 			v.vertex.xyz += normalize(v.normal)*a*b;//*b*0.3;//
 			//ふわふわする感じに頂点を動かす
@@ -108,6 +111,7 @@ Shader "Custom/Bubble_Burst" {
 			//風を受けた方向に応じて震えさせる
 			//Vectorに掛けるので平行移動成分消す
 			float4x4 matr = unity_WorldToObject;
+			
 			matr._14 = matr._24 = matr._34 = 0.0f;
 
 			//half m = sin(_VibrateTimer * 3 * _VibrateTest);
@@ -129,7 +133,7 @@ Shader "Custom/Bubble_Burst" {
 			float2 uvOfs = {_Time.y,_Time.y};
 			float value = tex2Dlod(_NoiseTex, float4(v.texcoord.xy+uvOfs, 0, 0)).r;
 			value = value - 0.5f;
-			v.vertex.xyz += normal*value*_VibrateRate*0.2f;
+			v.vertex.xyz += normal*value*_VibrateRate*0.15f;
 			
 			//X→Y→X→Y
 			half3 vibrateOfs = float3(normal.x*vib, normal.y*(1.0 - vib), 0)*_VibrateRate;
