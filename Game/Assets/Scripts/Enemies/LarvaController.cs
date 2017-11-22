@@ -17,7 +17,10 @@ public class LarvaController : MonoBehaviour {
 
     private Queue<Vector3> m_target;
 
-    private float m_turnArea;
+    /// <summary>
+    /// 敵の移動の更新範囲
+    /// </summary>
+    private float m_updateArea;
 
     private Animator m_animator;
 
@@ -30,7 +33,7 @@ public class LarvaController : MonoBehaviour {
             m_target.Enqueue(m_movePoint.end.transform.position);
         }
         m_animator = GetComponent<Animator>();
-        m_turnArea = m_speed / 2;
+        m_updateArea = m_speed / 2;
 	}
 
     void Update()
@@ -65,7 +68,7 @@ public class LarvaController : MonoBehaviour {
         Vector3 targetLen = m_target.Peek() - transform.position;
         targetLen.y = 0;
        
-        if (targetLen.magnitude < m_turnArea)
+        if (targetLen.magnitude < m_updateArea)
         {
             UpdateTargetPoint();
         }
