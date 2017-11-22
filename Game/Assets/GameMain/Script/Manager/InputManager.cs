@@ -81,7 +81,6 @@ public class InputManager : MonoBehaviour
                     {
                         
                         m_tapWindFlag = false;
-                        //変更点
                         hit.collider.GetComponent<SpriteRenderer>().color = m_setColor;
 
                         if (m_player.GetComponent<Player>().m_bubbleFlag == false)
@@ -103,7 +102,6 @@ public class InputManager : MonoBehaviour
                     {
                         
                         m_tapWindFlag = false;
-                        //変更点
                         hit.collider.GetComponent<SpriteRenderer>().color = m_setColor;
                         if (m_player.GetComponent<Player>().m_bubbleFlag == false)
                         {
@@ -122,10 +120,9 @@ public class InputManager : MonoBehaviour
 
                     if (m_stopWindFlag == false)
                     {
-                      //  Enemy.m_releaseFlag = true;
                         m_tapWindFlag = false;
                         m_floatEnemyFlag = false;
-                        //変更点
+
                         hit.collider.GetComponent<SpriteRenderer>().color = m_setColor;
                         m_player.transform.parent = null;
 

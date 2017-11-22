@@ -38,8 +38,7 @@ public class Bubble : MonoBehaviour {
     public GameObject m_switchingObject;
 
     private GameObject test;
-
-    private bool tes = false;
+    
 
     Collider col;
     void Start () {
@@ -65,38 +64,16 @@ public class Bubble : MonoBehaviour {
         this.gameObject.GetComponent<Rigidbody>().velocity = new Vector3(0,
                                                                          m_floatingCount,
                                                                          0);
-        Debug.Log(test);
+     
       
     }
     private void OnTriggerEnter(Collider other)
     {
-        ///  test = other.gameObject;
+        //最初にシャボン玉に入ったオブジェクトを保持する
         if (m_switchingObject == null)
         {
             m_switchingObject = other.gameObject;
-            Debug.Log("入った");
         }
-        else
-        {
-            tes = true;
-            // if (m_switchingObject != null)
-            //{
-            //  Death();
-            //}
-        }
-
-        
-        //if (m_switchingFlag)
-        //{
-        //    if (other.gameObject.tag == "Player" || other.gameObject.tag == "Enemy")
-        //    {
-        //      //  Death();
-        //    }
-        //    else if (other.gameObject.tag == "Enemy")
-        //    {
-
-        //    }
-        //}
     }
 
     private void OnTriggerStay(Collider collision)
@@ -104,19 +81,16 @@ public class Bubble : MonoBehaviour {
        
         if (collision.gameObject.tag=="Player")
         {
-            test = collision.gameObject;
-            if (m_switchingObject == test)
+            GameObject gameobject = collision.gameObject;
+            if (m_switchingObject == gameobject)
             {
 
-                Debug.Log("fdsbvn");
-                // if (m_switchingObject==test)
-                //{
+               
                 //バブルが最大かどうか
                 if (m_createManager.GetComponent<CreateManager>().m_createWindFlag)
                 {
                     m_moveDisabled = 0;
                     m_switchingFlag = true;
-                    //   m_switchingObject = collision.gameObject;
 
                 }
                 //最大じゃない時に当たると破裂
@@ -128,15 +102,10 @@ public class Bubble : MonoBehaviour {
                 }
             }
         }
-        //else
-        //{
-        //    m_inverted *= -1;
-        //    Death();
-        //}
-
+       
         else if (collision.gameObject.tag=="Enemy" && m_switchingObject.tag=="Enemy")
         {
-            test = collision.gameObject;
+            GameObject gameobject = collision.gameObject;
 
             if (m_createManager.GetComponent<CreateManager>().m_createWindFlag)
             {
@@ -150,8 +119,7 @@ public class Bubble : MonoBehaviour {
                 col = collision;
                 m_enemyFlag = true;
 
-                //  m_switchingObject = collision.gameObject;
-                // m_switchingFlag = true;
+               
             }
             else
             {
@@ -164,62 +132,6 @@ public class Bubble : MonoBehaviour {
             m_inverted *= -1;
             Death();
         }
-
-        //} if(collision.gameObject.tag == "Enemy")
-        //    {
-        //        /*  if (m_switchingFlag)
-        //          {
-        //              //バブルにプレイヤーが乗っている時の処理
-        //              m_inverted *= -1;
-        //              Death();
-        //          }else*/
-        //        // {
-        //        //if (m_switchingObject != null)
-        //        //{
-        //        //    Death();
-        //        //}
-        //       // if (m_switchingObject == test)
-        //        //{
-
-
-        //            //最大なら
-        //            if (m_createManager.GetComponent<CreateManager>().m_createWindFlag)
-        //            {
-        //                m_createManager.GetComponent<CreateManager>().m_WingMove = new Vector3(0, 0, 0);
-
-        //                collision.GetComponent<Rigidbody>().useGravity = false;
-        //                collision.transform.position = this.transform.position;
-        //                collision.GetComponent<Enemy>().WindStop();
-        //                collision.transform.localScale = m_smallerScale;
-
-        //                col = collision;
-        //                m_enemyFlag = true;
-
-        //              //  m_switchingObject = collision.gameObject;
-        //                // m_switchingFlag = true;
-        //            }
-        //            else
-        //            {
-        //                Death();
-        //                this.GetComponent<SphereCollider>().enabled = false;
-        //            }
-        //        }/*else
-        //        {
-        //            Death();
-        //        }*/
-
-        //       // }
-
-        // //   }
-        //   /* else
-        //    {
-
-        //        m_inverted *= -1;
-        //        m_moveDisabled = m_setMove;
-
-        //        Death();
-
-        //    }*/
     }
 
  
@@ -255,10 +167,5 @@ public class Bubble : MonoBehaviour {
         m_player.GetComponent<Rigidbody>().useGravity = true;
         m_createManager.GetComponent<CreateManager>().m_createWindFlag = false;
         
-    }
-    //敵にBubbleが当たった時（プレイヤーはいない）
-    public void Enemy()
-    {
-
     }
 }
