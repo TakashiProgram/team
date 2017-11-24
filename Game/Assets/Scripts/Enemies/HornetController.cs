@@ -17,8 +17,6 @@ public class HornetController : MonoBehaviour {
     //巡回をする情報を保存するキュー
     private Queue<Vector3> m_circle;
 
-    //現在移動するかのフラグ
-    private bool m_isMoved = true;
     /// <summary>
     /// 敵の移動の更新範囲
     /// </summary>
@@ -27,6 +25,8 @@ public class HornetController : MonoBehaviour {
     void Start()
     {
         m_circle = new Queue<Vector3>();
+        //キューの中に経路リストを作成
+        //m_isTurnUpがTrueなら往復処理
         if (!m_isTurnUp)
         {
             foreach (var way in m_wayPoints)
@@ -36,7 +36,6 @@ public class HornetController : MonoBehaviour {
         }
         else
         {
-
             foreach (var way in m_wayPoints)
             {
                 m_circle.Enqueue(way.transform.position);
@@ -47,30 +46,24 @@ public class HornetController : MonoBehaviour {
                 m_circle.Enqueue(m_wayPoints[i].transform.position);
             }
         }
-        m_isMoved = false;
     }
 
     private void Update()
     {
         
         transform.LookAt(m_circle.Peek());
-        Vector3 rotVec = transform.position;
 
         Quaternion rot = transform.rotation;
         rot.z = 0;
         rot.x = 0;
-        transform.SetPositionAndRotation(transform.position + (transform.forward * (float)(m_speed / MAX_SPEED)), rot);
+        
+        transform.SetPositionAndRotation(transform.position + (transform.forward * (m_speed / MAX_SPEED)), rot);
         
         if ((m_circle.Peek() - transform.position).magnitude < 0.5f)
         {
             UpdateWayPoints();
         }
            
-    }
-
-    public void SetMove(bool _isMoved)
-    {
-        m_isMoved = _isMoved;
     }
 
 
