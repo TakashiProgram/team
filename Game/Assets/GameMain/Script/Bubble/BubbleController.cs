@@ -184,7 +184,7 @@ public class BubbleController : MonoBehaviour {
     //引数無しならBubbleControllerに設定された破裂時間を使用する
     public void Burst(Collision col)
     {
-        Time.timeScale = 0.1f;
+        //Time.timeScale = 0.1f;
         foreach (ContactPoint point in col.contacts)
         {
             //w要素は1にしておく
