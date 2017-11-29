@@ -20,6 +20,9 @@ public class InputManager : MonoBehaviour
     private Camera m_uiCamera;
 
     [SerializeField]
+    private Camera m_cameraManager;
+
+    [SerializeField]
     private GameObject m_createManager;
 
     [SerializeField]
@@ -58,13 +61,15 @@ public class InputManager : MonoBehaviour
     //タップしたオブジェクトの名前を取ってくる
     void TapRay()
     {
+
         if (Input.GetMouseButton(0))
         {
             Ray ray = m_uiCamera.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
 
             RaycastHit2D hit = Physics2D.Raycast((Vector2)ray.origin, (Vector2)ray.direction, DISTANCE);
 
-
+            if (hit.collider == null) return;
+            
             if (Input.GetMouseButtonDown(0))
             {
                 if (hit.collider.gameObject.name=="BubbleTap")
@@ -145,6 +150,24 @@ public class InputManager : MonoBehaviour
                     SceneManager.LoadScene("GameMain");
 
                  
+                    break;
+
+                case "Decision":
+
+                    // SceneManager.LoadScene("GameMain");
+                    Debug.Log("左");
+                    m_cameraManager.GetComponent<CameraManager>().Resurrection();
+
+                    break;
+
+                case "Cancel":
+
+                    // Select画面に移行する
+                    //GameOverを表示するかも？
+                    Debug.Log("右");
+                    //デバッグ
+                    SceneManager.LoadScene("GameMain");
+
                     break;
 
             }

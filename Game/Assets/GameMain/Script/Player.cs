@@ -48,13 +48,15 @@ public class Player : MonoBehaviour
         if (this.transform.position.y <= HOLE_POS_Y)
         {
             this.transform.position = m_formerPosition;
-            Destroy(m_hp[m_desCount]);
+            //Destroy(m_hp[m_desCount]);
+            m_hp[m_desCount].SetActive(false);
            
             if (m_desCount == DEATH_COUNT_MAX)
             {
                 m_animator.SetBool("Death", true);
                 m_mainCamera.GetComponent<CameraManager>().Death();
-                Destroy(m_hp[DEATH_COUNT_MAX]);
+               // Destroy(m_hp[DEATH_COUNT_MAX]);
+                m_hp[DEATH_COUNT_MAX].SetActive(false);
 
             }
             m_desCount++;
@@ -69,7 +71,8 @@ public class Player : MonoBehaviour
         m_left.GetComponent<CircleCollider2D>().enabled = false;
         m_right.GetComponent<CircleCollider2D>().enabled = false;
 
-        Destroy(m_hp[m_desCount]);
+       // Destroy(m_hp[m_desCount]);
+        m_hp[m_desCount].SetActive(false);
         m_desCount++;
 
     }
@@ -119,8 +122,8 @@ public class Player : MonoBehaviour
             {
                 m_animator.SetBool("Death", true);
                 m_mainCamera.GetComponent<CameraManager>().Death();
-                Destroy(m_hp[DEATH_COUNT_MAX]);
-
+               // Destroy(m_hp[DEATH_COUNT_MAX]);
+                m_hp[DEATH_COUNT_MAX].SetActive(false);
             }
             else
             {

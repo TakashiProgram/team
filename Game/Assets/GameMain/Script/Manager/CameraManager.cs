@@ -9,12 +9,14 @@ public class CameraManager : MonoBehaviour {
 
     [SerializeField]
     private Vector2 m_playerPosMax;
-
-    [SerializeField]
-    private Vector3 CUNTINUE_SCALE = new Vector3(4.0f,10.0f,1.0f);
+    
+    private readonly Vector3 CUNTINUE_SCALE = new Vector3(1.0f,1.0f,1.0f);
     
     [SerializeField]
     private GameObject m_continueUI;
+
+    [SerializeField]
+    private GameObject m_DefaultUI;
 
     [SerializeField]
     private GameObject m_player;
@@ -51,6 +53,7 @@ public class CameraManager : MonoBehaviour {
         } else{
             if (m_zoomFlag)
             {
+                m_DefaultUI.SetActive(false);
                 iTween.MoveTo(gameObject, iTween.Hash(
                               "position", new Vector3(this.transform.position.x,this.transform.position.y- ZOOM_POS_Y, ZOOM_FIXED)));
 
@@ -72,5 +75,9 @@ public class CameraManager : MonoBehaviour {
     {
 
         iTween.ScaleTo(m_continueUI, iTween.Hash("scale", CUNTINUE_SCALE));
+    }
+    public void Resurrection()
+    {
+
     }
 }
