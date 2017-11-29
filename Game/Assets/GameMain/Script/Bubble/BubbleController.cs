@@ -35,6 +35,8 @@ public class BubbleController : MonoBehaviour {
 
     Material _material;
 
+    Rigidbody _rigidBody;
+
 	void Start ()
     {
         _burstRate = 0.0f;
@@ -55,19 +57,27 @@ public class BubbleController : MonoBehaviour {
         _material.SetVector("_HitPosition", new Vector4(0, 0, 0, 0));
         _material.SetFloat("_VibrateRate", 0.0f);
         //_material.SetVector("_WindVector", new Vector4(1, 0, 0, 1));
+
+        _rigidBody = gameObject.GetComponent<Rigidbody>();
 	}
 	
 	void Update ()
     {
+        _rigidBody.velocity *= 0.99f;
+
         ++_currentStateFrame;
         _currentAct();
 	}
 
     void ChangeState(BubbleState state)
     {
-        _currentStateFrame = 0;
-        _currentState = state;
-        _currentAct = _stateAction[_currentState];
+        //破裂の最中は状態遷移させない
+        if (_currentState != BubbleState.burst)
+        {
+            _currentStateFrame = 0;
+            _currentState = state;
+            _currentAct = _stateAction[_currentState];
+        }
     }
 
     /*破裂中の処理
@@ -79,7 +89,7 @@ public class BubbleController : MonoBehaviour {
         _material.SetFloat("_BurstRatio",_burstRate);
         if(_burstRate>=1.0f)
         {
-            gameObject.GetComponent<Bubble>().ParentRelease();
+            //gameObject.GetComponent<Bubble>().ParentRelease();
             Destroy(gameObject);
         }
     }
@@ -134,6 +144,7 @@ public class BubbleController : MonoBehaviour {
     //受け取った風のベクトルによって振動ベクトルも変える
     public void BubbleVibrate(Vector3 windVec)
     {
+        //Time.timeScale = 0.1f;
         _vibrateRate = 1.0f;
         _vibrateTimer = 0.0f;
         _material.SetFloat("_VibrateRate", _vibrateRate);
@@ -173,6 +184,7 @@ public class BubbleController : MonoBehaviour {
     //引数無しならBubbleControllerに設定された破裂時間を使用する
     public void Burst(Collision col)
     {
+        Time.timeScale = 0.1f;
         foreach (ContactPoint point in col.contacts)
         {
             //w要素は1にしておく
@@ -229,5 +241,11 @@ public class BubbleController : MonoBehaviour {
         //    Vector3 tempWind = gameObject.transform.position - hitpos;
         //    BubbleVibrate(tempWind);
         //}
+    }
+
+    public void Move(Vector3 windVec)
+    {
+        _rigidBody.velocity = windVec * 5.0f;//*windSpdとかにする
+        BubbleVibrate(windVec);
     }
 }

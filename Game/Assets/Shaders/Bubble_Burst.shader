@@ -4,6 +4,7 @@ Shader "Custom/Bubble_Burst" {
 	Properties {
 		_Color ("Color", Color) = (1,1,1,1)
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
+		//ノイズテクスチャ　Rに破裂用　Gに振動用の成分を入れる
 		_NoiseTex("NoiseTex",2D) = "white"{}
 		_BurstRatio("BurstRatio",Range(0,1)) = 0
 		_Fluffy("Fluffy",Range(0.01,0.5)) = 0.01
@@ -92,7 +93,7 @@ Shader "Custom/Bubble_Burst" {
 			UNITY_INITIALIZE_OUTPUT(Input, o);
 			o.localPos = v.vertex.xyz;
 			const float PI = 3.14159;
-			half b = pow(_BurstRatio, 2);
+			half b = pow(_BurstRatio, 2.0f);
 			//そのままだと大きすぎるので適当に調整
 			//cos(0)～cos(3PI)までで1.5周期=拡大→縮小→拡大
 			half a = 1.0 - ((cos(_BurstRatio*PI*3) + 1.0)*0.3);
@@ -126,14 +127,14 @@ Shader "Custom/Bubble_Burst" {
 			//風と垂直な方向には多めにオフセットさせる
 			half3 wc = cross( windVec, half3(0, 0, 1));
 			half wcdotn = dot(wc, normal);
-			v.vertex.xyz += wc*wcdotn*(1.0f-vib)*0.15f*_VibrateRate;
+			v.vertex.xyz += wc*wcdotn*(1.0f-vib)*0.2f*_VibrateRate;
 
 			//half3 localHitPos=mul(unity_)
 			//テクスチャ使って凸凹のテスト
 			float2 uvOfs = {_Time.y,_Time.y};
-			float value = tex2Dlod(_NoiseTex, float4(v.texcoord.xy+uvOfs, 0, 0)).r;
+			float value = tex2Dlod(_NoiseTex, float4(v.texcoord.xy+uvOfs, 0, 0)).g;
 			value = value - 0.5f;
-			v.vertex.xyz += normal*value*_VibrateRate*0.15f;
+			v.vertex.xyz += normal*value*_VibrateRate*0.2f;
 			
 			//X→Y→X→Y
 			half3 vibrateOfs = float3(normal.x*vib, normal.y*(1.0 - vib), 0)*_VibrateRate;
@@ -152,7 +153,7 @@ Shader "Custom/Bubble_Burst" {
 			hitDist = length(localHitPos - IN.localPos);
 			hitDist = hitDist*0.5;//hitDistは0～2.0なので0～1.0に
 
-			half f = tex2D(_NoiseTex, IN.uv_MainTex);
+			half f = tex2D(_NoiseTex, IN.uv_MainTex).r;
 			half t = _BurstRatio;
 			clip(1.0 - (((1.0 - hitDist) + f)*0.5 + t));
 
@@ -258,7 +259,7 @@ Shader "Custom/Bubble_Burst" {
 
 			//テクスチャ使って凸凹のテスト
 			float2 uvOfs = { _Time.y,_Time.y };
-			float value = tex2Dlod(_NoiseTex, float4(v.texcoord.xy + uvOfs, 0, 0)).r;
+			float value = tex2Dlod(_NoiseTex, float4(v.texcoord.xy + uvOfs, 0, 0)).g;
 			value = value - 0.5f;
 			v.vertex.xyz += normal*value*_VibrateRate*0.2f;
 
@@ -281,7 +282,7 @@ Shader "Custom/Bubble_Burst" {
 			hitDist = length(localHitPos - IN.localPos);
 			hitDist = hitDist*0.5;//hitDistは0～2.0なので0～1.0に
 
-			half f = tex2D(_NoiseTex, IN.uv_MainTex);
+			half f = tex2D(_NoiseTex, IN.uv_MainTex).r;
 			half t = _BurstRatio;
 			clip(1.0 - (((1.0 - hitDist) + f)*0.5 + t));
 			// Albedo comes from a texture tinted by color

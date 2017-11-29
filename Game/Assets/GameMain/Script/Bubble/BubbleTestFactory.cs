@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class BubbleTestFactory : MonoBehaviour {
 
@@ -8,6 +9,8 @@ public class BubbleTestFactory : MonoBehaviour {
     public GameObject _bubblePrefab;
     public uint _bubbleCntLimit;
     uint _frame;
+
+    
 
 	// Use this for initialization
 	void Start () {
@@ -29,5 +32,9 @@ public class BubbleTestFactory : MonoBehaviour {
             obj.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 10);
             //obj.GetComponent<Rigidbody>().AddForce(new Vector3(0, 0, 10));
         }
+
+        
 	}
+
+    
 }
