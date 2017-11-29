@@ -97,7 +97,7 @@ public class Bubble : MonoBehaviour {
                 else
                 {
 
-                    Death();
+                    Death(collision);
 
                 }
             }
@@ -123,22 +123,22 @@ public class Bubble : MonoBehaviour {
             }
             else
             {
-                Death();
+                Death(collision);
                 this.GetComponent<SphereCollider>().enabled = false;
             }
         }
         else
         {
             m_inverted *= -1;
-            Death();
+            Death(collision);
         }
     }
 
  
 
-    public void Death()
+    public void Death(Collider collision)
     {
-        this.GetComponent<BubbleController>().Burst();
+        this.GetComponent<BubbleController>().Burst(collision);
         
     }
     public void DestroyTime()
