@@ -5,40 +5,31 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
-   
-    [SerializeField]
-    private GameObject m_leftTap;
-    [SerializeField]
-    private GameObject m_rightTap;
-    [SerializeField]
-    private GameObject m_bubbleTap;
+
+    public bool m_tapWindFlag = false;
+
+    public bool m_floatEnemyFlag = false;
 
     [SerializeField]
     private GameObject m_player;
+
+    [SerializeField]
+    private GameObject m_createManager;
 
     [SerializeField]
     private Camera m_uiCamera;
 
     [SerializeField]
     private Camera m_cameraManager;
-
-    [SerializeField]
-    private GameObject m_createManager;
-
-    [SerializeField]
-    private GameObject m_bubblePos;
-
+ 
     private Vector3 m_downWind;
 
-    private readonly Color m_setColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+    private RaycastHit2D m_hitObject;
 
-    private readonly Color m_resetColor = new Color(1.0f, 1.0f, 1.0f, 0.5f);
-
-    public bool m_tapWindFlag = false;
+    private int m_flip = 1;
 
     private bool m_stopWindFlag = false;
 
-    public bool m_floatEnemyFlag = false;
     //playerの回転
     private const int PLAYER_ROTATION = 90;
     //rayが届く距離
@@ -48,14 +39,18 @@ public class InputManager : MonoBehaviour
     //bubbleの大きさの変化の値
     private const float BUBBLE_SCALE = 0.01f;
 
-    private int m_flip = 1;
-    
+    private readonly Color m_setColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
 
+    private readonly Color m_resetColor = new Color(1.0f, 1.0f, 1.0f, 0.5f);
+
+    void Start()
+    {
+    }
     void Update()
     {
         TapVector();
         TapRay();
-     
+
     }
 
     //タップしたオブジェクトの名前を取ってくる
@@ -67,9 +62,9 @@ public class InputManager : MonoBehaviour
             Ray ray = m_uiCamera.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
 
             RaycastHit2D hit = Physics2D.Raycast((Vector2)ray.origin, (Vector2)ray.direction, DISTANCE);
-
-            if (hit.collider == null) return;
             
+            if (hit.collider == null) return;
+            m_hitObject = hit;
             if (Input.GetMouseButtonDown(0))
             {
                 if (hit.collider.gameObject.name=="BubbleTap")
@@ -87,6 +82,7 @@ public class InputManager : MonoBehaviour
                         
                         m_tapWindFlag = false;
                         hit.collider.GetComponent<SpriteRenderer>().color = m_setColor;
+                        m_hitObject = hit;
 
                         if (m_player.GetComponent<Player>().m_bubbleFlag == false)
                         {
@@ -108,6 +104,7 @@ public class InputManager : MonoBehaviour
                         
                         m_tapWindFlag = false;
                         hit.collider.GetComponent<SpriteRenderer>().color = m_setColor;
+                        m_hitObject = hit;
                         if (m_player.GetComponent<Player>().m_bubbleFlag == false)
                         {
                             Vector3 playerMove = m_player.transform.position;
@@ -129,6 +126,7 @@ public class InputManager : MonoBehaviour
                         m_floatEnemyFlag = false;
 
                         hit.collider.GetComponent<SpriteRenderer>().color = m_setColor;
+                        m_hitObject = hit;
                         m_player.transform.parent = null;
 
                         m_player.GetComponent<Player>().m_bubbleFlag = false;
@@ -169,7 +167,7 @@ public class InputManager : MonoBehaviour
                     SceneManager.LoadScene("GameMain");
 
                     break;
-
+                    
             }
         }else
         if (Input.GetMouseButtonUp(0))
@@ -183,7 +181,7 @@ public class InputManager : MonoBehaviour
                 {
                     GameObject.Find("Bubble").transform.GetComponent<Bubble>().DestroyTime();
 
-
+                    //関数入れる
                     GameObject.Find("Bubble").transform.GetComponent<BubbleController>().BubbleVibrate();
                 }
               
@@ -194,9 +192,8 @@ public class InputManager : MonoBehaviour
     //手を離したら元に戻す
     void TapUpReset()
     {
-        m_leftTap.GetComponent<SpriteRenderer>().color = m_resetColor;
-        m_rightTap.GetComponent<SpriteRenderer>().color = m_resetColor;
-        m_bubbleTap.GetComponent<SpriteRenderer>().color = m_resetColor;
+        m_hitObject.collider.GetComponent<SpriteRenderer>().color = m_resetColor;
+        
         m_player.GetComponent<Animator>().SetBool("Move", false);
         m_stopWindFlag = false;
 

@@ -3,15 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraManager : MonoBehaviour {
-    
-    [SerializeField]
-    private Vector2 m_playerPosMin;
 
-    [SerializeField]
-    private Vector2 m_playerPosMax;
-    
-    private readonly Vector3 CUNTINUE_SCALE = new Vector3(1.0f,1.0f,1.0f);
-    
     [SerializeField]
     private GameObject m_continueUI;
 
@@ -20,6 +12,17 @@ public class CameraManager : MonoBehaviour {
 
     [SerializeField]
     private GameObject m_player;
+
+    [SerializeField]
+    private Vector2 m_playerPosMin;
+
+    [SerializeField]
+    private Vector2 m_playerPosMax;
+
+    private bool m_switchingFlag = true;
+
+    private bool m_zoomFlag = true;
+
     //playerのz軸を変更しない
     private const float FIXED = -4.75f;
 
@@ -31,10 +34,7 @@ public class CameraManager : MonoBehaviour {
 
     private const float CONTINUE_TIME = 2.0f;
 
-
-    private bool m_switchingFlag = true;
-
-    private bool m_zoomFlag = true;
+    private readonly Vector3 CUNTINUE_SCALE = new Vector3(1.0f, 1.0f, 1.0f);
     void Start () {
         //最初にカメラがプレイヤーに付いていく(デバック用)
         this.transform.position = new Vector3(m_player.transform.position.x, m_player.transform.position.y, FIXED);
@@ -59,13 +59,8 @@ public class CameraManager : MonoBehaviour {
 
                 Invoke("Cuntinue", CONTINUE_TIME);
                 m_zoomFlag = false;
-            }else
-            {
-
             }
-            
         }
-
     }
     public void Death()
     {
