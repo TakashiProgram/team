@@ -5,10 +5,8 @@ using UnityEngine;
 public class CreateManager : MonoBehaviour {
     //m_bubbleの動き
     public Vector3 m_WingMove;
-
+    //Bubbleが最大の時
     public bool m_createWindFlag = false;
-
-    private GameObject m_bubbleCreateBox;
 
     //プレイヤー前方
     [SerializeField]
@@ -20,13 +18,17 @@ public class CreateManager : MonoBehaviour {
     [SerializeField]
     private GameObject m_wind;
 
+    //Bubbleを生成したときに入れておく箱
+    private GameObject m_bubbleCreateBox;
+
     private float m_bubbleScale;
     
-
     //m_bubbleの最大scale
     private const float SCALE_MAX = 0.7f;
 
-    
+    private Collider col;
+
+
     void Start () {
 
     }
@@ -39,8 +41,12 @@ public class CreateManager : MonoBehaviour {
     {
         if (Input.GetMouseButtonDown(0))
         {
-           
-           
+            if (col!=null)
+            {
+                col.GetComponent<Rigidbody>().useGravity = true;
+                col.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+            }
+            
             m_bubbleScale = scale;
             Destroy(m_bubbleCreateBox);
             m_bubbleCreateBox = Instantiate(m_bubble, new Vector3(m_playerFront.transform.position.x, m_playerFront.transform.position.y, 0), Quaternion.identity);
@@ -50,6 +56,7 @@ public class CreateManager : MonoBehaviour {
             m_bubbleScale+=Time.deltaTime* flip;
 
             m_bubbleCreateBox.transform.localScale = new Vector3(m_bubbleScale, m_bubbleScale, m_bubbleScale);
+        //絶対値
         float value = Mathf.Abs(m_bubbleScale);
         if (value >= SCALE_MAX)
         {
@@ -67,5 +74,9 @@ public class CreateManager : MonoBehaviour {
             Instantiate(m_wind, m_bubbleCreateBox.transform.position, Quaternion.identity);
             m_WingMove = vector;
         }
+    }
+    public void test(Collider collision)
+    {
+        col = collision;
     }
 }

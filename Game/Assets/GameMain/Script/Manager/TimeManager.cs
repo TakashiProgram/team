@@ -5,21 +5,20 @@ using UnityEngine;
 
 public class TimeManager : MonoBehaviour {
 
-  
-    [SerializeField]
-    private float m_Time;
-
     [SerializeField]
     private GameObject m_timeLimit;
 
     [SerializeField]
     private GameObject m_player;
 
+    [SerializeField]
+    private float m_Time;
+
     private float m_rotationTime;
 
-    private float range = 0;
+    private float range = 0.0f;
 
-    private const float TIME_MAX = 360;
+    private const int TIME_MAX = 360;
 
     void Start () {
         m_rotationTime = TIME_MAX / m_Time;

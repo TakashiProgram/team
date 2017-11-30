@@ -118,7 +118,7 @@ public class LarvaController : MonoBehaviour {
             m_animator.SetBool("isInBubble", true);
 
             GetComponent<Rigidbody>().useGravity = false;
-            transform.parent = _coll.transform;
+            //transform.parent = _coll.transform;
             transform.localPosition = Vector3.zero;
         }else
         {
@@ -133,13 +133,14 @@ public class LarvaController : MonoBehaviour {
         {
             m_animator.SetBool("isInBubble", true);
             m_animator.SetBool("isGround", false);
+            Debug.Log("fdsbgv");
             return;
         }else if(_coll.tag != "Player")
         {
             m_animator.SetBool("isGround", false);
+
         }
 
         
     }
-
 }

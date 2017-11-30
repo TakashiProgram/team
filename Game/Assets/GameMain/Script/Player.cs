@@ -21,19 +21,19 @@ public class Player : MonoBehaviour
 
     [SerializeField]
     private GameObject m_mainCamera;
-    
-    [SerializeField]
-    private float m_invincibleTime;
+
+    private Vector3 m_formerPosition;
 
     private int m_desCount;
 
-    private Vector3 m_formerPosition;
+    [SerializeField]
+    private float m_invincibleTime;
 
     private const int DEATH_COUNT_MAX = 2; 
 
     private const float BACK_TIME = 1.0f;
 
-    private const float HOLE_POS_Y = -10;
+    private const float HOLE_POS_Y = -10.0f;
 
 
     void Start()
@@ -55,7 +55,6 @@ public class Player : MonoBehaviour
             {
                 m_animator.SetBool("Death", true);
                 m_mainCamera.GetComponent<CameraManager>().Death();
-               // Destroy(m_hp[DEATH_COUNT_MAX]);
                 m_hp[DEATH_COUNT_MAX].SetActive(false);
 
             }
@@ -70,8 +69,7 @@ public class Player : MonoBehaviour
         
         m_left.GetComponent<CircleCollider2D>().enabled = false;
         m_right.GetComponent<CircleCollider2D>().enabled = false;
-
-       // Destroy(m_hp[m_desCount]);
+        
         m_hp[m_desCount].SetActive(false);
         m_desCount++;
 
@@ -107,9 +105,7 @@ public class Player : MonoBehaviour
                 transform.parent = collision.transform.parent;
 
             }
-
         }
-      
     }
     private void OnCollisionEnter(Collision collision)
     {
@@ -135,7 +131,6 @@ public class Player : MonoBehaviour
                                                   transform.position - transform.forward,
                                                   "time", BACK_TIME
                 ));
-
         }
     }
     private void OnTriggerStay(Collider collision)
@@ -171,6 +166,4 @@ public class Player : MonoBehaviour
         
         gameObject.layer = LayerMask.NameToLayer("Player");
     }
-
-
 }
