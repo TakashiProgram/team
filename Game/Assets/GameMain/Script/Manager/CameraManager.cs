@@ -3,12 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraManager : MonoBehaviour {
-
+    //コンテニュー画面のUI
     [SerializeField]
     private GameObject m_continueUI;
-
+    //コンテニュー選択するかどうかのUI
+    [SerializeField]
+    private GameObject m_decisionUI;
+    //全体のUI
     [SerializeField]
     private GameObject m_DefaultUI;
+    //HP表示のUI
+    [SerializeField]
+    private GameObject[] m_hpUI;
 
     [SerializeField]
     private GameObject m_player;
@@ -32,9 +38,15 @@ public class CameraManager : MonoBehaviour {
     //playerの高さを調整
     private const int SET_POS_Y = 2;
 
+    private int m_continueCount = 0;
+
+    private const int CONTINUE_MAX = 2;
+
     private const float CONTINUE_TIME = 2.0f;
 
     private readonly Vector3 CUNTINUE_SCALE = new Vector3(1.0f, 1.0f, 1.0f);
+
+    
     void Start () {
         //最初にカメラがプレイヤーに付いていく(デバック用)
         this.transform.position = new Vector3(m_player.transform.position.x, m_player.transform.position.y, FIXED);
@@ -49,11 +61,14 @@ public class CameraManager : MonoBehaviour {
             //カメラが範囲外になったら止める
             this.transform.position = new Vector3(Mathf.Clamp(this.transform.position.x, m_playerPosMin.x, m_playerPosMax.x),
                                                  Mathf.Clamp(this.transform.position.y + SET_POS_Y, m_playerPosMin.y, m_playerPosMax.y), FIXED);
-            
+
+          
         } else{
             if (m_zoomFlag)
             {
-                m_DefaultUI.SetActive(false);
+
+                 m_DefaultUI.SetActive(false);
+                //カメラをplayerに寄せる
                 iTween.MoveTo(gameObject, iTween.Hash(
                               "position", new Vector3(this.transform.position.x,this.transform.position.y- ZOOM_POS_Y, ZOOM_FIXED)));
 
@@ -65,14 +80,34 @@ public class CameraManager : MonoBehaviour {
     public void Death()
     {
         m_switchingFlag = false;
+        m_continueCount++;
     }
+
+    //Contione表示
     public void Cuntinue()
     {
-
         iTween.ScaleTo(m_continueUI, iTween.Hash("scale", CUNTINUE_SCALE));
     }
+
     public void Resurrection()
     {
+     iTween.ScaleTo(m_continueUI, iTween.Hash("scale", new Vector3(0.0f,0.0f,0.0f)));
+        m_switchingFlag = true;
+       
+        for (int i = 0; i < 3; i++)
+        {
+            m_hpUI[i].SetActive(true);
+        }
+         m_DefaultUI.SetActive(true);
+    }
 
+    public void End()
+    {
+        m_zoomFlag = true;
+        if (m_continueCount == CONTINUE_MAX)
+        {
+            m_decisionUI.GetComponent<BoxCollider2D>().enabled = false;
+            m_decisionUI.GetComponent<SpriteRenderer>().color = new Color(1.0f, 1.0f, 1.0f,0.5f);
+        }
     }
 }

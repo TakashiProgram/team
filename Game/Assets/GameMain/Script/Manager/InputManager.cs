@@ -43,27 +43,26 @@ public class InputManager : MonoBehaviour
 
     private readonly Color m_resetColor = new Color(1.0f, 1.0f, 1.0f, 0.5f);
 
-    void Start()
-    {
-    }
     void Update()
     {
         TapVector();
         TapRay();
-
     }
 
     //タップしたオブジェクトの名前を取ってくる
     void TapRay()
     {
-
+       
         if (Input.GetMouseButton(0))
         {
             Ray ray = m_uiCamera.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
 
-            RaycastHit2D hit = Physics2D.Raycast((Vector2)ray.origin, (Vector2)ray.direction, DISTANCE);
             
+            RaycastHit2D hit = Physics2D.Raycast((Vector2)ray.origin, (Vector2)ray.direction, DISTANCE);
+            //パソコンで実行しているとバグるため置いている
+            //デバック用
             if (hit.collider == null) return;
+
             m_hitObject = hit;
             if (Input.GetMouseButtonDown(0))
             {
@@ -77,6 +76,7 @@ public class InputManager : MonoBehaviour
                 {
                     case "Left":
                     m_flip = -1;
+                   
                     if (m_stopWindFlag==false)
                     {
                         
@@ -119,9 +119,9 @@ public class InputManager : MonoBehaviour
 
                     break;
                 case "BubbleTap":
-
                     if (m_stopWindFlag == false)
                     {
+                       
                         m_tapWindFlag = false;
                         m_floatEnemyFlag = false;
 
@@ -151,18 +151,18 @@ public class InputManager : MonoBehaviour
                     break;
 
                 case "Decision":
-
-                    // SceneManager.LoadScene("GameMain");
-                    Debug.Log("左");
+                    
                     m_cameraManager.GetComponent<CameraManager>().Resurrection();
 
+                    m_cameraManager.GetComponent<CameraManager>().End();
+                    m_player.GetComponent<Player>().DownUP();
+                 
                     break;
 
                 case "Cancel":
 
                     // Select画面に移行する
                     //GameOverを表示するかも？
-                    Debug.Log("右");
                     //デバッグ
                     SceneManager.LoadScene("GameMain");
 
@@ -180,11 +180,7 @@ public class InputManager : MonoBehaviour
                 if (GameObject.Find("Bubble")!=null)
                 {
                     GameObject.Find("Bubble").transform.GetComponent<Bubble>().DestroyTime();
-
-                    //関数入れる
-                    GameObject.Find("Bubble").transform.GetComponent<BubbleController>().BubbleVibrate();
                 }
-              
             }
         }
     }
@@ -214,11 +210,15 @@ public class InputManager : MonoBehaviour
 
                 Vector3 UpWind = Input.mousePosition;
 
-              Vector3  SetWind = (m_downWind - UpWind);
+               Vector3 SetWind = (m_downWind - UpWind);
                 SetWind.z = 0;
                 SetWind.Normalize();
                 m_createManager.GetComponent<CreateManager>().TapWind(SetWind);
-                
+                if (m_downWind!=UpWind)
+                {
+                    GameObject.Find("Bubble").transform.GetComponent<BubbleController>().BubbleVibrate(SetWind);
+
+                }
                 m_stopWindFlag = false;
             }
         } 

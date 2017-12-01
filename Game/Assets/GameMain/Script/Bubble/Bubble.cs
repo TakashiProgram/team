@@ -14,7 +14,6 @@ public class Bubble : MonoBehaviour {
     [SerializeField]
     private float m_bubbleMove;
 
-
     private GameObject m_createManager;
 
     private GameObject m_player;
@@ -60,6 +59,7 @@ public class Bubble : MonoBehaviour {
             this.transform.parent.parent.position += m_move * m_bubbleMove * m_inverted * Time.deltaTime;
 
             this.gameObject.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
+            Debug.Log("efsrgdhg");
         }
     }
     private void OnTriggerEnter(Collider other)
@@ -97,9 +97,8 @@ public class Bubble : MonoBehaviour {
 
                 collision.GetComponent<Rigidbody>().useGravity = false;
                 collision.transform.position = this.transform.position;
-               // collision.GetComponent<Enemy>().WindStop();
                 collision.transform.localScale = m_smallerScale;
-                m_createManager.GetComponent<CreateManager>().test(collision);
+                m_createManager.GetComponent<CreateManager>().PutInObject(collision);
 
                 m_hitCollider = collision;
                 m_enemyFlag = true;
@@ -109,6 +108,10 @@ public class Bubble : MonoBehaviour {
                 Death(collision);
                 this.GetComponent<SphereCollider>().enabled = false;
             }
+        }
+        else if(collision.gameObject.tag=="CheackPoint")
+        {
+           //Bubbleを当ててチェックポイント通過にするかも
         }
         else
         {
@@ -141,7 +144,6 @@ public class Bubble : MonoBehaviour {
         {
             m_hitCollider.GetComponent<Rigidbody>().useGravity = true;
             m_hitCollider.transform.parent = null;
-            m_hitCollider.transform.localScale = m_hitCollider.GetComponent<Enemy>().m_scale;
             m_enemyFlag = false;
         }
       

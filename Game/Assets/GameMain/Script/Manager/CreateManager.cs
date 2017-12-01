@@ -21,30 +21,26 @@ public class CreateManager : MonoBehaviour {
     //Bubbleを生成したときに入れておく箱
     private GameObject m_bubbleCreateBox;
 
+    private Collider m_object;
+
     private float m_bubbleScale;
     
     //m_bubbleの最大scale
     private const float SCALE_MAX = 0.7f;
 
-    private Collider col;
-
-
     void Start () {
 
     }
-	
-	void Update () {
-	}
-  
     //BubbleボタンをTapした時の処理
   public void TapBubble(float scale,float flip)
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if (col!=null)
+            //シャボン玉に何かが入っているときに処理する
+            if (m_object != null)
             {
-                col.GetComponent<Rigidbody>().useGravity = true;
-                col.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+                m_object.GetComponent<Rigidbody>().useGravity = true;
+                m_object.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
             }
             
             m_bubbleScale = scale;
@@ -75,8 +71,10 @@ public class CreateManager : MonoBehaviour {
             m_WingMove = vector;
         }
     }
-    public void test(Collider collision)
+    public void PutInObject(Collider collision)
     {
-        col = collision;
+        m_object = collision;
     }
+
+  
 }

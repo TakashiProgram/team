@@ -39,9 +39,10 @@ public class Player : MonoBehaviour
     void Start()
     {
        m_animator= GetComponent<Animator>();
-       
+        m_formerPosition = this.transform.position;
+
     }
-    
+   
     void Update()
     {
         //落ちる前に保持したpositionをplayerに入れる
@@ -54,42 +55,14 @@ public class Player : MonoBehaviour
             if (m_desCount == DEATH_COUNT_MAX)
             {
                 m_animator.SetBool("Death", true);
-                m_mainCamera.GetComponent<CameraManager>().Death();
+                //m_mainCamera.GetComponent<CameraManager>().Death();
                 m_hp[DEATH_COUNT_MAX].SetActive(false);
 
             }
             m_desCount++;
         }
     }
-    //この下三つはアニメーション時に呼ばれるときの処理
-    //playerのダメージをくらったときにHPを減少させて
-    //0になったらplayerは死ぬ
-    private void Damage()
-    {
-        
-        m_left.GetComponent<CircleCollider2D>().enabled = false;
-        m_right.GetComponent<CircleCollider2D>().enabled = false;
-        
-        m_hp[m_desCount].SetActive(false);
-        m_desCount++;
-
-    }
-
-    //playerがダメージを食らってある程度したら操作できるようにする
-   private void MoveReturn()
-    {
-        m_left.GetComponent<CircleCollider2D>().enabled = true;
-        m_right.GetComponent<CircleCollider2D>().enabled = true;
-    }
-
-    //playerのダメージモーション処理が終わってIdleモーションに戻る
-    void DamageEnd()
-    {
-     
-            m_animator.SetBool("Damage", false);
-    }
-   
-
+  
     private void OnTriggerEnter(Collider collision)
     {
         //Bubbleに当たった瞬間しかいらない処理
@@ -97,7 +70,7 @@ public class Player : MonoBehaviour
         {
             if (m_createManager.GetComponent<CreateManager>().m_createWindFlag)
             {
-                m_formerPosition = this.transform.position;
+              
                 
                 m_bubbleFlag = true;
                 this.GetComponent<Rigidbody>().useGravity = false;
@@ -117,8 +90,6 @@ public class Player : MonoBehaviour
             if (m_desCount == DEATH_COUNT_MAX)
             {
                 m_animator.SetBool("Death", true);
-                m_mainCamera.GetComponent<CameraManager>().Death();
-               // Destroy(m_hp[DEATH_COUNT_MAX]);
                 m_hp[DEATH_COUNT_MAX].SetActive(false);
             }
             else
@@ -146,14 +117,17 @@ public class Player : MonoBehaviour
                 this.transform.position = new Vector3(bubblePos.x, bubblePos.y - 0.5f, bubblePos.z);
 
             } 
+        }else if (collision.gameObject.tag == "CheackPoint")
+        {
+            collision.GetComponent<BoxCollider>().enabled = false;
+            m_formerPosition = this.transform.position;
         }
     }
-
 
     //地面を離れる前に今いるpositionを保持する
     public void Resurrection(Vector3 pos)
     {
-        m_formerPosition = pos;
+      //  m_formerPosition = pos;
     }
 
     //無敵時間
@@ -166,4 +140,54 @@ public class Player : MonoBehaviour
         
         gameObject.layer = LayerMask.NameToLayer("Player");
     }
+    public void CheackPoint(Vector3 pos)
+    {
+        m_formerPosition = pos;
+    }
+
+    public void DownUP()
+    {
+        m_animator.SetBool("Death", false);
+        m_animator.SetBool("DownUp", true);
+        m_desCount = 0;
+    }
+
+    //この下のアニメーション時に呼ばれるときの処理
+    //playerのダメージをくらったときにHPを減少させて
+    //0になったらplayerは死ぬ
+    private void Damage()
+    {
+
+        m_left.GetComponent<CircleCollider2D>().enabled = false;
+        m_right.GetComponent<CircleCollider2D>().enabled = false;
+
+        m_hp[m_desCount].SetActive(false);
+        m_desCount++;
+
+    }
+
+    //playerがダメージを食らってある程度したら操作できるようにする
+    private void MoveReturn()
+    {
+        m_left.GetComponent<CircleCollider2D>().enabled = true;
+        m_right.GetComponent<CircleCollider2D>().enabled = true;
+    }
+
+    public void ContinueScene()
+    {
+        m_mainCamera.GetComponent<CameraManager>().Death();
+    }
+
+    public void GetUp()
+    {
+        m_animator.SetBool("DownUp", false);
+    }
+
+    //playerのダメージモーション処理が終わってIdleモーションに戻る
+    void DamageEnd()
+    {
+        m_animator.SetBool("Damage", false);
+    }
+
+
 }
