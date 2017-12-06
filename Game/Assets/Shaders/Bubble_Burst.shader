@@ -22,7 +22,9 @@ Shader "Custom/Bubble_Burst" {
 		_SpecularPower("SpecularPower",Range(0,160))=1
 
 		_HitPosition("HitPosition",Vector) = (0,0,0,0)
-		//_HitTimer("HitTimer",Range(0,1))=0
+		//バブルの反射ベクトル　バースト時にスクリプト側で計算してセットする
+		_ReflectVector("ReflectVector",Vector)=(0,0,0,1)
+		_ReflectRatio("ReflectRatio",Range(0.0,1.0))=0.0
 
 	}
 	SubShader {
@@ -65,7 +67,8 @@ Shader "Custom/Bubble_Burst" {
 		half _VibrateTest;
 		float4 _WindVector;
 		half _VibrateTimer;
-
+		float4 _ReflectVector;
+		half _ReflectRatio;
 
 		half4 LightingSpecular(SurfaceOutput s, half3 lightDir, half3 viewDir, half atten)
 		{
@@ -91,13 +94,20 @@ Shader "Custom/Bubble_Burst" {
 		void vert(inout appdata_full v,out Input o)
 		{
 			UNITY_INITIALIZE_OUTPUT(Input, o);
+			//反射ベクトル方向にオフセット
+			half rat = 1.0f - pow((1.0f - _BurstRatio), 2);
+			v.vertex.xyz += _ReflectVector.xyz*rat*_ReflectRatio;
+			//反射後の頂点位置を破裂の計算で使いたいのでここでlocalPosに入れる
 			o.localPos = v.vertex.xyz;
 			const float PI = 3.14159;
 			half b = pow(_BurstRatio, 2.0f);
 			//そのままだと大きすぎるので適当に調整
 			//cos(0)～cos(3PI)までで1.5周期=拡大→縮小→拡大
-			half a = 1.0 - ((cos(_BurstRatio*PI*3) + 1.0)*0.3);
+			half a = 1.0 - ((cos(_BurstRatio*PI*3) + 1.0)*0.2);
 			v.vertex.xyz += normalize(v.normal)*a*b;//*b*0.3;//
+
+			
+
 			//ふわふわする感じに頂点を動かす
 			half3 normal = normalize(v.normal);
 			half3 ofs = float3(normal.x*sin(_Time.w*3)*_Fluffy, normal.y*sin(_Time.w * 3+0.25)*_Fluffy, normal.z*sin(_Time.z*3+0.5)*_Fluffy);
@@ -111,21 +121,21 @@ Shader "Custom/Bubble_Burst" {
 			half vib = 1.0 - ((cos(_VibrateTimer*3*_VibrateTest) + 1.0)*0.5);
 			//風を受けた方向に応じて震えさせる
 			//Vectorに掛けるので平行移動成分消す
-			float4x4 matr = unity_WorldToObject;
+			//float4x4 matr = unity_WorldToObject;
 			
-			matr._14 = matr._24 = matr._34 = 0.0f;
+			//matr._14 = matr._24 = matr._34 = 0.0f;
 
 			//half m = sin(_VibrateTimer * 3 * _VibrateTest);
 			//内積結果が０の時の区別が出来ないので2回に分ける
-			half3 windVec =  normalize(mul(matr, _WindVector).xyz);
+			half3 windVec = _WindVector;//normalize(mul(matr, _WindVector).xyz);//
 			half wdotn = dot(windVec, normal);
 			v.vertex.xyz += windVec*wdotn*vib*0.1f*_VibrateRate;
 
-			//half3 temp = cross(half3(0, 1, 0), windVec);
-			//half3 wc = cross(windVec, temp);
+			half3 temp = cross(half3(0, 1, 0), windVec);
+			half3 wc = cross(windVec, temp);
 			//カメラ方向固定なので2回計算する必要は無い
 			//風と垂直な方向には多めにオフセットさせる
-			half3 wc = cross( windVec, half3(0, 0, 1));
+			//half3 wc = cross( windVec, half3(0, 0, 1));
 			half wcdotn = dot(wc, normal);
 			v.vertex.xyz += wc*wcdotn*(1.0f-vib)*0.2f*_VibrateRate;
 
@@ -137,7 +147,7 @@ Shader "Custom/Bubble_Burst" {
 			v.vertex.xyz += normal*value*_VibrateRate*0.2f;
 			
 			//X→Y→X→Y
-			half3 vibrateOfs = float3(normal.x*vib, normal.y*(1.0 - vib), 0)*_VibrateRate;
+			//half3 vibrateOfs = float3(normal.x*vib, normal.y*(1.0 - vib), 0)*_VibrateRate;
 			//0.0～1.0でオフセットすると大きすぎるので調整
 			//v.vertex.xyz += vibrateOfs*0.2;
 			//sin波（-1.0～1.0）だと大きすぎるので調整
@@ -148,8 +158,11 @@ Shader "Custom/Bubble_Burst" {
 		void surf (Input IN, inout SurfaceOutput o) {
 			half hitDist = 0;
 
-			float3 localHitPos = mul(unity_WorldToObject, _HitPosition).xyz;
-				
+			float3 localHitPos = _HitPosition;//mul(unity_WorldToObject, _HitPosition).xyz;
+			
+			//シェーダでの反射と物理マテリアルでの反射の違いの原因はここのhitDist
+			//物理マテリアルで反射させると頂点も遠ざかるのでhitDistが長くなる
+			//衝突の瞬間のhitDistは0～2.0だが物理マテリアルで反射させると2.0を超える
 			hitDist = length(localHitPos - IN.localPos);
 			hitDist = hitDist*0.5;//hitDistは0～2.0なので0～1.0に
 
@@ -191,6 +204,8 @@ Shader "Custom/Bubble_Burst" {
 		half _VibrateTest;
 		float4 _WindVector;
 		half _VibrateTimer;
+		float4 _ReflectVector;
+		half _ReflectRatio;
 
 		struct Input {
 			float2 uv_MainTex:TEXCOORD0;
@@ -228,6 +243,10 @@ Shader "Custom/Bubble_Burst" {
 		void vert(inout appdata_full v, out Input o)
 		{
 			UNITY_INITIALIZE_OUTPUT(Input, o);
+			//反射ベクトル方向にオフセット
+			half rat = 1.0f - pow((1.0f - _BurstRatio), 2);
+			v.vertex.xyz += _ReflectVector.xyz*rat*_ReflectRatio;
+			//反射後の頂点位置を破裂の計算で使いたいのでここでlocalPosに入れる
 			o.localPos = v.vertex.xyz;
 			const float PI = 3.14159;
 			half b = pow(_BurstRatio, 2);
@@ -235,6 +254,9 @@ Shader "Custom/Bubble_Burst" {
 			half a = 1.0 - ((cos(_BurstRatio*PI * 3) + 1.0)*0.3);
 			//half f = abs(sin(_BurstRatio*5))*0.5;
 			v.vertex.xyz += normalize(v.normal)*a*b;// *b*0.3;//
+
+			
+
 			//ふわふわする感じに頂点を動かす
 			half3 normal = normalize(v.normal);
 			half3 ofs = float3(normal.x*sin(_Time.w*3)*_Fluffy, normal.y*sin(_Time.w * 3 + 0.25)*_Fluffy, normal.z*sin(_Time.z*3 + 0.5)*_Fluffy);
@@ -247,9 +269,9 @@ Shader "Custom/Bubble_Burst" {
 
 			//風を受けた方向に応じて震えさせる
 			//Vectorに掛けるので平行移動成分消す
-			float4x4 matr = unity_WorldToObject;
-			matr._14 = matr._24 = matr._34 = 0.0f;
-			half3 windVec = normalize(mul(matr, _WindVector).xyz);
+			//float4x4 matr = unity_WorldToObject;
+			//matr._14 = matr._24 = matr._34 = 0.0f;
+			half3 windVec = _WindVector;//normalize(mul(matr, _WindVector).xyz);//
 			half wdotn = abs(dot(windVec, normal));
 			v.vertex.xyz += windVec*wdotn*vib*0.1f*_VibrateRate;
 
@@ -266,7 +288,7 @@ Shader "Custom/Bubble_Burst" {
 			//v.vertex.xy += float2(normal.x*(vib - wdotn), normal.y*(vib - wdotn));
 
 			//X→Z→X→Z
-			half3 vibrateOfs = float3(normal.x*vib, normal.y*(1.0 - vib), 0)*_VibrateRate;
+			//half3 vibrateOfs = float3(normal.x*vib, normal.y*(1.0 - vib), 0)*_VibrateRate;
 			//0.0～1.0でオフセットすると大きすぎるので調整
 			//v.vertex.xyz += vibrateOfs*0.2;
 			//sin波（-1.0～1.0）だと大きすぎるので調整
@@ -277,7 +299,7 @@ Shader "Custom/Bubble_Burst" {
 		void surf(Input IN, inout SurfaceOutput o) {
 
 			half hitDist = 0;
-			float3 localHitPos = mul(unity_WorldToObject, _HitPosition).xyz;
+			float3 localHitPos = _HitPosition;//mul(unity_WorldToObject, _HitPosition).xyz;
 
 			hitDist = length(localHitPos - IN.localPos);
 			hitDist = hitDist*0.5;//hitDistは0～2.0なので0～1.0に

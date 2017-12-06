@@ -23,4 +23,12 @@ public class BubbleCollisionTest : MonoBehaviour {
             
         }
     }
+
+    private void OnTriggerEnter(Collider col)
+    {
+        if (col.gameObject.tag != "Player")
+        {
+            //gameObject.GetComponent<BubbleController>().Burst(col);
+        }
+    }
 }
