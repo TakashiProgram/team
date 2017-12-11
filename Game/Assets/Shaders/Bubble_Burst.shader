@@ -13,6 +13,9 @@ Shader "Custom/Bubble_Burst" {
 
 		_VibrateTest("VibrateTest",Range(0.0,15.0)) = 1.0
 		_WindVector("WindVector",Vector) = (1,0,0,1)
+		//外積が0ベクトルになった時の対処にif文使いたくない
+		//スクリプト側で計算して渡した方が軽い
+		_WindCrossVector("WindCross",Vector)=(0,1,0,1)
 
 		//前面ポリゴン不透明度
 		_Transparency("Transparency_Back",Range(0,1))=1.0
@@ -66,6 +69,7 @@ Shader "Custom/Bubble_Burst" {
 		half _VibrateRate;
 		half _VibrateTest;
 		float4 _WindVector;
+		float4 _WindCrossVector;
 		half _VibrateTimer;
 		float4 _ReflectVector;
 		half _ReflectRatio;
@@ -131,8 +135,8 @@ Shader "Custom/Bubble_Burst" {
 			half wdotn = dot(windVec, normal);
 			v.vertex.xyz += windVec*wdotn*vib*0.1f*_VibrateRate;
 
-			half3 temp = cross(half3(0, 1, 0), windVec);
-			half3 wc = cross(windVec, temp);
+			//half3 temp = normalize(cross( windVec,half3(0, 1, 0)));
+			half3 wc = _WindCrossVector;//normalize(cross(windVec, temp));
 			//カメラ方向固定なので2回計算する必要は無い
 			//風と垂直な方向には多めにオフセットさせる
 			//half3 wc = cross( windVec, half3(0, 0, 1));
@@ -203,6 +207,7 @@ Shader "Custom/Bubble_Burst" {
 		half _VibrateRate;
 		half _VibrateTest;
 		float4 _WindVector;
+		float4 _WindCrossVector;
 		half _VibrateTimer;
 		float4 _ReflectVector;
 		half _ReflectRatio;
@@ -275,7 +280,7 @@ Shader "Custom/Bubble_Burst" {
 			half wdotn = abs(dot(windVec, normal));
 			v.vertex.xyz += windVec*wdotn*vib*0.1f*_VibrateRate;
 
-			half3 wc = cross(windVec, half3(0, 0, 1));
+			half3 wc = _WindCrossVector;//cross(windVec, half3(0, 0, 1));
 			half wcdotn = dot(wc, normal);
 			v.vertex.xyz += wc*wcdotn*(1.0f - vib)*0.15f*_VibrateRate;
 
@@ -300,6 +305,7 @@ Shader "Custom/Bubble_Burst" {
 
 			half hitDist = 0;
 			float3 localHitPos = _HitPosition;//mul(unity_WorldToObject, _HitPosition).xyz;
+
 
 			hitDist = length(localHitPos - IN.localPos);
 			hitDist = hitDist*0.5;//hitDistは0～2.0なので0～1.0に

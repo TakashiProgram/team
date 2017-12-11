@@ -42,6 +42,16 @@ public class BubbleController : MonoBehaviour {
     [SerializeField]
     Vector3 _diffVec;
 
+    Vector4 _windVec;
+    Vector4 _windCrossVec;
+
+    Vector4 _hitpos;
+    Vector4 _refl;
+
+    Camera _mainCamera;
+
+    Vector3 _reflec;
+
 
     private void Awake()
     {
@@ -66,6 +76,14 @@ public class BubbleController : MonoBehaviour {
 
         _rigidBody = gameObject.GetComponent<Rigidbody>();
         _lastPos = gameObject.transform.position;
+
+        _windVec = new Vector4(1, 0, 0, 1);
+        _windCrossVec = new Vector4(0, 1, 0, 1);
+        _hitpos = new Vector4(0, 0, 0, 1);
+        _refl = new Vector4(-1, 0, 0, 1);
+
+        _mainCamera = Camera.main;
+
     }
     void Start ()
     {
@@ -95,10 +113,10 @@ public class BubbleController : MonoBehaviour {
     {
         _lastPos = transform.position;
 
-        Vector3 p = Camera.main.transform.position;
+        Vector3 p = _mainCamera.transform.position;
         //Z軸がカメラと同じ方向を向いてほしいのでposition-cameraPosition
         Quaternion q = Quaternion.LookRotation(transform.position - p, Vector3.up);
-        //gameObject.transform.rotation = Quaternion.Slerp(transform.rotation, q, 0.1f);
+        gameObject.transform.rotation = Quaternion.Slerp(transform.rotation, q, 0.1f);
     }
 
     void ChangeState(BubbleState state)
@@ -122,7 +140,7 @@ public class BubbleController : MonoBehaviour {
         if(_burstRate>=1.0f)
         {
             //gameObject.GetComponent<Bubble>().ParentRelease();
-            Time.timeScale = 1.0f;
+            //Time.timeScale = 1.0f;
             Destroy(gameObject);
         }
     }
@@ -185,7 +203,8 @@ public class BubbleController : MonoBehaviour {
         _material.SetFloat("_VibrateTimer", _vibrateTimer);
 
         //windVec = transform.InverseTransformVector(windVec).normalized;
-        _material.SetVector("_WindVector", new Vector4(windVec.x, windVec.y, windVec.z, 1));
+        //_material.SetVector("_WindVector", new Vector4(windVec.x, windVec.y, windVec.z, 1));
+        SetWindVectorForShader(windVec);
         ChangeState(BubbleState.vibrate);
     }
 
@@ -201,10 +220,7 @@ public class BubbleController : MonoBehaviour {
     {
         //バブルの柔らかさ
         _material.SetFloat("_Fluffy", 0.03f);
-        //適当に回転成分決める
-        float minRange = 30.0f;
-        float maxRange = 50.0f;
-        _euler = new Vector3(UnityEngine.Random.Range(minRange, maxRange), UnityEngine.Random.Range(minRange, maxRange), UnityEngine.Random.Range(minRange, maxRange));
+        
         ChangeState(BubbleState.floating);
     }
 
@@ -219,32 +235,54 @@ public class BubbleController : MonoBehaviour {
     //引数無しならBubbleControllerに設定された破裂時間を使用する
     public void Burst(Collision col)
     {
-        Time.timeScale = 0.1f;
-        foreach (ContactPoint point in col.contacts)
+        //Time.timeScale = 0.1f;
+        for(int i=0;i<col.contacts.Length;++i)
         {
             //w要素は1にしておく
-            Vector3 hitpos = point.point;
+            Vector3 hitpos = col.contacts[i].point;
             //オブジェクト空間に移動する
             hitpos = transform.InverseTransformPoint(hitpos);
-            _material.SetVector("_HitPosition", new Vector4(hitpos.x,hitpos.y,hitpos.z,1));
+            _hitpos.Set(hitpos.x, hitpos.y, hitpos.z, 1);
+            _material.SetVector("_HitPosition", _hitpos);
 
             //反射ベクトルを計算する
             //球体との接触点から球の中心へのベクトルなので法線として扱う
-            Vector3 n = (gameObject.transform.position - point.point).normalized;
+            Vector3 n = (gameObject.transform.position - col.contacts[i].point).normalized;
             Vector3 f = _diffVec;
             float a = Vector3.Dot(-f, n);
             //法線方向への成分を強く反映させる（本来は2*a*n) 正規化するので大きくなってもいい
             Vector3 refl = f + 10 * a * n;
             //ワールド座標系からローカル座標系に変換
             refl = transform.InverseTransformVector(refl).normalized;
-            if (gameObject.GetComponent<SphereCollider>().sharedMaterial==null)
+            _refl.Set(refl.x, refl.y, refl.z, 1);
+            if (gameObject.GetComponent<SphereCollider>().sharedMaterial == null)
             {
-                _material.SetVector("_ReflectVector", new Vector4(refl.x, refl.y, refl.z, 1));
-                //Debug.Log("SetReflectVector");
+                _material.SetVector("_ReflectVector", _refl);
             }
-            //Debug.Log("Reflect = (" + refl.x+","+refl.y+","+refl.z+")");
-
         }
+        //foreach (ContactPoint point in col.contacts)
+        //{
+        //    //w要素は1にしておく
+        //    Vector3 hitpos = point.point;
+        //    //オブジェクト空間に移動する
+        //    hitpos = transform.InverseTransformPoint(hitpos);
+        //    _material.SetVector("_HitPosition", new Vector4(hitpos.x,hitpos.y,hitpos.z,1));
+
+        //    //反射ベクトルを計算する
+        //    //球体との接触点から球の中心へのベクトルなので法線として扱う
+        //    Vector3 n = (gameObject.transform.position - point.point).normalized;
+        //    Vector3 f = _diffVec;
+        //    float a = Vector3.Dot(-f, n);
+        //    //法線方向への成分を強く反映させる（本来は2*a*n) 正規化するので大きくなってもいい
+        //    Vector3 refl = f + 10 * a * n;
+        //    //ワールド座標系からローカル座標系に変換
+        //    refl = transform.InverseTransformVector(refl).normalized;
+        //    if (gameObject.GetComponent<SphereCollider>().sharedMaterial==null)
+        //    {
+        //        _material.SetVector("_ReflectVector", new Vector4(refl.x, refl.y, refl.z, 1));
+        //    }
+
+        //}
         ChangeState(BubbleState.burst);
     }
 
@@ -256,7 +294,7 @@ public class BubbleController : MonoBehaviour {
 
     public void Burst(Collider col)
     {
-        Time.timeScale = 0.1f;
+        //Time.timeScale = 0.1f;
         gameObject.GetComponent<SphereCollider>().isTrigger = false;
         /*Collider.ClosestPointOnBounds(Vector3) 返り値Vector3
              * 設定した座標に一番近いColliderオブジェクトの座標を返す
@@ -265,7 +303,8 @@ public class BubbleController : MonoBehaviour {
         Vector3 hitpos = col.ClosestPointOnBounds(transform.position);
         //オブジェクト空間に移動する
         hitpos = transform.InverseTransformPoint(hitpos);
-        _material.SetVector("_HitPosition", hitpos);
+        _hitpos.Set(hitpos.x, hitpos.y, hitpos.z, 1);
+        _material.SetVector("_HitPosition", _hitpos);
 
         //反射ベクトルを計算する
         //球体との接触点から球の中心へのベクトルなので法線として扱う
@@ -276,9 +315,10 @@ public class BubbleController : MonoBehaviour {
         Vector3 refl = f + 10 * a * n;
         //ワールド座標系からローカル座標系に変換
         refl = transform.InverseTransformVector(refl).normalized;
+        _refl.Set(refl.x, refl.y, refl.z, 1);
         if (gameObject.GetComponent<SphereCollider>().sharedMaterial == null)
         {
-            _material.SetVector("_ReflectVector", new Vector4(refl.x, refl.y, refl.z, 1));
+            _material.SetVector("_ReflectVector", _refl);
             //Debug.Log("SetReflectVector");
         }
 
@@ -290,19 +330,30 @@ public class BubbleController : MonoBehaviour {
 
     private void OnCollisionEnter(Collision col)
     {
-        //if (col.gameObject.tag != "Player")
-        //{
-        //    foreach (ContactPoint point in col.contacts)
-        //    {
-        //        Vector3 hitpos = point.point;
+        if (col.gameObject.tag != "Player")
+        {
+            //Vector3 refl = Vector3.zero;
+            ////foreachはGCの原因になり得るので変更
+            //for (int i = 0; i<col.contacts.Length;++i)
+            //{
+            //    Vector3 f = _diffVec;
+            //    Vector3 n = (transform.position - col.contacts[i].point).normalized;
+            //    float a = Vector3.Dot(-f, n);
+            //    refl = f + 2 * a * n;
+            //}
+            //Move(refl);
 
-        //        Vector3 f = _diffVec;
-        //        Vector3 n = (transform.position - point.point).normalized;
-        //        float a = Vector3.Dot(-f, n);
-        //        Vector3 refl = f + 2 * a * n;
-        //        Move(refl);
-        //    }
-        //}
+            //foreach (ContactPoint point in col.contacts)
+            //{
+            //    Vector3 hitpos = point.point;
+
+            //    Vector3 f = _diffVec;
+            //    Vector3 n = (transform.position - point.point).normalized;
+            //    float a = Vector3.Dot(-f, n);
+            //    Vector3 refl = f + 2 * a * n;
+            //    Move(refl);
+            //}
+        }
     }
     private void OnTriggerEnter(Collider col)
     {
@@ -315,7 +366,7 @@ public class BubbleController : MonoBehaviour {
         //}
 
         //Vector3 f = _diffVec;
-        //Vector3 n=(transform.position - col.ClosestPointOnBounds(transform.position)).normalized;
+        //Vector3 n = (transform.position - col.ClosestPointOnBounds(transform.position)).normalized;
         //float a = Vector3.Dot(-f, n);
         //Vector3 refl = f + 2 * a * n;
         //Move(refl);
@@ -325,5 +376,33 @@ public class BubbleController : MonoBehaviour {
     {
         _rigidBody.velocity = windVec * 10.0f;//*windSpdとかにする
         BubbleVibrate(windVec);
+    }
+
+    //ワールド空間の風ベクトルをオブジェクト空間に移動させてマテリアルにセット
+    //風ベクトルの直交ベクトルも同じようにセット
+    //worldWindVec ワールド空間の風ベクトル
+    void SetWindVectorForShader(Vector3 worldWindVec)
+    {
+        Vector3 windVec = worldWindVec.normalized;
+        Vector3 windCross = Vector3.zero;
+        //先にワールド直交ベクトルを求める
+
+        //仮Z軸　これが0ベクトルだったら風ベクトルがupと重なってるのでrightで再計算する
+        Vector3 temp = Vector3.Cross(windVec, Vector3.up);
+        if(temp.magnitude!=0.0f)
+        {
+            temp = Vector3.Cross(windVec, Vector3.right);
+        }
+        windCross = Vector3.Cross(windVec.normalized, temp.normalized);
+
+        //オブジェクト空間に移動する
+        windVec = transform.InverseTransformVector(windVec).normalized;
+        windCross = transform.InverseTransformVector(windCross).normalized;
+
+        _windVec.Set(windVec.x, windVec.y, windVec.z, 1);
+        _windCrossVec.Set(windCross.x, windCross.y, windCross.z, 1);
+
+        _material.SetVector("_WindVector", _windVec);
+        _material.SetVector("_WindCrossVector", _windCrossVec);
     }
 }
