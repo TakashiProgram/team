@@ -124,38 +124,24 @@ Shader "Custom/Bubble_Burst" {
 
 			half vib = 1.0 - ((cos(_VibrateTimer*3*_VibrateTest) + 1.0)*0.5);
 			//風を受けた方向に応じて震えさせる
-			//Vectorに掛けるので平行移動成分消す
-			//float4x4 matr = unity_WorldToObject;
 			
-			//matr._14 = matr._24 = matr._34 = 0.0f;
-
-			//half m = sin(_VibrateTimer * 3 * _VibrateTest);
 			//内積結果が０の時の区別が出来ないので2回に分ける
-			half3 windVec = _WindVector;//normalize(mul(matr, _WindVector).xyz);//
+			half3 windVec = _WindVector;//
 			half wdotn = dot(windVec, normal);
 			v.vertex.xyz += windVec*wdotn*vib*0.1f*_VibrateRate;
 
-			//half3 temp = normalize(cross( windVec,half3(0, 1, 0)));
-			half3 wc = _WindCrossVector;//normalize(cross(windVec, temp));
-			//カメラ方向固定なので2回計算する必要は無い
+			half3 wc = _WindCrossVector;
 			//風と垂直な方向には多めにオフセットさせる
-			//half3 wc = cross( windVec, half3(0, 0, 1));
 			half wcdotn = dot(wc, normal);
 			v.vertex.xyz += wc*wcdotn*(1.0f-vib)*0.2f*_VibrateRate;
 
-			//half3 localHitPos=mul(unity_)
 			//テクスチャ使って凸凹のテスト
 			float2 uvOfs = {_Time.y,_Time.y};
 			float value = tex2Dlod(_NoiseTex, float4(v.texcoord.xy+uvOfs, 0, 0)).g;
 			value = value - 0.5f;
 			v.vertex.xyz += normal*value*_VibrateRate*0.2f;
 			
-			//X→Y→X→Y
-			//half3 vibrateOfs = float3(normal.x*vib, normal.y*(1.0 - vib), 0)*_VibrateRate;
-			//0.0～1.0でオフセットすると大きすぎるので調整
-			//v.vertex.xyz += vibrateOfs*0.2;
-			//sin波（-1.0～1.0）だと大きすぎるので調整
-			//v.vertex.x += sin(_Time.w * _VibrateTest)*0.2f*_VibrateRate;
+			
 			v.vertex.xyz += windVec*sin(_VibrateTimer*3*_VibrateTest)*0.1f*_VibrateRate;
 
 		}
@@ -273,14 +259,11 @@ Shader "Custom/Bubble_Burst" {
 			half vib = 1.0 - ((cos(_VibrateTimer*3 * _VibrateTest) + 1.0)*0.5);
 
 			//風を受けた方向に応じて震えさせる
-			//Vectorに掛けるので平行移動成分消す
-			//float4x4 matr = unity_WorldToObject;
-			//matr._14 = matr._24 = matr._34 = 0.0f;
-			half3 windVec = _WindVector;//normalize(mul(matr, _WindVector).xyz);//
+			half3 windVec = _WindVector;
 			half wdotn = abs(dot(windVec, normal));
 			v.vertex.xyz += windVec*wdotn*vib*0.1f*_VibrateRate;
 
-			half3 wc = _WindCrossVector;//cross(windVec, half3(0, 0, 1));
+			half3 wc = _WindCrossVector;
 			half wcdotn = dot(wc, normal);
 			v.vertex.xyz += wc*wcdotn*(1.0f - vib)*0.15f*_VibrateRate;
 
@@ -290,14 +273,7 @@ Shader "Custom/Bubble_Burst" {
 			value = value - 0.5f;
 			v.vertex.xyz += normal*value*_VibrateRate*0.2f;
 
-			//v.vertex.xy += float2(normal.x*(vib - wdotn), normal.y*(vib - wdotn));
-
-			//X→Z→X→Z
-			//half3 vibrateOfs = float3(normal.x*vib, normal.y*(1.0 - vib), 0)*_VibrateRate;
-			//0.0～1.0でオフセットすると大きすぎるので調整
-			//v.vertex.xyz += vibrateOfs*0.2;
-			//sin波（-1.0～1.0）だと大きすぎるので調整
-			//v.vertex.x += sin(_Time.w * _VibrateTest)*0.2f*_VibrateRate;
+			
 			v.vertex.xyz += windVec*sin(_VibrateTimer*3*_VibrateTest)*0.1f*_VibrateRate;
 		}
 

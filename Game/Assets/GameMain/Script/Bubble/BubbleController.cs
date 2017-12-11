@@ -29,9 +29,7 @@ public class BubbleController : MonoBehaviour {
     float _vibrateRate;
     //シェーダに渡して使うタイマ　振動の制御に使う
     float _vibrateTimer;
-
-    //浮遊中の回転成分
-    Vector3 _euler;
+    
 
     Material _material;
 
@@ -92,13 +90,13 @@ public class BubbleController : MonoBehaviour {
 	
 	void Update ()
     {
-        
+        //移動ベクトルを保存しておく
         if ((transform.position - _lastPos).magnitude > 0.0f)
         {
             _diffVec = (transform.position - _lastPos).normalized;
         }
         
-        _rigidBody.velocity *= 0.995f;
+        //_rigidBody.velocity *= 0.995f;
 
         if (_currentAct != null)
         {
@@ -140,27 +138,13 @@ public class BubbleController : MonoBehaviour {
         if(_burstRate>=1.0f)
         {
             //gameObject.GetComponent<Bubble>().ParentRelease();
-            //Time.timeScale = 1.0f;
             Destroy(gameObject);
         }
     }
     //浮いている時の処理（特に何もしない）
     void FloatingUpdate()
     {
-        //Vibrateのテスト用コード
-        //if (_currentStateFrame > 60)
-        //{
-        //    BubbleVibrate();
-        //}
-
-        //回転させてみる
-        Quaternion q = Quaternion.Euler(_euler*Time.deltaTime);
-        //transform.rotation = q * transform.rotation;
-
-        //一旦保留
-        _euler.x = Mathf.Max(5.0f, _euler.x - 2.0f * Time.deltaTime);
-        _euler.y = Mathf.Max(5.0f, _euler.y - 2.0f * Time.deltaTime);
-        _euler.z = Mathf.Max(5.0f, _euler.z - 2.0f * Time.deltaTime);
+        
     }
 
     //生成途中の処理
@@ -178,7 +162,6 @@ public class BubbleController : MonoBehaviour {
         _material.SetFloat("_VibrateRate", _vibrateRate);
         if(_vibrateRate<=0.0f)
         {
-            Time.timeScale = 1.0f;
             ChangeState(BubbleState.floating);
         }
     }
@@ -189,32 +172,28 @@ public class BubbleController : MonoBehaviour {
         _vibrateTimer = 0.0f;
         _material.SetFloat("_VibrateRate", _vibrateRate);
         _material.SetFloat("_VibrateTimer", _vibrateTimer);
-
-        //Time.timeScale = 0.1f;
+        
         ChangeState(BubbleState.vibrate);
     }
     //受け取った風のベクトルによって振動ベクトルも変える
     public void BubbleVibrate(Vector3 windVec)
     {
-        //Time.timeScale = 0.1f;
         _vibrateRate = 1.0f;
         _vibrateTimer = 0.0f;
         _material.SetFloat("_VibrateRate", _vibrateRate);
         _material.SetFloat("_VibrateTimer", _vibrateTimer);
-
-        //windVec = transform.InverseTransformVector(windVec).normalized;
-        //_material.SetVector("_WindVector", new Vector4(windVec.x, windVec.y, windVec.z, 1));
+        
         SetWindVectorForShader(windVec);
         ChangeState(BubbleState.vibrate);
     }
 
     //浮遊状態へ遷移　rot:浮遊中の初期回転成分
-    public void BubbleFloat(Vector3 rot)
-    {
-        _material.SetFloat("_Fluffy", 0.03f);
-        _euler = rot;
-        ChangeState(BubbleState.floating);
-    }
+    //public void BubbleFloat(Vector3 rot)
+    //{
+    //    _material.SetFloat("_Fluffy", 0.03f);
+    //    _euler = rot;
+    //    ChangeState(BubbleState.floating);
+    //}
 
     public void BubbleFloat()
     {
@@ -230,12 +209,10 @@ public class BubbleController : MonoBehaviour {
 
         _burstTime = burstTime;
         ChangeState(BubbleState.burst);
-        //Time.timeScale = 0.1f;
     }
     //引数無しならBubbleControllerに設定された破裂時間を使用する
     public void Burst(Collision col)
     {
-        //Time.timeScale = 0.1f;
         for(int i=0;i<col.contacts.Length;++i)
         {
             //w要素は1にしておく
@@ -260,29 +237,7 @@ public class BubbleController : MonoBehaviour {
                 _material.SetVector("_ReflectVector", _refl);
             }
         }
-        //foreach (ContactPoint point in col.contacts)
-        //{
-        //    //w要素は1にしておく
-        //    Vector3 hitpos = point.point;
-        //    //オブジェクト空間に移動する
-        //    hitpos = transform.InverseTransformPoint(hitpos);
-        //    _material.SetVector("_HitPosition", new Vector4(hitpos.x,hitpos.y,hitpos.z,1));
-
-        //    //反射ベクトルを計算する
-        //    //球体との接触点から球の中心へのベクトルなので法線として扱う
-        //    Vector3 n = (gameObject.transform.position - point.point).normalized;
-        //    Vector3 f = _diffVec;
-        //    float a = Vector3.Dot(-f, n);
-        //    //法線方向への成分を強く反映させる（本来は2*a*n) 正規化するので大きくなってもいい
-        //    Vector3 refl = f + 10 * a * n;
-        //    //ワールド座標系からローカル座標系に変換
-        //    refl = transform.InverseTransformVector(refl).normalized;
-        //    if (gameObject.GetComponent<SphereCollider>().sharedMaterial==null)
-        //    {
-        //        _material.SetVector("_ReflectVector", new Vector4(refl.x, refl.y, refl.z, 1));
-        //    }
-
-        //}
+        
         ChangeState(BubbleState.burst);
     }
 
@@ -294,7 +249,6 @@ public class BubbleController : MonoBehaviour {
 
     public void Burst(Collider col)
     {
-        //Time.timeScale = 0.1f;
         gameObject.GetComponent<SphereCollider>().isTrigger = false;
         /*Collider.ClosestPointOnBounds(Vector3) 返り値Vector3
              * 設定した座標に一番近いColliderオブジェクトの座標を返す
@@ -319,19 +273,15 @@ public class BubbleController : MonoBehaviour {
         if (gameObject.GetComponent<SphereCollider>().sharedMaterial == null)
         {
             _material.SetVector("_ReflectVector", _refl);
-            //Debug.Log("SetReflectVector");
         }
 
         ChangeState(BubbleState.burst);
-        //とりあえず動かないようにする
-        //gameObject.GetComponent<Rigidbody>().isKinematic = true;
-        //gameObject.GetComponent<Collider>().isTrigger = false;
     }
 
-    private void OnCollisionEnter(Collision col)
-    {
-        if (col.gameObject.tag != "Player")
-        {
+    //private void OnCollisionEnter(Collision col)
+    //{
+        //if (col.gameObject.tag != "Player")
+        //{
             //Vector3 refl = Vector3.zero;
             ////foreachはGCの原因になり得るので変更
             //for (int i = 0; i<col.contacts.Length;++i)
@@ -353,10 +303,10 @@ public class BubbleController : MonoBehaviour {
             //    Vector3 refl = f + 2 * a * n;
             //    Move(refl);
             //}
-        }
-    }
-    private void OnTriggerEnter(Collider col)
-    {
+        //}
+    //}
+    //private void OnTriggerEnter(Collider col)
+    //{
         //if (col.gameObject.tag != "Player")
         //{
         //    Vector3 hitpos = col.ClosestPointOnBounds(transform.position);
@@ -370,7 +320,7 @@ public class BubbleController : MonoBehaviour {
         //float a = Vector3.Dot(-f, n);
         //Vector3 refl = f + 2 * a * n;
         //Move(refl);
-    }
+    //}
 
     public void Move(Vector3 windVec)
     {
