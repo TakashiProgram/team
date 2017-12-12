@@ -36,15 +36,28 @@ public class Player : MonoBehaviour
     private const float HOLE_POS_Y = -10.0f;
 
 
+    Vector3 os;
+    private float speed = 3f;
+
     void Start()
     {
        m_animator= GetComponent<Animator>();
         m_formerPosition = this.transform.position;
 
+
+         //os = new Vector3(transform.position.x+2, transform.position.y, transform.position.z);
+
+     //   m_animator.SetBool("Move", true);
+       // m_animator.SetBool("GameClear", true);
+       
     }
    
     void Update()
     {
+     //   float step = speed * Time.deltaTime;
+       // transform.position = Vector3.MoveTowards(transform.position, os, step);
+
+
         //落ちる前に保持したpositionをplayerに入れる
         if (this.transform.position.y <= HOLE_POS_Y)
         {
@@ -62,7 +75,14 @@ public class Player : MonoBehaviour
             m_desCount++;
         }
     }
-  
+
+    public void Expiration()
+    {
+       
+        m_animator.SetBool("Death", true);
+    }
+
+
     private void OnTriggerEnter(Collider collision)
     {
         //Bubbleに当たった瞬間しかいらない処理
@@ -121,6 +141,12 @@ public class Player : MonoBehaviour
         {
             collision.GetComponent<BoxCollider>().enabled = false;
             m_formerPosition = this.transform.position;
+        }
+        else if (collision.gameObject.tag == "Gool")
+        {
+            m_animator.SetBool("Move", true);
+            m_animator.SetBool("GameClear", true);
+            m_mainCamera.GetComponent<CameraManager>().Result();
         }
     }
 

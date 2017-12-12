@@ -12,15 +12,18 @@ public class TimeManager : MonoBehaviour {
     private GameObject m_player;
 
     [SerializeField]
-    private float m_Time;
+    public float m_Time;
 
     private float m_rotationTime;
 
-    private float range = 0.0f;
+    private float m_range = 0.0f;
+
+    private float m_resetTime; 
 
     private const int TIME_MAX = 360;
 
     void Start () {
+        m_resetTime = m_Time;
         m_rotationTime = TIME_MAX / m_Time;
 	}
 	
@@ -29,18 +32,22 @@ public class TimeManager : MonoBehaviour {
         if (m_Time<=0)
         {
             m_Time = 0;
-            range = 0;
-            Destroy(m_player);
-            //ここでコンテニュー画面を呼ぶ
+            m_range = 0;
+            m_player.GetComponent<Player>().Expiration();
         }
 
     }
     private void Disable()
     {
-       
-        range = range + (m_rotationTime * Time.deltaTime);
-        m_timeLimit.transform.rotation = Quaternion.Euler(0,0, -range);
+
+        m_range = m_range + (m_rotationTime * Time.deltaTime);
+        m_timeLimit.transform.rotation = Quaternion.Euler(0,0, -m_range);
         m_Time -= Time.deltaTime;
 
+    }
+    public void TimeReset()
+    {
+        m_Time = m_resetTime;
+        m_range = 0;
     }
 }
