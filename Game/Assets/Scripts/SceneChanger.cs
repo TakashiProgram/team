@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-public static class SceneChanger {
+public static class SceneChanger{
 
+    private const float DEFAULT_FADE_TIME = 1.0f;
 	
    public static void LoadSceneAtList(SceneNameList _listName)
     {
@@ -16,21 +17,30 @@ public static class SceneChanger {
         SceneManager.LoadScene((int)_listName,LoadSceneMode.Single);
     }
 
-  public static IEnumerator LoadSceneAtListAsync(SceneNameList _listName)
+  public static void LoadSceneAtListAsync(SceneNameList _listName)
+    {
+
+        CoroutineHandler.StartStaticCoroutine(LoadAtListAsync(_listName));
+    }
+    static IEnumerator LoadAtListAsync(SceneNameList _listName)
     {
         Debug.Log("LoadScene To :" + _listName.ToString());
         if ((int)_listName < 0)
         {
             yield break;
         }
-      
-        Fader fadeTarget =  GameObject.Find("FadeCamera").GetComponent<Fader>();
-        if (fadeTarget != null)
+        GameObject target = GameObject.Find("FadeCamera");
+       
+        if (target != null)
         {
+            Fader fadeTarget = target.GetComponent<Fader>();
             fadeTarget.FadeIn();
             yield return new WaitForSeconds(fadeTarget.GetFadeTime());
+        }else
+        {
+            Debug.Log("NonFade");
+            yield return new WaitForSeconds(DEFAULT_FADE_TIME);
         }
-
 
         AsyncOperation asyncData =  SceneManager.LoadSceneAsync((int)_listName,LoadSceneMode.Single);
         asyncData.allowSceneActivation = false;
@@ -45,3 +55,4 @@ public static class SceneChanger {
         asyncData.allowSceneActivation = true;
     }
 }
+

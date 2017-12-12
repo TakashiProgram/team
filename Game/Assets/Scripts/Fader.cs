@@ -18,13 +18,12 @@ public class Fader : MonoBehaviour {
 
     // Use this for initialization
     void Start()
-    {
-        m_isFade = false;
-    }
+    {}
 
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(m_isFade);
         if (m_isFade)
         {
             m_range = Mathf.Min(m_range + ((1 / m_fadeTime) * Time.deltaTime), 1);
@@ -36,6 +35,7 @@ public class Fader : MonoBehaviour {
     public void FadeIn()
     {
         m_isFade = true;
+        Debug.Log(m_isFade);
     }
     public float GetFadeTime()
     {
