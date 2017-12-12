@@ -59,7 +59,7 @@ public class Bubble : MonoBehaviour {
             this.transform.parent.parent.position += m_move * m_bubbleMove * m_inverted * Time.deltaTime;
 
             this.gameObject.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
-            Debug.Log("efsrgdhg");
+
         }
     }
     private void OnTriggerEnter(Collider other)

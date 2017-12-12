@@ -20,6 +20,9 @@ public class CameraManager : MonoBehaviour {
     private GameObject m_player;
 
     [SerializeField]
+    private GameObject m_timeManager;
+
+    [SerializeField]
     private Vector2 m_playerPosMin;
 
     [SerializeField]
@@ -46,11 +49,13 @@ public class CameraManager : MonoBehaviour {
 
     private readonly Vector3 CUNTINUE_SCALE = new Vector3(1.0f, 1.0f, 1.0f);
 
+    private bool stop = false;
     
     void Start () {
         //最初にカメラがプレイヤーに付いていく(デバック用)
         this.transform.position = new Vector3(m_player.transform.position.x, m_player.transform.position.y, FIXED);
-
+        //m_switchingFlag = false;
+        //m_zoomFlag = false;
     }
 	
 	void Update () {
@@ -66,8 +71,8 @@ public class CameraManager : MonoBehaviour {
         } else{
             if (m_zoomFlag)
             {
-
-                 m_DefaultUI.SetActive(false);
+                
+                m_DefaultUI.SetActive(false);
                 //カメラをplayerに寄せる
                 iTween.MoveTo(gameObject, iTween.Hash(
                               "position", new Vector3(this.transform.position.x,this.transform.position.y- ZOOM_POS_Y, ZOOM_FIXED)));
@@ -75,6 +80,7 @@ public class CameraManager : MonoBehaviour {
                 Invoke("Cuntinue", CONTINUE_TIME);
                 m_zoomFlag = false;
             }
+         //   m_timeManager.GetComponent<TimeManager>().m_Time = 300;
         }
     }
     public void Death()
@@ -99,6 +105,7 @@ public class CameraManager : MonoBehaviour {
             m_hpUI[i].SetActive(true);
         }
          m_DefaultUI.SetActive(true);
+        m_timeManager.GetComponent<TimeManager>().TimeReset();
     }
 
     public void End()
@@ -109,5 +116,31 @@ public class CameraManager : MonoBehaviour {
             m_decisionUI.GetComponent<BoxCollider2D>().enabled = false;
             m_decisionUI.GetComponent<SpriteRenderer>().color = new Color(1.0f, 1.0f, 1.0f,0.5f);
         }
+    }
+
+    public void Result()
+    {
+       // this.transform.position = new Vector3(-13.24f,0.75f,-4.75f);
+        m_player.transform.position = new Vector3(-13.68f, -1.24f, 0);
+        m_DefaultUI.SetActive(false);
+        this.GetComponent<Animator>().enabled = true;
+        //this.GetComponent<CameraManager>().enabled = false;
+         m_switchingFlag = false;
+         m_zoomFlag = false;
+
+    }
+    public void AnimatorStop()
+    {
+        this.GetComponent<Animator>().speed = 0;
+        if (stop==false)
+        {
+            Invoke("test", 2f);
+            stop = true;
+        }
+        
+    }
+    public void test()
+    {
+        this.GetComponent<Animator>().speed = 1;
     }
 }
