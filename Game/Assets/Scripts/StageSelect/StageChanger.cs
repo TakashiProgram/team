@@ -84,7 +84,7 @@ public class StageChanger : MonoBehaviour {
     /// </summary>
     public void ChangeScene()
     {
-        StartCoroutine(SceneChanger.LoadSceneAtListAsync(m_changeTarget));
+        SceneChanger.LoadSceneAtListAsync(m_changeTarget);
     }
 
     ///<summary>
