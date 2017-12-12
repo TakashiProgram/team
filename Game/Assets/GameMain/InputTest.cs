@@ -92,7 +92,7 @@ public class InputTest : MonoBehaviour {
         }
         else
         {
-            _creatingBubble = GameObject.Instantiate(_bubblePrefab, new Vector3(-10, 0, 0), Quaternion.identity);
+            _creatingBubble = GameObject.Instantiate(_bubblePrefab, new Vector3(-5, 0, 0), Quaternion.identity);
             _creatingBubbleScale = 0.3f;
             _creatingBubble.transform.localScale = new Vector3(_creatingBubbleScale, _creatingBubbleScale, _creatingBubbleScale);
             _isCreating = true;

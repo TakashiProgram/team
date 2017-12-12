@@ -213,6 +213,7 @@ public class BubbleController : MonoBehaviour {
     //引数無しならBubbleControllerに設定された破裂時間を使用する
     public void Burst(Collision col)
     {
+        _rigidBody.velocity *= 0;
         for(int i=0;i<col.contacts.Length;++i)
         {
             //w要素は1にしておく
@@ -228,14 +229,13 @@ public class BubbleController : MonoBehaviour {
             Vector3 f = _diffVec;
             float a = Vector3.Dot(-f, n);
             //法線方向への成分を強く反映させる（本来は2*a*n) 正規化するので大きくなってもいい
-            Vector3 refl = f + 10 * a * n;
+            Vector3 refl = f + 20 * a * n;
             //ワールド座標系からローカル座標系に変換
             refl = transform.InverseTransformVector(refl).normalized;
             _refl.Set(refl.x, refl.y, refl.z, 1);
-            if (gameObject.GetComponent<SphereCollider>().sharedMaterial == null)
-            {
-                _material.SetVector("_ReflectVector", _refl);
-            }
+            
+            _material.SetVector("_ReflectVector", _refl);
+            
         }
         
         ChangeState(BubbleState.burst);
@@ -249,6 +249,7 @@ public class BubbleController : MonoBehaviour {
 
     public void Burst(Collider col)
     {
+        _rigidBody.velocity *= 0;
         gameObject.GetComponent<SphereCollider>().isTrigger = false;
         /*Collider.ClosestPointOnBounds(Vector3) 返り値Vector3
              * 設定した座標に一番近いColliderオブジェクトの座標を返す
@@ -266,14 +267,13 @@ public class BubbleController : MonoBehaviour {
         Vector3 f = _diffVec;
         float a = Vector3.Dot(-f, n);
         //法線方向への成分を強く反映させる（本来は2*a*n) 正規化するので大きくなってもいい
-        Vector3 refl = f + 10 * a * n;
+        Vector3 refl = f + 20 * a * n;
         //ワールド座標系からローカル座標系に変換
         refl = transform.InverseTransformVector(refl).normalized;
         _refl.Set(refl.x, refl.y, refl.z, 1);
-        if (gameObject.GetComponent<SphereCollider>().sharedMaterial == null)
-        {
-            _material.SetVector("_ReflectVector", _refl);
-        }
+        
+        _material.SetVector("_ReflectVector", _refl);
+        
 
         ChangeState(BubbleState.burst);
     }
