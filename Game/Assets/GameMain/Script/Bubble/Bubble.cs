@@ -115,7 +115,8 @@ public class Bubble : MonoBehaviour {
         }
         else
         {
-            m_inverted *= -1;
+            //   m_inverted *= -1;
+            m_inverted = 0;
             Death(collision);
         }
     }
