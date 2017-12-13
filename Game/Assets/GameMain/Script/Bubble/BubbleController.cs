@@ -278,39 +278,39 @@ public class BubbleController : MonoBehaviour {
         ChangeState(BubbleState.burst);
     }
 
-    private void OnCollisionEnter(Collision col)
-    {
-        if (col.gameObject.tag != "Player")
-        {
-            Vector3 refl = Vector3.zero;
-            //foreachはGCの原因になり得るので変更
-            for (int i = 0; i < col.contacts.Length; ++i)
-            {
-                Vector3 f = _diffVec;
-                Vector3 n = (transform.position - col.contacts[i].point).normalized;
-                float a = Vector3.Dot(-f, n);
-                refl = f + 2 * a * n;
-            }
-            Move(refl);
+    //private void OnCollisionEnter(Collision col)
+    //{
+    //    if (col.gameObject.tag != "Player")
+    //    {
+    //        Vector3 refl = Vector3.zero;
+    //        //foreachはGCの原因になり得るので変更
+    //        for (int i = 0; i < col.contacts.Length; ++i)
+    //        {
+    //            Vector3 f = _diffVec;
+    //            Vector3 n = (transform.position - col.contacts[i].point).normalized;
+    //            float a = Vector3.Dot(-f, n);
+    //            refl = f + 2 * a * n;
+    //        }
+    //        Move(refl);
             
-        }
-    }
-    private void OnTriggerEnter(Collider col)
-    {
-        //if (col.gameObject.tag != "Player")
-        //{
-        //    Vector3 hitpos = col.ClosestPointOnBounds(transform.position);
+    //    }
+    //}
+    //private void OnTriggerEnter(Collider col)
+    //{
+    //    //if (col.gameObject.tag != "Player")
+    //    //{
+    //    //    Vector3 hitpos = col.ClosestPointOnBounds(transform.position);
 
-        //    Vector3 tempWind = gameObject.transform.position - hitpos;
-        //    BubbleVibrate(tempWind);
-        //}
+    //    //    Vector3 tempWind = gameObject.transform.position - hitpos;
+    //    //    BubbleVibrate(tempWind);
+    //    //}
 
-        Vector3 f = _diffVec;
-        Vector3 n = (transform.position - col.ClosestPointOnBounds(transform.position)).normalized;
-        float a = Vector3.Dot(-f, n);
-        Vector3 refl = f + 2 * a * n;
-        Move(refl);
-    }
+    //    Vector3 f = _diffVec;
+    //    Vector3 n = (transform.position - col.ClosestPointOnBounds(transform.position)).normalized;
+    //    float a = Vector3.Dot(-f, n);
+    //    Vector3 refl = f + 2 * a * n;
+    //    Move(refl);
+    //}
 
     public void Move(Vector3 windVec)
     {
