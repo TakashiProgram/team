@@ -41,4 +41,5 @@ SceneNameList.cs.meta
 saveData.dat
 saveData.dat.meta
 
-Test.unity
+Game/Assets/Scenes/Test.unity
+Game/Assets/Test/
