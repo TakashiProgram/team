@@ -49,7 +49,7 @@ public class BubbleController : MonoBehaviour {
     Camera _mainCamera;
 
     Vector3 _reflec;
-
+    
 
     private void Awake()
     {
@@ -81,6 +81,7 @@ public class BubbleController : MonoBehaviour {
         _refl = new Vector4(-1, 0, 0, 1);
 
         _mainCamera = Camera.main;
+        
 
     }
     void Start ()
@@ -90,11 +91,7 @@ public class BubbleController : MonoBehaviour {
 	
 	void Update ()
     {
-        //移動ベクトルを保存しておく
-        if ((transform.position - _lastPos).magnitude > 0.0f)
-        {
-            _diffVec = (transform.position - _lastPos).normalized;
-        }
+        
         
         //_rigidBody.velocity *= 0.995f;
 
@@ -107,9 +104,22 @@ public class BubbleController : MonoBehaviour {
         
 	}
 
+    private void FixedUpdate()
+    {
+        //移動ベクトルを保存しておく
+        if ((transform.position - _lastPos).magnitude > 0.0f)
+        {
+            //Debug.Log("DiffVec = " + _diffVec);
+            _diffVec = (transform.position - _lastPos).normalized;
+        }
+
+        _lastPos = transform.position;
+    }
+
     private void LateUpdate()
     {
-        _lastPos = transform.position;
+        
+        
 
         Vector3 p = _mainCamera.transform.position;
         //Z軸がカメラと同じ方向を向いてほしいのでposition-cameraPosition
