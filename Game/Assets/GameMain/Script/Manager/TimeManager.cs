@@ -12,7 +12,10 @@ public class TimeManager : MonoBehaviour {
     private GameObject m_player;
 
     [SerializeField]
-    public float m_Time;
+    private GameObject[] Image;
+
+    [SerializeField]
+    private float m_Time;
 
     private float m_rotationTime;
 
@@ -21,6 +24,14 @@ public class TimeManager : MonoBehaviour {
     private float m_resetTime; 
 
     private const int TIME_MAX = 360;
+
+    private enum ScoreRank
+    {
+        S =100,
+        A,
+        B =49
+    }
+
 
     void Start () {
         m_resetTime = m_Time;
@@ -35,7 +46,7 @@ public class TimeManager : MonoBehaviour {
             m_range = 0;
             m_player.GetComponent<Player>().Expiration();
         }
-
+        TimeResult();
     }
     private void Disable()
     {
@@ -49,5 +60,33 @@ public class TimeManager : MonoBehaviour {
     {
         m_Time = m_resetTime;
         m_range = 0;
+    }
+    public void TimeResult()
+    {
+        //無理やり止めている
+        m_Time += Time.deltaTime;
+
+        int wTime = (int)m_Time;
+        //コンテニューした時のことを後で追加する
+        if (wTime >= (int)ScoreRank.S)
+        {
+            Image[1].GetComponent<Text>().text = "ランク　S";
+       
+        }else if (m_Time<=(int)ScoreRank.S &&m_Time>=(int)ScoreRank.B)
+        {
+            Image[1].GetComponent<Text>().text = "ランク　A";
+        }
+        else 
+        {
+
+            Image[1].GetComponent<Text>().text = "ランク　B";
+        }
+        
+        Image[0].GetComponent<Text>().text = wTime.ToString();
+        Invoke("Tap", 1.0f);
+    }
+    public void Tap()
+    {
+        Image[2].SetActive(true);
     }
 }
