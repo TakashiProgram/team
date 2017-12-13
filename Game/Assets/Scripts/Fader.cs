@@ -14,7 +14,7 @@ public class Fader : MonoBehaviour {
     [SerializeField, Range(0.1f, 3.0f),Tooltip("フェード終了までの時間")]
     private float m_fadeTime = 0.1f;
 
-    private bool m_isFade;
+    private bool m_fadeFlag;
 
     // Use this for initialization
     void Start()
@@ -23,8 +23,7 @@ public class Fader : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(m_isFade);
-        if (m_isFade)
+        if (m_fadeFlag)
         {
             m_range = Mathf.Min(m_range + ((1 / m_fadeTime) * Time.deltaTime), 1);
         }else
@@ -34,8 +33,35 @@ public class Fader : MonoBehaviour {
     }
     public void FadeIn()
     {
-        m_isFade = true;
-        Debug.Log(m_isFade);
+        m_fadeFlag = true;
+        Debug.Log("FadeInStart");
+    }
+
+    public void FadeOut()
+    {
+        m_fadeFlag = false;
+        Debug.Log("FadeOutStart");
+    }
+    public bool IsFade()
+    {
+        return m_fadeFlag;
+    }
+    public bool IsFadeEnd()
+    {
+        if (m_fadeFlag && m_range >= 1.0f)
+        {
+            return true;
+        }else if(!m_fadeFlag && m_range <= 0.0f)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public void FadeReset()
+    {
+        m_fadeFlag = false;
+        m_range = 0.0f;
     }
     public float GetFadeTime()
     {
