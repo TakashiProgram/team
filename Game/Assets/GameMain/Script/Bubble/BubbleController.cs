@@ -137,7 +137,7 @@ public class BubbleController : MonoBehaviour {
         _material.SetFloat("_BurstRatio",_burstRate);
         if(_burstRate>=1.0f)
         {
-            //gameObject.GetComponent<Bubble>().ParentRelease();
+            gameObject.GetComponent<Bubble>().ParentRelease();
             Destroy(gameObject);
         }
     }
