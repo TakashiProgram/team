@@ -147,7 +147,6 @@ public class BubbleController : MonoBehaviour {
         _material.SetFloat("_BurstRatio",_burstRate);
         if(_burstRate>=1.0f)
         {
-            gameObject.GetComponent<Bubble>().ParentRelease();
             Destroy(gameObject);
         }
     }
@@ -259,6 +258,8 @@ public class BubbleController : MonoBehaviour {
 
     public void Burst(Collider col)
     {
+
+        gameObject.GetComponent<Bubble>().ParentRelease();
         _rigidBody.velocity *= 0;
         //gameObject.GetComponent<SphereCollider>().isTrigger = false;
         /*Collider.ClosestPointOnBounds(Vector3) 返り値Vector3
