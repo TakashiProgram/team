@@ -137,7 +137,7 @@ public class BubbleController : MonoBehaviour {
         _material.SetFloat("_BurstRatio",_burstRate);
         if(_burstRate>=1.0f)
         {
-            gameObject.GetComponent<Bubble>().ParentRelease();
+            //gameObject.GetComponent<Bubble>().ParentRelease();
             Destroy(gameObject);
         }
     }
@@ -250,7 +250,7 @@ public class BubbleController : MonoBehaviour {
     public void Burst(Collider col)
     {
         _rigidBody.velocity *= 0;
-        gameObject.GetComponent<SphereCollider>().isTrigger = false;
+        //gameObject.GetComponent<SphereCollider>().isTrigger = false;
         /*Collider.ClosestPointOnBounds(Vector3) 返り値Vector3
              * 設定した座標に一番近いColliderオブジェクトの座標を返す
              * Vector4型に代入するとw要素は０になってるので1にしておく
@@ -278,35 +278,25 @@ public class BubbleController : MonoBehaviour {
         ChangeState(BubbleState.burst);
     }
 
-    //private void OnCollisionEnter(Collision col)
-    //{
-        //if (col.gameObject.tag != "Player")
-        //{
-            //Vector3 refl = Vector3.zero;
-            ////foreachはGCの原因になり得るので変更
-            //for (int i = 0; i<col.contacts.Length;++i)
-            //{
-            //    Vector3 f = _diffVec;
-            //    Vector3 n = (transform.position - col.contacts[i].point).normalized;
-            //    float a = Vector3.Dot(-f, n);
-            //    refl = f + 2 * a * n;
-            //}
-            //Move(refl);
-
-            //foreach (ContactPoint point in col.contacts)
-            //{
-            //    Vector3 hitpos = point.point;
-
-            //    Vector3 f = _diffVec;
-            //    Vector3 n = (transform.position - point.point).normalized;
-            //    float a = Vector3.Dot(-f, n);
-            //    Vector3 refl = f + 2 * a * n;
-            //    Move(refl);
-            //}
-        //}
-    //}
-    //private void OnTriggerEnter(Collider col)
-    //{
+    private void OnCollisionEnter(Collision col)
+    {
+        if (col.gameObject.tag != "Player")
+        {
+            Vector3 refl = Vector3.zero;
+            //foreachはGCの原因になり得るので変更
+            for (int i = 0; i < col.contacts.Length; ++i)
+            {
+                Vector3 f = _diffVec;
+                Vector3 n = (transform.position - col.contacts[i].point).normalized;
+                float a = Vector3.Dot(-f, n);
+                refl = f + 2 * a * n;
+            }
+            Move(refl);
+            
+        }
+    }
+    private void OnTriggerEnter(Collider col)
+    {
         //if (col.gameObject.tag != "Player")
         //{
         //    Vector3 hitpos = col.ClosestPointOnBounds(transform.position);
@@ -315,12 +305,12 @@ public class BubbleController : MonoBehaviour {
         //    BubbleVibrate(tempWind);
         //}
 
-        //Vector3 f = _diffVec;
-        //Vector3 n = (transform.position - col.ClosestPointOnBounds(transform.position)).normalized;
-        //float a = Vector3.Dot(-f, n);
-        //Vector3 refl = f + 2 * a * n;
-        //Move(refl);
-    //}
+        Vector3 f = _diffVec;
+        Vector3 n = (transform.position - col.ClosestPointOnBounds(transform.position)).normalized;
+        float a = Vector3.Dot(-f, n);
+        Vector3 refl = f + 2 * a * n;
+        Move(refl);
+    }
 
     public void Move(Vector3 windVec)
     {
