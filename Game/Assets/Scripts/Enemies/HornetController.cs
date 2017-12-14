@@ -57,7 +57,7 @@ public class HornetController : MonoBehaviour {
         rot.z = 0;
         rot.x = 0;
         
-        transform.SetPositionAndRotation(transform.position + (transform.forward * (m_speed / MAX_SPEED)), rot);
+        transform.SetPositionAndRotation(transform.position + ((transform.forward * (m_speed / MAX_SPEED)) * Time.deltaTime), rot);
         
         if ((m_circle.Peek() - transform.position).magnitude < 0.5f)
         {
