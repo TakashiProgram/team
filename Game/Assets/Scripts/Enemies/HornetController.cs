@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class HornetController : MonoBehaviour {
+
     const float MAX_SPEED = 10.0f;
     //巡回をする場所を格納するオブジェクト群
     [SerializeField, Tooltip("巡回する場所を格納する")]
@@ -57,7 +58,7 @@ public class HornetController : MonoBehaviour {
         rot.z = 0;
         rot.x = 0;
         
-        transform.SetPositionAndRotation(transform.position + ((transform.forward * (m_speed / MAX_SPEED)) * Time.deltaTime), rot);
+        transform.SetPositionAndRotation(transform.position + (transform.forward * m_speed  * Time.deltaTime), rot);
         
         if ((m_circle.Peek() - transform.position).magnitude < 0.5f)
         {
