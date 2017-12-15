@@ -59,6 +59,7 @@ public class InputManager : MonoBehaviour
 
             
             RaycastHit2D hit = Physics2D.Raycast((Vector2)ray.origin, (Vector2)ray.direction, DISTANCE);
+
             //パソコンで実行しているとバグるため置いている
             //デバック用
             if (hit.collider == null) return;
@@ -87,6 +88,7 @@ public class InputManager : MonoBehaviour
                         if (m_player.GetComponent<Player>().m_bubbleFlag == false)
                         {
                             Vector3 playerMove = m_player.transform.position;
+                            //delttime
                             playerMove.x -= MOVE_COUNT;
                             m_player.transform.position = playerMove;
                         }

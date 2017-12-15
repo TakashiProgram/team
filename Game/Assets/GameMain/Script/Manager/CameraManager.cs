@@ -49,7 +49,7 @@ public class CameraManager : MonoBehaviour {
 
     private readonly Vector3 CUNTINUE_SCALE = new Vector3(1.0f, 1.0f, 1.0f);
 
-    private bool stop = false;
+    private bool stop = true;
     
     void Start () {
         //最初にカメラがプレイヤーに付いていく(デバック用)
@@ -93,12 +93,14 @@ public class CameraManager : MonoBehaviour {
     public void Cuntinue()
     {
         iTween.ScaleTo(m_continueUI, iTween.Hash("scale", CUNTINUE_SCALE));
+        m_timeManager.GetComponent<TimeManager>().RankFixed();
     }
 
     public void Resurrection()
     {
      iTween.ScaleTo(m_continueUI, iTween.Hash("scale", new Vector3(0.0f,0.0f,0.0f)));
         m_switchingFlag = true;
+       
        
         for (int i = 0; i < 3; i++)
         {
@@ -129,18 +131,23 @@ public class CameraManager : MonoBehaviour {
          m_zoomFlag = false;
 
     }
+    //resultカメラ用
     public void AnimatorStop()
     {
         this.GetComponent<Animator>().speed = 0;
-        if (stop==false)
+        if (stop)
         {
             Invoke("test", 2f);
-            stop = true;
+            stop = false;
         }
-        
+      
     }
     public void test()
     {
         this.GetComponent<Animator>().speed = 1;
+    }
+    private void ResultMove()
+    {
+        m_timeManager.GetComponent<TimeManager>().TimeResult();
     }
 }

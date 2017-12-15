@@ -75,6 +75,4 @@ public class CreateManager : MonoBehaviour {
     {
         m_object = collision;
     }
-
-  
 }

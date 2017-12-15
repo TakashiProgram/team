@@ -4,9 +4,7 @@ using UnityEngine;
 
 public class ResultManager : MonoBehaviour {
 
-    [SerializeField]
-    private GameObject[] Image;
-
+ 
 	// Use this for initialization
 	void Start () {
 		
