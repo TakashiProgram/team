@@ -20,6 +20,9 @@ public class InputManager : MonoBehaviour
     private Camera m_uiCamera;
 
     [SerializeField]
+    private GameObject m_fade;
+
+    [SerializeField]
     private Camera m_cameraManager;
  
     private Vector3 m_downWind;
@@ -43,8 +46,17 @@ public class InputManager : MonoBehaviour
 
     private readonly Color m_resetColor = new Color(1.0f, 1.0f, 1.0f, 0.5f);
 
+    private void Start()
+    {
+        m_fade.GetComponent<Fader>().FadeIn();
+        m_fade.GetComponent<Fader>().IsFadeEnd();
+    }
     void Update()
     {
+        if(m_fade.GetComponent<Fader>().IsFade() && m_fade.GetComponent<Fader>().IsFadeEnd())
+        {
+            m_fade.GetComponent<Fader>().FadeOut();
+        }
         TapVector();
         TapRay();
     }
