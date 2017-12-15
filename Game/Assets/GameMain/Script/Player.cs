@@ -35,40 +35,24 @@ public class Player : MonoBehaviour
 
     private const float HOLE_POS_Y = -10.0f;
 
-
-    Vector3 os;
-    private float speed = 3f;
-
     void Start()
     {
        m_animator= GetComponent<Animator>();
         m_formerPosition = this.transform.position;
-
-
-         //os = new Vector3(transform.position.x+2, transform.position.y, transform.position.z);
-
-     //   m_animator.SetBool("Move", true);
-       // m_animator.SetBool("GameClear", true);
-       
     }
    
     void Update()
     {
-     //   float step = speed * Time.deltaTime;
-       // transform.position = Vector3.MoveTowards(transform.position, os, step);
-
-
+    
         //落ちる前に保持したpositionをplayerに入れる
         if (this.transform.position.y <= HOLE_POS_Y)
         {
             this.transform.position = m_formerPosition;
-            //Destroy(m_hp[m_desCount]);
             m_hp[m_desCount].SetActive(false);
            
             if (m_desCount == DEATH_COUNT_MAX)
             {
                 m_animator.SetBool("Death", true);
-                //m_mainCamera.GetComponent<CameraManager>().Death();
                 m_hp[DEATH_COUNT_MAX].SetActive(false);
 
             }
@@ -90,8 +74,6 @@ public class Player : MonoBehaviour
         {
             if (m_createManager.GetComponent<CreateManager>().m_createWindFlag)
             {
-              
-                
                 m_bubbleFlag = true;
                 this.GetComponent<Rigidbody>().useGravity = false;
 
@@ -142,20 +124,13 @@ public class Player : MonoBehaviour
             collision.GetComponent<BoxCollider>().enabled = false;
             m_formerPosition = this.transform.position;
         }
-        else if (collision.gameObject.tag == "Gool")
+        else if (collision.gameObject.tag == "Goal")
         {
             m_animator.SetBool("Move", true);
             m_animator.SetBool("GameClear", true);
             m_mainCamera.GetComponent<CameraManager>().Result();
         }
     }
-
-    //地面を離れる前に今いるpositionを保持する
-    public void Resurrection(Vector3 pos)
-    {
-      //  m_formerPosition = pos;
-    }
-
     //無敵時間
     IEnumerator InvincibleTime()
     {

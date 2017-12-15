@@ -62,32 +62,30 @@ public class Bubble : MonoBehaviour {
 
         }
     }
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider collision)
     {
         //最初にシャボン玉に入ったオブジェクトを保持する
         if (m_switchingObject == null)
         {
-            m_switchingObject = other.gameObject;
+            m_switchingObject = collision.gameObject;
         }
-    }
 
-    private void OnTriggerStay(Collider collision)
-    {
-       
-        if (collision.gameObject.tag=="Player")
+
+
+        if (collision.gameObject.tag == "Player")
         {
             GameObject gameobject = collision.gameObject;
             if (m_switchingObject == gameobject)
             {
-               //最大じゃない時に当たると破裂
-                if (m_createManager.GetComponent<CreateManager>().m_createWindFlag==false)
+                //最大じゃない時に当たると破裂
+                if (m_createManager.GetComponent<CreateManager>().m_createWindFlag == false)
                 {
                     Death(collision);
                 }
             }
         }
-       
-        else if (collision.gameObject.tag=="Enemy" && m_switchingObject.tag=="Enemy")
+
+        else if (collision.gameObject.tag == "Enemy" && m_switchingObject.tag == "Enemy")
         {
             GameObject gameobject = collision.gameObject;
 
@@ -109,16 +107,22 @@ public class Bubble : MonoBehaviour {
                 this.GetComponent<SphereCollider>().enabled = false;
             }
         }
-        else if(collision.gameObject.tag=="CheackPoint")
+        else if (collision.gameObject.tag == "CheackPoint")
         {
-           //Bubbleを当ててチェックポイント通過にするかも
+            //Bubbleを当ててチェックポイント通過にするかも
         }
         else
         {
+            // 渋谷君しだい
             //   m_inverted *= -1;
             m_inverted = 0;
             Death(collision);
         }
+    }
+
+    private void OnTriggerStay(Collider collision)
+    {
+     
     }
 
     public void Death(Collider collision)
