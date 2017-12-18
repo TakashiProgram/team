@@ -40,6 +40,10 @@ public class TimeManager : MonoBehaviour {
 
     private bool m_fixed = true;
 
+    private StageData resources;
+
+    
+
     private enum ScoreRank
     {
         S =100,
@@ -51,6 +55,9 @@ public class TimeManager : MonoBehaviour {
     void Start () {
         m_resetTime = m_Time;
         m_rotationTime = TIME_MAX / m_Time;
+
+        //   resources = Resources.Load("Image/StageSelect/OrangeButton");
+        resources = Resources.Load<StageData>("SaveData");
     }
 	
 	void Update () {
@@ -92,18 +99,22 @@ public class TimeManager : MonoBehaviour {
             if (wTime >= (int)ScoreRank.S)
             {
                 Image[3].GetComponent<Image>().sprite = Rank[0];
+                resources.data[0].rank = ClearRank.rank_S;
 
             } else if (m_Time <= (int)ScoreRank.S && m_Time >= (int)ScoreRank.B)
             {
                 Image[3].GetComponent<Image>().sprite = Rank[1];
+                resources.data[0].rank = ClearRank.rank_A;
             }
             else
             {
                 Image[3].GetComponent<Image>().sprite = Rank[2];
+                resources.data[0].rank = ClearRank.rank_B;
             }
         }else
         {
             Image[3].GetComponent<Image>().sprite = Rank[2];
+            resources.data[0].rank = ClearRank.rank_B;
         }
         for (int i = 0; i < 3; i++)
         {
@@ -115,8 +126,10 @@ public class TimeManager : MonoBehaviour {
             m_digitUp = m_digitUp * 10;
 
         }
+        
+
         //クリアランク表示
-       // Image[0].GetComponent<Image>().sprite = wTime.ToString();
+        // Image[0].GetComponent<Image>().sprite = wTime.ToString();
         Invoke("Tap", 1.0f);
     }
     public void Tap()
