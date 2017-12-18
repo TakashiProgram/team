@@ -48,11 +48,11 @@ public class InputManager : MonoBehaviour
 
     private void Start()
     {
-        m_fade.GetComponent<Fader>().FadeIn();
-        m_fade.GetComponent<Fader>().IsFadeEnd();
+      //  m_fade.GetComponent<Fader>().FadeIn();
     }
     void Update()
     {
+        //FadeInが終わった時に呼ぶ
         if(m_fade.GetComponent<Fader>().IsFade() && m_fade.GetComponent<Fader>().IsFadeEnd())
         {
             m_fade.GetComponent<Fader>().FadeOut();

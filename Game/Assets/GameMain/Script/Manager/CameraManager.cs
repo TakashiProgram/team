@@ -28,6 +28,9 @@ public class CameraManager : MonoBehaviour {
     [SerializeField]
     private Vector2 m_playerPosMax;
 
+    [SerializeField]
+    private ParticleSystem particle;
+
     private bool m_switchingFlag = true;
 
     private bool m_zoomFlag = true;
@@ -122,8 +125,11 @@ public class CameraManager : MonoBehaviour {
 
     public void Result()
     {
+        Debug.Log("ewsrgdhj");
        // this.transform.position = new Vector3(-13.24f,0.75f,-4.75f);
         m_player.transform.position = new Vector3(-13.68f, -1.24f, 0);
+      //  m_player.transform.localRotation = Quaternion.Euler(0.0f, 90.0f, 0.0f);
+        
         m_DefaultUI.SetActive(false);
         this.GetComponent<Animator>().enabled = true;
         //this.GetComponent<CameraManager>().enabled = false;
@@ -137,6 +143,7 @@ public class CameraManager : MonoBehaviour {
         this.GetComponent<Animator>().speed = 0;
         if (stop)
         {
+            particle.GetComponent<ParticleSystem>().Play();
             Invoke("test", 2f);
             stop = false;
         }

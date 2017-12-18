@@ -20,7 +20,13 @@ public class Player : MonoBehaviour
     private GameObject m_createManager;
 
     [SerializeField]
+    private GameObject m_fade;
+
+    [SerializeField]
     private GameObject m_mainCamera;
+
+    [SerializeField]
+  ///  private ParticleSystem m_particle;
 
     private Vector3 m_formerPosition;
 
@@ -58,6 +64,14 @@ public class Player : MonoBehaviour
             }
             m_desCount++;
         }
+
+        if (m_fade.GetComponent<Fader>().IsFade() && m_fade.GetComponent<Fader>().IsFadeEnd())
+        {
+            m_fade.GetComponent<Fader>().FadeOut();
+          //  m_animator.SetBool("Move", true);
+            m_animator.SetBool("GameClear", true);
+            m_mainCamera.GetComponent<CameraManager>().Result();
+        }
     }
 
     public void Expiration()
@@ -81,6 +95,7 @@ public class Player : MonoBehaviour
 
             }
         }
+        
     }
     private void OnCollisionEnter(Collision collision)
     {
@@ -105,7 +120,9 @@ public class Player : MonoBehaviour
                                                   "time", BACK_TIME
                 ));
         }
+        
     }
+  
     private void OnTriggerStay(Collider collision)
     {
         //Bubbleと同じ動きをする
@@ -126,9 +143,11 @@ public class Player : MonoBehaviour
         }
         else if (collision.gameObject.tag == "Goal")
         {
-            m_animator.SetBool("Move", true);
-            m_animator.SetBool("GameClear", true);
-            m_mainCamera.GetComponent<CameraManager>().Result();
+         //   if (m_particle.GetComponent<ParticleSystem>().isStopped)
+            {
+                m_fade.GetComponent<Fader>().FadeIn();
+            }
+            
         }
     }
     //無敵時間
@@ -190,5 +209,10 @@ public class Player : MonoBehaviour
         m_animator.SetBool("Damage", false);
     }
 
+    void test()
+    {
+        iTween.Stop(gameObject);
+        this.transform.eulerAngles = new Vector3(0, 90, 0);
+    }
 
 }
