@@ -155,9 +155,6 @@ public class InputManager : MonoBehaviour
                     TapVector();
                     m_stopWindFlag = true;
 
-
-                   
-
                     break;
                     //デバック用
                 case "Reselt":
@@ -165,13 +162,6 @@ public class InputManager : MonoBehaviour
                     SceneManager.LoadScene("GameMain");
 
                  
-                    break;
-
-                case "Clear":
-                    //あとでセレクトに変更
-                    SceneChanger.LoadSceneAtListAsync(SceneNameList.Title);
-
-
                     break;
 
                 case "Decision":
