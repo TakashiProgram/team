@@ -133,7 +133,7 @@ public class InputTest : MonoBehaviour {
     {
         if (_creatingBubble != null)
         {
-            _creatingBubble.GetComponent<BubbleController>().BubbleVibrate();
+            _creatingBubble.GetComponent<BubbleEffectTest>().BubbleVibrate();
             //今生成したバブルを動かすバブルに設定
             SetBubble(_creatingBubble);
 
@@ -151,7 +151,7 @@ public class InputTest : MonoBehaviour {
         {
             _flickVector = (_flickEndPos - _flickStartPos).normalized;
 
-            _currentBubble.GetComponent<BubbleController>().Move(
+            _currentBubble.GetComponent<BubbleEffectTest>().Move(
                 new Vector3(_flickVector.x, _flickVector.y, 0));
         }
         _isFlicking = false;

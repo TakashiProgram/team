@@ -47,7 +47,7 @@ public class BubbleTestFactory : MonoBehaviour {
 
                 _initDir.Set(Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f));
                 _initDir = _initDir.normalized;
-                obj.GetComponent<BubbleController>().Move(_initDir);
+                obj.GetComponent<BubbleEffectTest>().Move(_initDir);
                 //obj.GetComponent<Rigidbody>().velocity = v;
             }
         }
