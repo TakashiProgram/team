@@ -6,4 +6,5 @@
 
 	GameMain,
 	Select,
+	Title,
 }

@@ -164,6 +164,13 @@ public class InputManager : MonoBehaviour
                  
                     break;
 
+                case "Clear":
+
+                    SceneChanger.LoadSceneAtListAsync(SceneNameList.Title);
+
+
+                    break;
+
                 case "Decision":
                     
                     m_cameraManager.GetComponent<CameraManager>().Resurrection();

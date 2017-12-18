@@ -18,6 +18,9 @@ public class TimeManager : MonoBehaviour {
     private GameObject m_result;
 
     [SerializeField]
+    private GameObject m_clear;
+
+    [SerializeField]
     private Sprite[] Rank;
 
     [SerializeField]
@@ -99,22 +102,22 @@ public class TimeManager : MonoBehaviour {
             if (wTime >= (int)ScoreRank.S)
             {
                 Image[3].GetComponent<Image>().sprite = Rank[0];
-                resources.data[0].rank = ClearRank.rank_S;
+                //resources.data[0].rank = ClearRank.rank_S;
 
             } else if (m_Time <= (int)ScoreRank.S && m_Time >= (int)ScoreRank.B)
             {
                 Image[3].GetComponent<Image>().sprite = Rank[1];
-                resources.data[0].rank = ClearRank.rank_A;
+             //   resources.data[0].rank = ClearRank.rank_A;
             }
             else
             {
                 Image[3].GetComponent<Image>().sprite = Rank[2];
-                resources.data[0].rank = ClearRank.rank_B;
+               // resources.data[0].rank = ClearRank.rank_B;
             }
         }else
         {
             Image[3].GetComponent<Image>().sprite = Rank[2];
-            resources.data[0].rank = ClearRank.rank_B;
+         //   resources.data[0].rank = ClearRank.rank_B;
         }
         for (int i = 0; i < 3; i++)
         {
@@ -134,6 +137,7 @@ public class TimeManager : MonoBehaviour {
     }
     public void Tap()
     {
+        m_clear.SetActive(true);
         Image[4].SetActive(true);
     }
     public void RankFixed()
