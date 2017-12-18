@@ -258,7 +258,7 @@ public class BubbleController : MonoBehaviour {
 
     public void Burst(Collider col)
     {
-
+        Debug.Log("Burst called");
         gameObject.GetComponent<Bubble>().ParentRelease();
         _rigidBody.velocity *= 0;
         //gameObject.GetComponent<SphereCollider>().isTrigger = false;
@@ -272,6 +272,10 @@ public class BubbleController : MonoBehaviour {
         _hitpos.Set(hitpos.x, hitpos.y, hitpos.z, 1);
         _material.SetVector("_HitPosition", _hitpos);
 
+        if(hitpos.magnitude<=0.01f)
+        {
+            Debug.Log("予期していないhitpos : "+hitpos);
+        }
         //反射ベクトルを計算する
         //球体との接触点から球の中心へのベクトルなので法線として扱う
         Vector3 n = (gameObject.transform.position - col.ClosestPointOnBounds(transform.position)).normalized;

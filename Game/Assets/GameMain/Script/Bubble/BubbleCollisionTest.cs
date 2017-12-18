@@ -19,7 +19,7 @@ public class BubbleCollisionTest : MonoBehaviour {
         if (col.gameObject.tag != "Player")
         {
             //Debug.Log("Burst(col)を呼ぶ");
-            gameObject.GetComponent<BubbleController>().Burst(col);
+            gameObject.GetComponent<BubbleEffectTest>().Burst(col);
             
         }
     }
@@ -28,7 +28,7 @@ public class BubbleCollisionTest : MonoBehaviour {
     {
         if (col.gameObject.tag != "Player")
         {
-            gameObject.GetComponent<BubbleController>().Burst(col);
+            gameObject.GetComponent<BubbleEffectTest>().Burst(col);
         }
     }
 }
