@@ -29,6 +29,7 @@ Thumbs.db
 [Bb]uild/
 
 [Tt]est.unity
+[Tt]est.unity.meta
 [Tt]est/
 
 *.csproj
