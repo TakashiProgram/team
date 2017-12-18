@@ -28,6 +28,9 @@ Thumbs.db
 [Ll]ibrary/
 [Bb]uild/
 
+[Tt]est.unity
+[Tt]est/
+
 *.csproj
 *.unityproj
 *.sln
@@ -41,5 +44,3 @@ SceneNameList.cs.meta
 saveData.dat
 saveData.dat.meta
 
-[Tt]est.unity
-[Tt]est/
