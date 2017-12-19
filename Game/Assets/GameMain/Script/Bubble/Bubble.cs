@@ -144,7 +144,7 @@ public class Bubble : MonoBehaviour {
     public void ParentRelease()
     {
         m_player.transform.parent = null;
-        m_player.GetComponent<Player>().m_bubbleFlag = false;
+        m_player.GetComponent<Player>().BubbleFlag();
         if (m_enemyFlag)
         {
             m_hitCollider.GetComponent<Rigidbody>().useGravity = true;

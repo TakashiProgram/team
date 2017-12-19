@@ -144,7 +144,7 @@ public class CameraManager : MonoBehaviour {
         if (stop)
         {
             particle.GetComponent<ParticleSystem>().Play();
-            Invoke("test", 2f);
+            Invoke("test", 3f);
             stop = false;
         }
       
