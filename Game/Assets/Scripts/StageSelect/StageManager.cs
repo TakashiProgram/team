@@ -56,7 +56,7 @@ public class StageManager : MonoBehaviour
 
         for (int i = 0; i < m_stages.Length; i++)
         {
-            m_stagesData.data[i].name = m_stages[i].name;
+            m_stagesData.data[i].name = m_stages[i].GetComponent<StageChanger>().GetChangeTarget().ToString();
             m_stagesData.data[i].ReleaseFlag = m_stages[i].GetComponent<StageChanger>().IsRelease();
             m_stagesData.data[i].rank = m_stages[i].GetComponent<StageChanger>().GetRank();
         }
