@@ -49,9 +49,9 @@ public class StageSelectManager : MonoBehaviour {
             RaycastHit2D hit = Physics2D.Raycast((Vector2)ray.origin, ray.direction, 50.0f);
             Debug.Log(hit.collider.tag);
 
-            if (hit && hit.collider.tag == "SelectIcon")
+            if (hit && hit.collider.tag == "SelectIcon" && hit.collider.name == "TargetStage")
             {
-              
+                hit.collider.GetComponent<StageChanger>().ChangeScene();
             }else
             {
                 m_selectObject.GetComponent<StageObject>().CloseWindow();

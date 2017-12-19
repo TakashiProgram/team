@@ -104,11 +104,4 @@ public class StageChanger : MonoBehaviour {
         return false;
 
     }
-
-
-    private void OnCollisionEnter(Collision _coll)
-    {
-        ChangeScene();
-    }
-
 }

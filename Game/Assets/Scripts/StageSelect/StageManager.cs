@@ -16,6 +16,8 @@ public class StageManager : MonoBehaviour
     
     private StageData m_stagesData;
 
+    private bool m_once;
+
 
     void Start()
     {
@@ -29,15 +31,25 @@ public class StageManager : MonoBehaviour
         {
             LoadStagesData();
         }
+        m_once = false;
         
-        //データの設定が終わったらそのデータによるステージ開放の更新をかけていく
-        foreach (var stage in m_stages)
+      
+    }
+
+    private void Update()
+    {
+        if (!m_once)
         {
-            stage.GetComponent<StageChanger>().Check();
+            //データの設定が終わったらそのデータによるステージ開放の更新をかけていく
+            foreach (var stage in m_stages)
+            {
+                stage.GetComponent<StageChanger>().Check();
+            }
+            m_once = true;
         }
     }
 
-    
+
     private void OnApplicationQuit()
     {
         m_stagesData.data = new StageData.Data[m_stages.Length];
