@@ -37,8 +37,6 @@ public class InputManager : MonoBehaviour
     private const int PLAYER_ROTATION = 90;
     //rayが届く距離
     private const float DISTANCE = 10f;
-    //playerのスピード
-    private const float MOVE_COUNT = 0.05f;
     //bubbleの大きさの変化の値
     private const float BUBBLE_SCALE = 0.01f;
 
@@ -97,13 +95,8 @@ public class InputManager : MonoBehaviour
                         hit.collider.GetComponent<SpriteRenderer>().color = m_setColor;
                         m_hitObject = hit;
 
-                        if (m_player.GetComponent<Player>().m_bubbleFlag == false)
-                        {
-                            Vector3 playerMove = m_player.transform.position;
-                            //delttime
-                            playerMove.x -= MOVE_COUNT;
-                            m_player.transform.position = playerMove;
-                        }
+                      
+                        m_player.GetComponent<Player>().Move(m_flip);
 
                         iTween.RotateTo(m_player, iTween.Hash("y", -PLAYER_ROTATION));
                         m_player.GetComponent<Animator>().SetBool("Move", true);
@@ -119,13 +112,8 @@ public class InputManager : MonoBehaviour
                         m_tapWindFlag = false;
                         hit.collider.GetComponent<SpriteRenderer>().color = m_setColor;
                         m_hitObject = hit;
-                        if (m_player.GetComponent<Player>().m_bubbleFlag == false)
-                        {
-                            Vector3 playerMove = m_player.transform.position;
-                            playerMove.x += MOVE_COUNT;
-                            m_player.transform.position = playerMove;
-                        }
-
+                        
+                        m_player.GetComponent<Player>().Move(m_flip);
                         iTween.RotateTo(m_player, iTween.Hash("y", PLAYER_ROTATION));
                         m_player.GetComponent<Animator>().SetBool("Move", true);
 
@@ -143,7 +131,7 @@ public class InputManager : MonoBehaviour
                         m_hitObject = hit;
                         m_player.transform.parent = null;
 
-                        m_player.GetComponent<Player>().m_bubbleFlag = false;
+                        m_player.GetComponent<Player>().BubbleFlag();
 
                         m_player.GetComponent<Rigidbody>().useGravity = true;
 
@@ -167,7 +155,7 @@ public class InputManager : MonoBehaviour
                 case "Clear":
 
                     SceneChanger.LoadSceneAtListAsync(SceneNameList.Title);
-
+                  //  m_hitObject = hit;
 
                     break;
 
@@ -176,7 +164,7 @@ public class InputManager : MonoBehaviour
                     m_cameraManager.GetComponent<CameraManager>().Resurrection();
 
                     m_cameraManager.GetComponent<CameraManager>().End();
-                    m_player.GetComponent<Player>().DownUP();
+                    m_player.GetComponent<Player>().Down();
                  
                     break;
 
@@ -211,7 +199,11 @@ public class InputManager : MonoBehaviour
     //手を離したら元に戻す
     void TapUpReset()
     {
-        m_hitObject.collider.GetComponent<SpriteRenderer>().color = m_resetColor;
+       // if (m_hitObject.collider!=null)
+        {
+            m_hitObject.collider.GetComponent<SpriteRenderer>().color = m_resetColor;
+        }
+       
         
         m_player.GetComponent<Animator>().SetBool("Move", false);
         m_stopWindFlag = false;
