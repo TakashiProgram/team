@@ -11,7 +11,7 @@ struct VectorCheckers
 public class BubbleFactory : MonoBehaviour
 {
     private const float RANGE      = 10.0f;   // 生成範囲
-    private const int   BUBBLE_MAX = 20;      // シャボン最大生成数
+    private const int   BUBBLE_MAX = 30;      // シャボン最大生成数
 
     [SerializeField]
     private GameObject m_prefab;
@@ -24,6 +24,8 @@ public class BubbleFactory : MonoBehaviour
 
     [SerializeField,Tooltip("飛ばす方向")]
     private Vector3 m_direction;
+    [SerializeField, Tooltip("飛ばすスピード(1～指定数)")]
+    private float m_speed = 1;
 
     [SerializeField,Tooltip("生成時のランダム指定")]
     private VectorCheckers m_randomArea;
@@ -56,7 +58,7 @@ public class BubbleFactory : MonoBehaviour
             float rand = Random.Range(0.5f, 0.5f);              // シャボン大きさ(a～b)
             Vector3 randScale = new Vector3(rand, rand, rand);
             obj.transform.localScale = randScale;
-            obj.GetComponent<Rigidbody>().velocity = m_direction;
+            obj.GetComponent<Rigidbody>().velocity = m_direction.normalized * Random.Range(1,m_speed);
             if (m_bubbles[m_bubbleIndex] == null)
             {
                 m_bubbles[m_bubbleIndex++] = obj;
