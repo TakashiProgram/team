@@ -120,8 +120,30 @@ public class LarvaController : MonoBehaviour {
             GetComponent<Rigidbody>().useGravity = false;
         }else
         {
+            GetComponent<Rigidbody>().useGravity = true;
             m_animator.SetBool("isGround", true);
             m_animator.Play("Move");
+        }
+    }
+
+    public void RemoveBubble()
+    {
+        m_animator.SetBool("isInBubble", false);
+
+        m_animator.SetBool("isGround", false);
+        GetComponent<Rigidbody>().useGravity = true;
+    }
+
+    private void OnTriggerStay(Collider _coll)
+    {
+        if (!m_animator.GetBool("isGround"))
+        {
+            if(_coll.tag != "Bubble")
+            {
+                GetComponent<Rigidbody>().useGravity = true;
+                m_animator.SetBool("isGround", true);
+                m_animator.Play("Move");
+            }
         }
     }
 
@@ -129,16 +151,14 @@ public class LarvaController : MonoBehaviour {
     {
         if (_coll.tag == "Bubble")
         {
-            m_animator.SetBool("isInBubble", true);
+            m_animator.SetBool("isInBubble", false);
             m_animator.SetBool("isGround", false);
-            Debug.Log("fdsbgv");
             return;
-        }else if(_coll.tag != "Player")
+        }
+        else
         {
             m_animator.SetBool("isGround", false);
-
         }
 
-        
     }
 }
