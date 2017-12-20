@@ -14,9 +14,6 @@ public class InputManager : MonoBehaviour
     private Camera m_uiCamera;
 
     [SerializeField]
-    private GameObject m_fade;
-
-    [SerializeField]
     private Camera m_cameraManager;
 
     private Vector3 m_downWind;
@@ -44,11 +41,7 @@ public class InputManager : MonoBehaviour
 
     void Update()
     {
-        //FadeInが終わった時に呼ぶ
-        if(m_fade.GetComponent<Fader>().IsFade() && m_fade.GetComponent<Fader>().IsFadeEnd())
-        {
-            m_fade.GetComponent<Fader>().FadeOut();
-        }
+       
         TapVector();
         TapRay();
     }

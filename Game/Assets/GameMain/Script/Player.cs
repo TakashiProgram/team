@@ -70,7 +70,6 @@ public class Player : MonoBehaviour
         if (m_fade.GetComponent<Fader>().IsFade() && m_fade.GetComponent<Fader>().IsFadeEnd())
         {
             m_fade.GetComponent<Fader>().FadeOut();
-          //  m_animator.SetBool("Move", true);
             m_animator.SetBool("GameClear", true);
             m_mainCamera.GetComponent<CameraManager>().Result();
         }
