@@ -172,6 +172,7 @@ public class InputManager : MonoBehaviour
                 m_tapWindFlag = true;
                 if (GameObject.Find("Bubble")!=null)
                 {
+
                     GameObject.Find("Bubble").transform.GetComponent<Bubble>().DestroyTime();
                     GameObject.Find("Bubble").transform.GetComponent<BubbleController>().BubbleVibrate();
 
