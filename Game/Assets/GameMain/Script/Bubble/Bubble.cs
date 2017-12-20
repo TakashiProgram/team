@@ -101,13 +101,18 @@ public class Bubble : MonoBehaviour {
 
     private void OnTriggerEnter(Collider collision)
     {
+      
+    }
+
+    private void OnTriggerStay(Collider collision)
+    {
         //最初にシャボン玉に入ったオブジェクトを保持する
         if (m_switchingObject == null)
         {
             m_switchingObject = collision.gameObject;
-            
+
         }
-        
+
         if (collision.gameObject.tag == "Player")
         {
             GameObject gameobject = collision.gameObject;
@@ -149,15 +154,10 @@ public class Bubble : MonoBehaviour {
         }
         else
         {
-            
+
             m_inverted = 0;
             Death(collision);
         }
-    }
-
-    private void OnTriggerStay(Collider other)
-    {
-
     }
 
     private void OnCollisionEnter(Collision collision)

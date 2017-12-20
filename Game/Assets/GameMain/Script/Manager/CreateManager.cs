@@ -40,7 +40,7 @@ public class CreateManager : MonoBehaviour {
             if (m_object != null)
             {
                 m_object.GetComponent<Rigidbody>().useGravity = true;
-                m_object.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+                m_object.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
             }
             
             m_bubbleScale = scale;
