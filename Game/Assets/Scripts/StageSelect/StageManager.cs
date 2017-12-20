@@ -14,6 +14,7 @@ public class StageManager : MonoBehaviour
     [SerializeField, Tooltip("シーン上に配置されるすべてのステージを格納します。")]
     private GameObject[] m_stages;
     
+    [SerializeField]
     private StageData m_stagesData;
 
     private bool m_once;
@@ -22,7 +23,10 @@ public class StageManager : MonoBehaviour
     void Start()
     {
         //アセットのResourcesフォルダから該当のオブジェクトをロード
+        if (!m_stagesData) { 
         m_stagesData = Resources.Load<StageData>("StagesData");
+        Debug.Log(m_stagesData);
+            }
         if (m_stagesData.data == null)
         {
             LoadSaveFile();
