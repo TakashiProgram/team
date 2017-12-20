@@ -1,10 +1,9 @@
 fileFormatVersion: 2
-guid: ccd27dcee39ce294a995cdbac2b90624
-timeCreated: 1513738214
+guid: 692c0542f44edaf4b8d379d69d44a575
+timeCreated: 1513741528
 licenseType: Free
 TextureImporter:
-  fileIDToRecycleName:
-    21300000: UI_Font_0
+  fileIDToRecycleName: {}
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -29,7 +28,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     filterMode: -1
-    aniso: 1
+    aniso: -1
     mipBias: -1
     wrapMode: 1
   nPOTScale: 0
@@ -67,14 +66,6 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
-  - buildTarget: iPhone
-    maxTextureSize: 2048
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
   - buildTarget: Android
     maxTextureSize: 2048
     textureFormat: -1
@@ -85,20 +76,7 @@ TextureImporter:
     overridden: 0
   spriteSheet:
     serializedVersion: 2
-    sprites:
-    - serializedVersion: 2
-      name: UI_Font_0
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 768
-        width: 671
-        height: 128
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
+    sprites: []
     outline: []
   spritePackingTag: 
   userData: 
