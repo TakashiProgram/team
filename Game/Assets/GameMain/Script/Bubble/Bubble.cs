@@ -63,6 +63,7 @@ public class Bubble : MonoBehaviour {
             this.gameObject.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
 
         }
+        Debug.Log(m_switchingObject);
     }
    
 
@@ -104,6 +105,7 @@ public class Bubble : MonoBehaviour {
         if (m_switchingObject == null)
         {
             m_switchingObject = collision.gameObject;
+            
         }
         
         if (collision.gameObject.tag == "Player")
@@ -126,7 +128,7 @@ public class Bubble : MonoBehaviour {
             if (m_createManager.GetComponent<CreateManager>().m_createWindFlag)
             {
                 m_createManager.GetComponent<CreateManager>().m_WingMove = new Vector3(0, 0, 0);
-
+                Debug.Log("dn");
                 collision.GetComponent<Rigidbody>().useGravity = false;
                 collision.transform.position = this.transform.position;
                 collision.transform.localScale = m_smallerScale;
@@ -151,5 +153,15 @@ public class Bubble : MonoBehaviour {
             m_inverted = 0;
             Death(collision);
         }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+
     }
 }

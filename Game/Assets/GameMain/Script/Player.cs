@@ -157,7 +157,6 @@ public class Player : MonoBehaviour
         {
             if (m_createManager.GetComponent<CreateManager>().m_createWindFlag)
             {
-
                 Vector3 bubblePos = collider.transform.position;
 
                 this.transform.position = new Vector3(bubblePos.x, bubblePos.y - 0.5f, bubblePos.z);
