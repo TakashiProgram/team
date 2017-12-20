@@ -8,13 +8,13 @@ public static class SceneChanger{
 	
    public static void LoadSceneAtList(SceneNameList _listName)
     {
-        if((int)_listName < 0)
+        if((int)_listName <= 0)
         {
-            Debug.LogError("_listNameの値が不正です。_listNameの値は正の値でなくてはなりません");
+            Debug.LogError("_listNameがNoneのためシーンを移行できません。");
             return;
         }
        
-        SceneManager.LoadScene((int)_listName,LoadSceneMode.Single);
+        SceneManager.LoadScene(((int)_listName) - 1,LoadSceneMode.Single);
     }
 
   public static void LoadSceneAtListAsync(SceneNameList _listName)
@@ -25,7 +25,7 @@ public static class SceneChanger{
     static IEnumerator LoadAtListAsync(SceneNameList _listName)
     {
         Debug.Log("LoadScene To :" + _listName.ToString());
-        if ((int)_listName < 0)
+        if ((int)_listName <= 0)
         {
             yield break;
         }
@@ -42,7 +42,7 @@ public static class SceneChanger{
             yield return new WaitForSeconds(DEFAULT_FADE_TIME);
         }
 
-        AsyncOperation asyncData =  SceneManager.LoadSceneAsync((int)_listName,LoadSceneMode.Single);
+        AsyncOperation asyncData =  SceneManager.LoadSceneAsync(((int)_listName) - 1,LoadSceneMode.Single);
         asyncData.allowSceneActivation = false;
 
         while(asyncData.progress < 0.9f)

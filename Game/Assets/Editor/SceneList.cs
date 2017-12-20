@@ -185,7 +185,7 @@ public static class SceneList {
         builder.AppendLine("/// シーン名を定数で管理する");
         builder.AppendLine("/// </summary>");
         builder.Append("\t").AppendLine(@"public enum SceneNameList {");
-        builder.Append("\t").AppendLine(@"None = -1,").AppendLine();
+        builder.Append("\t").AppendLine(@"None,").AppendLine();
         int num = 0;
         foreach (var n in EditorBuildSettings.scenes
             .Select(c => Path.GetFileNameWithoutExtension(c.path))
