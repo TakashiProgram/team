@@ -63,13 +63,15 @@ public class Bubble : MonoBehaviour {
             this.gameObject.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
 
         }
-        Debug.Log(m_switchingObject);
+       
     }
    
 
     public void Death(Collider collision)
     {
+        Debug.Log("fdsbn");
         this.GetComponent<BubbleController>().Burst(collision);
+        
         
     }
     public void DestroyTime()
@@ -101,11 +103,6 @@ public class Bubble : MonoBehaviour {
 
     private void OnTriggerEnter(Collider collision)
     {
-      
-    }
-
-    private void OnTriggerStay(Collider collision)
-    {
         //最初にシャボン玉に入ったオブジェクトを保持する
         if (m_switchingObject == null)
         {
@@ -118,9 +115,11 @@ public class Bubble : MonoBehaviour {
             GameObject gameobject = collision.gameObject;
             if (m_switchingObject == gameobject)
             {
+             
                 //最大じゃない時に当たると破裂
                 if (m_createManager.GetComponent<CreateManager>().m_createWindFlag == false)
                 {
+                    Debug.Log("m_switchingObject");
                     Death(collision);
                 }
             }
@@ -144,6 +143,7 @@ public class Bubble : MonoBehaviour {
             }
             else
             {
+                Debug.Log("あれ");
                 Death(collision);
                 this.GetComponent<SphereCollider>().enabled = false;
             }
@@ -154,10 +154,15 @@ public class Bubble : MonoBehaviour {
         }
         else
         {
-
+            Debug.Log("これ");
             m_inverted = 0;
             Death(collision);
         }
+    }
+
+    private void OnTriggerStay(Collider collision)
+    {
+       
     }
 
     private void OnCollisionEnter(Collision collision)
