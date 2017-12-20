@@ -4,20 +4,6 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public bool m_bubbleFlag = false;
-
-    private Animator m_animator;
-
-    [SerializeField]
-    private GameObject m_right;
-    [SerializeField]
-    private GameObject m_left;
-
-    [SerializeField]
-    private GameObject[] m_hp;
-
-    [SerializeField]
-    private GameObject m_createManager;
 
     [SerializeField]
     private GameObject m_fade;
@@ -26,20 +12,35 @@ public class Player : MonoBehaviour
     private GameObject m_mainCamera;
 
     [SerializeField]
-  ///  private ParticleSystem m_particle;
+    private GameObject m_createManager;
+
+    [SerializeField]
+    private GameObject m_right;
+
+    [SerializeField]
+    private GameObject m_left;
+
+    [SerializeField]
+    private GameObject[] m_hp;
 
     private Vector3 m_formerPosition;
 
+    private Animator m_animator;
+    
     private int m_desCount;
 
     [SerializeField]
     private float m_invincibleTime;
+
+    private bool m_bubbleFlag = false;
 
     private const int DEATH_COUNT_MAX = 2; 
 
     private const float BACK_TIME = 1.0f;
 
     private const float HOLE_POS_Y = -10.0f;
+    //playerのスピード
+    private const float MOVE_COUNT = 0.05f;
 
     void Start()
     {
@@ -65,41 +66,122 @@ public class Player : MonoBehaviour
             m_desCount++;
         }
 
+
         if (m_fade.GetComponent<Fader>().IsFade() && m_fade.GetComponent<Fader>().IsFadeEnd())
         {
             m_fade.GetComponent<Fader>().FadeOut();
-          //  m_animator.SetBool("Move", true);
             m_animator.SetBool("GameClear", true);
             m_mainCamera.GetComponent<CameraManager>().Result();
         }
     }
 
+    //playerの移動
+    public void Move(float flip)
+    {
+        Vector3 playerMove = transform.position;
+        playerMove.x += MOVE_COUNT * flip;
+        transform.position = playerMove;
+    }
+
+    public void BubbleFlag()
+    {
+        m_bubbleFlag = false;
+    }
+
+    //playerの死亡アニメーションフラグ
     public void Expiration()
     {
        
         m_animator.SetBool("Death", true);
     }
-
-
-    private void OnTriggerEnter(Collider collision)
+    //無敵時間
+    IEnumerator InvincibleTime()
     {
-        //Bubbleに当たった瞬間しかいらない処理
-        if (collision.gameObject.tag == "Bubble"&& collision.GetComponent<Bubble>().m_switchingObject.tag=="Player")
+        gameObject.layer = LayerMask.NameToLayer("PlayerDamage");
+       
+       
+            yield return new WaitForSeconds(m_invincibleTime);
+        
+        gameObject.layer = LayerMask.NameToLayer("Player");
+    }
+    //リトライ時の倒れるモーション
+    public void Down()
+    {
+        m_animator.SetBool("Death", false);
+        m_animator.SetBool("DownUp", true);
+        m_desCount = 0;
+    }
+    //playerのダメージをくらったときにHPを減少させる
+    private void Damage()
+    {
+
+        m_left.GetComponent<CircleCollider2D>().enabled = false;
+        m_right.GetComponent<CircleCollider2D>().enabled = false;
+
+        m_hp[m_desCount].SetActive(false);
+        m_desCount++;
+
+    }
+    //playerがダメージを食らってある程度したら操作できるようにする
+    private void MoveReturn()
+    {
+        m_left.GetComponent<CircleCollider2D>().enabled = true;
+        m_right.GetComponent<CircleCollider2D>().enabled = true;
+    }
+    //リザルトの表示に移行
+    public void ContinueScene()
+    {
+        m_mainCamera.GetComponent<CameraManager>().Death();
+    }
+    //起き上がりモーション
+    public void GetUp()
+    {
+        m_animator.SetBool("DownUp", false);
+    }
+    //playerのダメージモーション処理が終わってIdleモーションに戻る
+    public void DamageEnd()
+    {
+        m_animator.SetBool("Damage", false);
+    }
+    //GameClearのポジションに移行
+    public void GameClear()
+    {
+        iTween.Stop(gameObject);
+        this.transform.eulerAngles = new Vector3(0, 90, 0);
+    }
+    //当たり判定関係
+    private void OnTriggerStay(Collider collider)
+    {
+        //Bubbleと同じ動きをする
+        if (collider.gameObject.tag == "Bubble" && collider.GetComponent<Bubble>().m_switchingObject.tag == "Player")
         {
             if (m_createManager.GetComponent<CreateManager>().m_createWindFlag)
             {
-                m_bubbleFlag = true;
-                this.GetComponent<Rigidbody>().useGravity = false;
 
-                transform.parent = collision.transform.parent;
+                Vector3 bubblePos = collider.transform.position;
+
+                this.transform.position = new Vector3(bubblePos.x, bubblePos.y - 0.5f, bubblePos.z);
 
             }
         }
-        
+        else if (collider.gameObject.tag == "CheackPoint")
+        {
+            collider.GetComponent<BoxCollider>().enabled = false;
+            m_formerPosition = this.transform.position;
+        }
+        else if (collider.gameObject.tag == "Goal")
+        {
+            
+            collider.transform.position = transform.position;
+           
+            m_fade.GetComponent<Fader>().FadeIn();
+           
+        }
     }
-    private void OnCollisionEnter(Collision collision)
+
+    private void OnCollisionEnter(Collision collider)
     {
-        if (collision.gameObject.tag == "Enemy")
+        if (collider.gameObject.tag == "Enemy")
         {
             StartCoroutine("InvincibleTime");
 
@@ -120,99 +202,24 @@ public class Player : MonoBehaviour
                                                   "time", BACK_TIME
                 ));
         }
-        
+
     }
-  
-    private void OnTriggerStay(Collider collision)
+
+    private void OnTriggerEnter(Collider collider)
     {
-        //Bubbleと同じ動きをする
-        if (collision.gameObject.tag == "Bubble" && collision.GetComponent<Bubble>().m_switchingObject.tag == "Player")
+        //Bubbleに当たった瞬間しかいらない処理
+        if (collider.gameObject.tag == "Bubble" && collider.GetComponent<Bubble>().m_switchingObject.tag == "Player")
         {
             if (m_createManager.GetComponent<CreateManager>().m_createWindFlag)
             {
-                
-                Vector3 bubblePos = collision.transform.position;
+                m_bubbleFlag = true;
+                this.GetComponent<Rigidbody>().useGravity = false;
 
-                this.transform.position = new Vector3(bubblePos.x, bubblePos.y - 0.5f, bubblePos.z);
+                transform.parent = collider.transform.parent;
 
-            } 
-        }else if (collision.gameObject.tag == "CheackPoint")
-        {
-            collision.GetComponent<BoxCollider>().enabled = false;
-            m_formerPosition = this.transform.position;
-        }
-        else if (collision.gameObject.tag == "Goal")
-        {
-         //   if (m_particle.GetComponent<ParticleSystem>().isStopped)
-            {
-                m_fade.GetComponent<Fader>().FadeIn();
             }
-            
         }
-    }
-    //無敵時間
-    IEnumerator InvincibleTime()
-    {
-        gameObject.layer = LayerMask.NameToLayer("PlayerDamage");
-       
-       
-            yield return new WaitForSeconds(m_invincibleTime);
-        
-        gameObject.layer = LayerMask.NameToLayer("Player");
-    }
-    public void CheackPoint(Vector3 pos)
-    {
-        m_formerPosition = pos;
-    }
 
-    public void DownUP()
-    {
-        m_animator.SetBool("Death", false);
-        m_animator.SetBool("DownUp", true);
-        m_desCount = 0;
-    }
-
-    //この下のアニメーション時に呼ばれるときの処理
-    //playerのダメージをくらったときにHPを減少させて
-    //0になったらplayerは死ぬ
-    private void Damage()
-    {
-
-        m_left.GetComponent<CircleCollider2D>().enabled = false;
-        m_right.GetComponent<CircleCollider2D>().enabled = false;
-
-        m_hp[m_desCount].SetActive(false);
-        m_desCount++;
-
-    }
-
-    //playerがダメージを食らってある程度したら操作できるようにする
-    private void MoveReturn()
-    {
-        m_left.GetComponent<CircleCollider2D>().enabled = true;
-        m_right.GetComponent<CircleCollider2D>().enabled = true;
-    }
-
-    public void ContinueScene()
-    {
-        m_mainCamera.GetComponent<CameraManager>().Death();
-    }
-
-    public void GetUp()
-    {
-        m_animator.SetBool("DownUp", false);
-    }
-
-    //playerのダメージモーション処理が終わってIdleモーションに戻る
-    void DamageEnd()
-    {
-        m_animator.SetBool("Damage", false);
-    }
-
-    void test()
-    {
-        iTween.Stop(gameObject);
-        this.transform.eulerAngles = new Vector3(0, 90, 0);
     }
 
 }
