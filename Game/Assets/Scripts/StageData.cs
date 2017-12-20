@@ -1,10 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System;
-using System.Linq;
 using UnityEngine;
 
-[CreateAssetMenu(menuName ="Tools/StageRank")]
+[CreateAssetMenu(menuName ="Tools/CreateStageData")]
 public class StageData : ScriptableObject {
     [System.Serializable]
     public struct Data
