@@ -207,7 +207,7 @@ public class Player : MonoBehaviour
     private void OnTriggerEnter(Collider collider)
     {
         //Bubbleに当たった瞬間しかいらない処理
-        if (collider.gameObject.tag == "Bubble" && collider.GetComponent<Bubble>().m_switchingObject.tag == "Player")
+        if (collider.gameObject.tag == "Bubble"/* && collider.GetComponent<Bubble>().m_switchingObject.tag == "Player"*/)
         {
             if (m_createManager.GetComponent<CreateManager>().m_createWindFlag)
             {

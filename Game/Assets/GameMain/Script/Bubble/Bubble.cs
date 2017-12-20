@@ -27,7 +27,7 @@ public class Bubble : MonoBehaviour {
     //時間がたって上昇の値
     private float m_floatingCount = 0;
 
-    private Collider m_hitCollider;
+    public Collider m_hitCollider;
 
     private bool m_enemyFlag = false;
 
@@ -66,10 +66,13 @@ public class Bubble : MonoBehaviour {
        
     }
    
-
+    public void rr()
+    {
+        Destroy(gameObject);
+    }
     public void Death()
     {
-        Debug.Log("fdsbn");
+
 
         ParentRelease();
         this.GetComponent<BubbleController>().Burst();
@@ -80,7 +83,12 @@ public class Bubble : MonoBehaviour {
 
     public void rrr()
     {
-        this.GetComponent<BubbleController>().Burst();
+        //   m_hitCollider.GetComponent<LarvaController>().RemoveBubble();
+        m_hitCollider.GetComponent<Rigidbody>().useGravity = true;
+        m_hitCollider.transform.parent = null;
+        LarvaController tmp = m_hitCollider.GetComponent<LarvaController>();
+
+        if (tmp) tmp.RemoveBubble();
     }
     public void DestroyTime()
     {
@@ -102,7 +110,7 @@ public class Bubble : MonoBehaviour {
             m_hitCollider.GetComponent<Rigidbody>().useGravity = true;
             m_hitCollider.transform.parent = null;
             LarvaController tmp = m_hitCollider.GetComponent<LarvaController>();
-            Debug.Log(tmp);
+
             if (tmp) tmp.RemoveBubble();
             m_enemyFlag = false;
         }
@@ -114,7 +122,62 @@ public class Bubble : MonoBehaviour {
 
     private void OnTriggerEnter(Collider collision)
     {
-     
+        //最初にシャボン玉に入ったオブジェクトを保持する
+        if (m_switchingObject == null)
+        {
+            m_switchingObject = collision.gameObject;
+
+        }
+
+        if (collision.gameObject.tag == "Player")
+        {
+            GameObject gameobject = collision.gameObject;
+            if (m_switchingObject == gameobject)
+            {
+
+                //最大じゃない時に当たると破裂
+                if (m_createManager.GetComponent<CreateManager>().m_createWindFlag == false)
+                {
+                    Debug.Log("m_switchingObject");
+                    Death();
+                }
+            }
+        }
+
+        else if (collision.gameObject.tag == "Enemy" && m_switchingObject.tag == "Enemy")
+        {
+            GameObject gameobject = collision.gameObject;
+
+            if (m_createManager.GetComponent<CreateManager>().m_createWindFlag)
+            {
+                m_createManager.GetComponent<CreateManager>().m_WingMove = new Vector3(0, 0, 0);
+
+                collision.GetComponent<Rigidbody>().useGravity = false;
+               // collision.transform.position = this.transform.position;
+                collision.transform.localScale = m_smallerScale;
+                m_createManager.GetComponent<CreateManager>().PutInObject(collision);
+                Debug.Log("efsdbvc");
+                m_hitCollider = collision;
+                m_enemyFlag = true;
+            }
+            else
+            {
+
+                Death();
+                rrr();
+                this.GetComponent<SphereCollider>().enabled = false;
+            }
+        }
+        else if (collision.gameObject.tag == "CheackPoint")
+        {
+            //Bubbleを当ててチェックポイント通過にするかも
+        }
+        else
+        {
+            Debug.Log("これ");
+            m_inverted = 0;
+            Death();
+        }
     }
 
     private void OnTriggerStay(Collider collision)
@@ -148,18 +211,18 @@ public class Bubble : MonoBehaviour {
             if (m_createManager.GetComponent<CreateManager>().m_createWindFlag)
             {
                 m_createManager.GetComponent<CreateManager>().m_WingMove = new Vector3(0, 0, 0);
-                Debug.Log("dn");
+
                 collision.GetComponent<Rigidbody>().useGravity = false;
                 collision.transform.position = this.transform.position;
                 collision.transform.localScale = m_smallerScale;
-                m_createManager.GetComponent<CreateManager>().PutInObject(collision);
-
-                m_hitCollider = collision;
-                m_enemyFlag = true;
+              //  m_createManager.GetComponent<CreateManager>().PutInObject(collision);
+                Debug.Log("efsdbvc");
+             //   m_hitCollider = collision;
+               // m_enemyFlag = true;
             }
             else
             {
-                Debug.Log("あれ");
+
                 Death();
                 rrr();
                 this.GetComponent<SphereCollider>().enabled = false;

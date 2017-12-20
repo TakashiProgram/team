@@ -65,7 +65,7 @@ public class CameraManager : MonoBehaviour {
 
     private readonly Vector3 CUNTINUE_SCALE = new Vector3(1.0f, 1.0f, 1.0f);
 
-    private readonly Vector3 RESULT_POS = new Vector3(-13.68f, -1.24f, 0);
+    private readonly Vector3 RESULT_POS = new Vector3(-13.68f, -1.14f, 0.67f);
 
     //private enum reee
     //{
