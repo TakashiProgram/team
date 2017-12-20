@@ -39,14 +39,17 @@ public class CreateManager : MonoBehaviour {
             //シャボン玉に何かが入っているときに処理する
             if (m_object != null)
             {
+         //       Debug.Break();
                 m_object.GetComponent<Rigidbody>().useGravity = true;
                 m_object.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+                if(m_bubbleCreateBox.GetComponent<BubbleController>())m_bubbleCreateBox.GetComponent<BubbleController>().Burst();
             }
             
             m_bubbleScale = scale;
-            Destroy(m_bubbleCreateBox);
-            m_bubbleCreateBox = Instantiate(m_bubble, new Vector3(m_playerFront.transform.position.x, m_playerFront.transform.position.y, 0), Quaternion.identity);
-            
+            // Destroy(m_bubbleCreateBox);
+         //   m_bubble.GetComponent<BubbleController>().Burst();
+             m_bubbleCreateBox = Instantiate(m_bubble, new Vector3(m_playerFront.transform.position.x, m_playerFront.transform.position.y, 0), Quaternion.identity);
+          //  m_bubbleCreateBox.GetComponent<BubbleController>().Burst();
         }
             m_bubbleScale+=Time.deltaTime* flip;
 
