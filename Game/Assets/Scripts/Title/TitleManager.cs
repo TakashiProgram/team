@@ -5,8 +5,9 @@ using UnityEngine;
 public class TitleManager : MonoBehaviour
 {
     bool changeFlag;  // シーン遷移可能かどうか
-    
 
+    [SerializeField]
+    private SceneNameList changeTarget;
 
 	// Use this for initialization
 	void Start ()
@@ -17,15 +18,15 @@ public class TitleManager : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        GameObject fade = GameObject.Find("FadeCamera");     // 
-        
+        GameObject fade = GameObject.Find("FadeCamera");
+
+        // フェード処理が終わってたら
         if (fade.GetComponent<Fader>().IsFadeEnd())
         {
-            
             // 画面クリック/タップで遷移
             if (Input.GetMouseButtonDown(0))
             {
-                SceneChanger.LoadSceneAtListAsync(SceneNameList.GameMain);
+                SceneChanger.LoadSceneAtListAsync(changeTarget);
             }
         }
     }
