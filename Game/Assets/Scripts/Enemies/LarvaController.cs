@@ -118,8 +118,6 @@ public class LarvaController : MonoBehaviour {
             m_animator.SetBool("isInBubble", true);
 
             GetComponent<Rigidbody>().useGravity = false;
-            //transform.parent = _coll.transform;
-            transform.localPosition = Vector3.zero;
         }else
         {
             m_animator.SetBool("isGround", true);
