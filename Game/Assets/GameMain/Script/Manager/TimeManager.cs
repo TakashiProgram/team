@@ -67,7 +67,7 @@ public class TimeManager : MonoBehaviour {
         m_resetTime = m_Time;
         m_rotationTime = TIME_MAX / m_Time;
         
-        resources = Resources.Load<StageData>("SaveData");
+        resources = Resources.Load<StageData>("StagesData");
     }
 	
 	void Update () {
