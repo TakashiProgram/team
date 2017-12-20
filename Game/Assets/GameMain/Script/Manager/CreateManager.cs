@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class CreateManager : MonoBehaviour {
     //m_bubbleの動き
@@ -28,11 +26,13 @@ public class CreateManager : MonoBehaviour {
     //m_bubbleの最大scale
     private const float SCALE_MAX = 0.7f;
 
-    void Start () {
-
+    private void Update()
+    {
+       
     }
+
     //BubbleボタンをTapした時の処理
-  public void TapBubble(float scale,float flip)
+    public void TapBubble(float scale,float flip)
     {
         if (Input.GetMouseButtonDown(0))
         {
@@ -48,7 +48,6 @@ public class CreateManager : MonoBehaviour {
             m_bubbleCreateBox = Instantiate(m_bubble, new Vector3(m_playerFront.transform.position.x, m_playerFront.transform.position.y, 0), Quaternion.identity);
             
         }
-
             m_bubbleScale+=Time.deltaTime* flip;
 
             m_bubbleCreateBox.transform.localScale = new Vector3(m_bubbleScale, m_bubbleScale, m_bubbleScale);
@@ -65,14 +64,18 @@ public class CreateManager : MonoBehaviour {
     public void TapWind(Vector3 vector)
     {
         if (GameObject.Find("Bubble") != null)
-
         {
-            Instantiate(m_wind, m_bubbleCreateBox.transform.position, Quaternion.identity);
+            if (vector != Vector3.zero)
+            {
+                GameObject m_windBox; m_windBox= Instantiate(m_wind, m_bubbleCreateBox.transform.position, Quaternion.identity);
+                Destroy(m_windBox, 1);
+            }
+            
             m_WingMove = vector;
         }
     }
-    public void PutInObject(Collider collision)
+    public void PutInObject(Collider collider)
     {
-        m_object = collision;
+        m_object = collider;
     }
 }

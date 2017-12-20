@@ -151,43 +151,38 @@ public class Player : MonoBehaviour
         this.transform.eulerAngles = new Vector3(0, 90, 0);
     }
     //当たり判定関係
-    private void OnTriggerStay(Collider collision)
+    private void OnTriggerStay(Collider collider)
     {
         //Bubbleと同じ動きをする
-        if (collision.gameObject.tag == "Bubble" && collision.GetComponent<Bubble>().m_switchingObject.tag == "Player")
+        if (collider.gameObject.tag == "Bubble" && collider.GetComponent<Bubble>().m_switchingObject.tag == "Player")
         {
             if (m_createManager.GetComponent<CreateManager>().m_createWindFlag)
             {
 
-                Vector3 bubblePos = collision.transform.position;
+                Vector3 bubblePos = collider.transform.position;
 
                 this.transform.position = new Vector3(bubblePos.x, bubblePos.y - 0.5f, bubblePos.z);
 
             }
         }
-        else if (collision.gameObject.tag == "CheackPoint")
+        else if (collider.gameObject.tag == "CheackPoint")
         {
-            collision.GetComponent<BoxCollider>().enabled = false;
+            collider.GetComponent<BoxCollider>().enabled = false;
             m_formerPosition = this.transform.position;
         }
-        else if (collision.gameObject.tag == "Goal")
+        else if (collider.gameObject.tag == "Goal")
         {
-            //   if (m_particle.GetComponent<ParticleSystem>().isStopped)
-            //transform.position = collision.transform.position;
-
-            collision.transform.position = transform.position;
-            //  Debug.Break();
-            //  {
-            Debug.Log("dscvx");
+            
+            collider.transform.position = transform.position;
+           
             m_fade.GetComponent<Fader>().FadeIn();
-            //}
-
+           
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter(Collision collider)
     {
-        if (collision.gameObject.tag == "Enemy")
+        if (collider.gameObject.tag == "Enemy")
         {
             StartCoroutine("InvincibleTime");
 
@@ -211,17 +206,17 @@ public class Player : MonoBehaviour
 
     }
 
-    private void OnTriggerEnter(Collider collision)
+    private void OnTriggerEnter(Collider collider)
     {
         //Bubbleに当たった瞬間しかいらない処理
-        if (collision.gameObject.tag == "Bubble" && collision.GetComponent<Bubble>().m_switchingObject.tag == "Player")
+        if (collider.gameObject.tag == "Bubble" && collider.GetComponent<Bubble>().m_switchingObject.tag == "Player")
         {
             if (m_createManager.GetComponent<CreateManager>().m_createWindFlag)
             {
                 m_bubbleFlag = true;
                 this.GetComponent<Rigidbody>().useGravity = false;
 
-                transform.parent = collision.transform.parent;
+                transform.parent = collider.transform.parent;
 
             }
         }

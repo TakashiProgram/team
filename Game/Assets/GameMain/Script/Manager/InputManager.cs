@@ -1,14 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine.SceneManagement;
+﻿using UnityEngine.SceneManagement;
 using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
-
-    public bool m_tapWindFlag = false;
-
-    public bool m_floatEnemyFlag = false;
 
     [SerializeField]
     private GameObject m_player;
@@ -24,14 +18,18 @@ public class InputManager : MonoBehaviour
 
     [SerializeField]
     private Camera m_cameraManager;
- 
-    private Vector3 m_downWind;
 
-    private RaycastHit2D m_hitObject;
+    private Vector3 m_downWind;
 
     private int m_flip = 1;
 
+    private bool m_tapWindFlag = false;
+
+    private bool m_floatEnemyFlag = false;
+
     private bool m_stopWindFlag = false;
+
+    private RaycastHit2D m_hitObject;
 
     //playerの回転
     private const int PLAYER_ROTATION = 90;
@@ -44,10 +42,6 @@ public class InputManager : MonoBehaviour
 
     private readonly Color m_resetColor = new Color(1.0f, 1.0f, 1.0f, 0.5f);
 
-    private void Start()
-    {
-      //  m_fade.GetComponent<Fader>().FadeIn();
-    }
     void Update()
     {
         //FadeInが終わった時に呼ぶ
@@ -60,9 +54,8 @@ public class InputManager : MonoBehaviour
     }
 
     //タップしたオブジェクトの名前を取ってくる
-    void TapRay()
+    private void TapRay()
     {
-       
         if (Input.GetMouseButton(0))
         {
             Ray ray = m_uiCamera.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
@@ -94,8 +87,7 @@ public class InputManager : MonoBehaviour
                         m_tapWindFlag = false;
                         hit.collider.GetComponent<SpriteRenderer>().color = m_setColor;
                         m_hitObject = hit;
-
-                      
+                        
                         m_player.GetComponent<Player>().Move(m_flip);
 
                         iTween.RotateTo(m_player, iTween.Hash("y", -PLAYER_ROTATION));
@@ -155,7 +147,6 @@ public class InputManager : MonoBehaviour
                 case "Clear":
 
                     SceneChanger.LoadSceneAtListAsync(SceneNameList.Title);
-                  //  m_hitObject = hit;
 
                     break;
 
@@ -173,7 +164,7 @@ public class InputManager : MonoBehaviour
                     // Select画面に移行する
                     //GameOverを表示するかも？
                     //デバッグ
-                    SceneManager.LoadScene("GameMain");
+                    SceneChanger.LoadSceneAtListAsync(SceneNameList.Select);
 
                     break;
                     
@@ -197,9 +188,8 @@ public class InputManager : MonoBehaviour
     }
     
     //手を離したら元に戻す
-    void TapUpReset()
+   private void TapUpReset()
     {
-       // if (m_hitObject.collider!=null)
         {
             m_hitObject.collider.GetComponent<SpriteRenderer>().color = m_resetColor;
         }
