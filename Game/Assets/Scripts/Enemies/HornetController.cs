@@ -32,19 +32,28 @@ public class HornetController : MonoBehaviour {
         {
             foreach (var way in m_wayPoints)
             {
-                m_circle.Enqueue(way.transform.position);
+                if (way)
+                {
+                    m_circle.Enqueue(way.transform.position);
+                }
             }
         }
         else
         {
             foreach (var way in m_wayPoints)
             {
-                m_circle.Enqueue(way.transform.position);
+                if (way)
+                {
+                    m_circle.Enqueue(way.transform.position);
+                }
             }
 
             for (int i = m_wayPoints.Length - 2; i > 0; i--)
             {
-                m_circle.Enqueue(m_wayPoints[i].transform.position);
+                if (m_wayPoints[i])
+                {
+                    m_circle.Enqueue(m_wayPoints[i].transform.position);
+                }
             }
         }
     }
