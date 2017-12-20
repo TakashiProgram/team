@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine.UI;
+﻿using UnityEngine.UI;
 using UnityEngine;
 
 public class TimeManager : MonoBehaviour {
@@ -12,19 +10,23 @@ public class TimeManager : MonoBehaviour {
     private GameObject m_player;
 
     [SerializeField]
-    private GameObject[] Image;
-
-    [SerializeField]
     private GameObject m_result;
 
     [SerializeField]
     private GameObject m_clear;
 
     [SerializeField]
-    private Sprite[] Rank;
+    private GameObject[] m_image;
 
     [SerializeField]
-    private Sprite[] Numbers;
+    private Sprite[] m_rank;
+
+    [SerializeField]
+    private Sprite[] m_numbers;
+
+    private int m_digitUp = 1;
+
+    private int m_rankTime;
 
     [SerializeField]
     private float m_Time;
@@ -35,17 +37,15 @@ public class TimeManager : MonoBehaviour {
 
     private float m_resetTime;
 
-    private int m_digitUp = 1;
-
-    private int wTime;
+    private bool m_fixed = true;
 
     private const int TIME_MAX = 360;
 
-    private bool m_fixed = true;
+    private const int RANK_COUNT = 3;
+
+    private const int TAP_COUNT = 4;
 
     private StageData resources;
-
-    
 
     private enum ScoreRank
     {
@@ -54,12 +54,18 @@ public class TimeManager : MonoBehaviour {
         B =49
     }
 
+    private enum Rank
+    {
+        S=0,
+        A,
+        B
+    }
+
 
     void Start () {
         m_resetTime = m_Time;
         m_rotationTime = TIME_MAX / m_Time;
-
-        //   resources = Resources.Load("Image/StageSelect/OrangeButton");
+        
         resources = Resources.Load<StageData>("SaveData");
     }
 	
@@ -74,7 +80,6 @@ public class TimeManager : MonoBehaviour {
     }
     private void Disable()
     {
-
         m_range = m_range + (m_rotationTime * Time.deltaTime);
         m_timeLimit.transform.rotation = Quaternion.Euler(0,0, -m_range);
         m_Time -= Time.deltaTime;
@@ -92,53 +97,56 @@ public class TimeManager : MonoBehaviour {
         //後で変更
         m_Time += Time.deltaTime;
 
-         wTime = (int)m_Time;
+        m_rankTime = (int)m_Time;
 
-       // printf("%d", wTime / 100);
-       
+      
         //コンテニューした時のことを後で追加する
         if (m_fixed)
         {
-            if (wTime >= (int)ScoreRank.S)
+            if (m_rankTime >= (int)ScoreRank.S)
             {
-                Image[3].GetComponent<Image>().sprite = Rank[0];
-                //resources.data[0].rank = ClearRank.rank_S;
+                m_image[RANK_COUNT].GetComponent<Image>().sprite = m_rank[(int)Rank.S];
+                //Selectからするようになったら消す
+              //  resources.data[0].rank = ClearRank.rank_S;
+                //Selectからするようになったらコメント解除
+               // resources.SetClearRank(SceneManager.GetActiveScene().name, ClearRank.rank_S);
 
             } else if (m_Time <= (int)ScoreRank.S && m_Time >= (int)ScoreRank.B)
             {
-                Image[3].GetComponent<Image>().sprite = Rank[1];
-             //   resources.data[0].rank = ClearRank.rank_A;
+                m_image[RANK_COUNT].GetComponent<Image>().sprite = m_rank[(int)Rank.A];
+                //Selectからするようになったらコメント解除
+                //    resources.SetClearRank(SceneManager.GetActiveScene().name, ClearRank.rank_A);
             }
             else
             {
-                Image[3].GetComponent<Image>().sprite = Rank[2];
-               // resources.data[0].rank = ClearRank.rank_B;
+                m_image[RANK_COUNT].GetComponent<Image>().sprite = m_rank[(int)Rank.B];
+                //Selectからするようになったらコメント解除
+                //  resources.SetClearRank(SceneManager.GetActiveScene().name, ClearRank.rank_B);
             }
-        }else
+        }
+        else
         {
-            Image[3].GetComponent<Image>().sprite = Rank[2];
-         //   resources.data[0].rank = ClearRank.rank_B;
+            m_image[RANK_COUNT].GetComponent<Image>().sprite = m_rank[(int)Rank.B];
+            //Selectからするようになったらコメント解除
+            //   resources.SetClearRank(SceneManager.GetActiveScene().name, ClearRank.rank_B);
         }
         for (int i = 0; i < 3; i++)
         {
            
-           int r= wTime / m_digitUp;
+           int r= m_rankTime / m_digitUp;
 
             r = r % 10;
-            Image[i].GetComponent<Image>().sprite = Numbers[r];
+            m_image[i].GetComponent<Image>().sprite = m_numbers[r];
             m_digitUp = m_digitUp * 10;
 
         }
         
-
-        //クリアランク表示
-        // Image[0].GetComponent<Image>().sprite = wTime.ToString();
         Invoke("Tap", 1.0f);
     }
     public void Tap()
     {
         m_clear.SetActive(true);
-        Image[4].SetActive(true);
+        m_image[TAP_COUNT].SetActive(true);
     }
     public void RankFixed()
     {

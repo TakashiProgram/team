@@ -6,27 +6,29 @@ public class Bubble : MonoBehaviour {
     //当たったオブジェクトの格納場所
     public GameObject m_switchingObject;
 
-    //プランナーが指定
+    private GameObject m_createManager;
+
+    private GameObject m_player;
+
+    //風の向きを保持する
+    private Vector3 m_move;
+
     //生存時間
     [SerializeField]
     private int m_survivalTime;
+
+    //スワイプで動かしたときに反対の値
+    private int m_inverted = -1;
+
     //移動速度
     [SerializeField]
     private float m_bubbleMove;
 
-    private GameObject m_createManager;
-
-    private GameObject m_player;
-    //風の向きを保持する
-    private Vector3 m_move;
+    //時間がたって上昇の値
+    private float m_floatingCount = 0;
 
     private Collider m_hitCollider;
 
-    //スワイプで動かしたときに反対の値
-    private int m_inverted = -1;
-    //時間がたって上昇の値
-    private float m_floatingCount = 0;
-   
     private bool m_enemyFlag = false;
 
     //自動で上昇が発動するまでの時間
@@ -48,7 +50,7 @@ public class Bubble : MonoBehaviour {
 	
 	void Update () {
         m_move = m_createManager.GetComponent<CreateManager>().m_WingMove;
-        if (m_move==new Vector3(0,0,0))
+        if (m_move== Vector3.zero)
         {
             //上昇
             this.gameObject.GetComponent<Rigidbody>().velocity = new Vector3(0,m_floatingCount,0);
@@ -62,6 +64,40 @@ public class Bubble : MonoBehaviour {
 
         }
     }
+   
+
+    public void Death(Collider collision)
+    {
+        this.GetComponent<BubbleController>().Burst(collision);
+        
+    }
+    public void DestroyTime()
+    {
+        Invoke("Death", m_survivalTime);
+        
+    }
+
+    private void Rising()
+    {
+        m_floatingCount = 0.5f;
+    }
+
+    public void ParentRelease()
+    {
+        m_player.transform.parent = null;
+        m_player.GetComponent<Player>().BubbleFlag();
+        if (m_enemyFlag)
+        {
+            m_hitCollider.GetComponent<Rigidbody>().useGravity = true;
+            m_hitCollider.transform.parent = null;
+            m_enemyFlag = false;
+        }
+      
+        m_player.GetComponent<Rigidbody>().useGravity = true;
+        m_createManager.GetComponent<CreateManager>().m_createWindFlag = false;
+        
+    }
+
     private void OnTriggerEnter(Collider collision)
     {
         //最初にシャボン玉に入ったオブジェクトを保持する
@@ -69,9 +105,7 @@ public class Bubble : MonoBehaviour {
         {
             m_switchingObject = collision.gameObject;
         }
-
-
-
+        
         if (collision.gameObject.tag == "Player")
         {
             GameObject gameobject = collision.gameObject;
@@ -113,47 +147,9 @@ public class Bubble : MonoBehaviour {
         }
         else
         {
-            // 渋谷君しだい
-            //   m_inverted *= -1;
+            
             m_inverted = 0;
             Death(collision);
         }
-    }
-
-    private void OnTriggerStay(Collider collision)
-    {
-     
-    }
-
-    public void Death(Collider collision)
-    {
-        this.GetComponent<BubbleController>().Burst(collision);
-        
-    }
-    public void DestroyTime()
-    {
-        Invoke("Death", m_survivalTime);
-        
-    }
-
-    private void Rising()
-    {
-        m_floatingCount = 0.5f;
-    }
-
-    public void ParentRelease()
-    {
-        m_player.transform.parent = null;
-        m_player.GetComponent<Player>().BubbleFlag();
-        if (m_enemyFlag)
-        {
-            m_hitCollider.GetComponent<Rigidbody>().useGravity = true;
-            m_hitCollider.transform.parent = null;
-            m_enemyFlag = false;
-        }
-      
-        m_player.GetComponent<Rigidbody>().useGravity = true;
-        m_createManager.GetComponent<CreateManager>().m_createWindFlag = false;
-        
     }
 }

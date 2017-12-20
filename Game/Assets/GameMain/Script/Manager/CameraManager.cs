@@ -1,26 +1,28 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class CameraManager : MonoBehaviour {
-    //コンテニュー画面のUI
-    [SerializeField]
-    private GameObject m_continueUI;
-    //コンテニュー選択するかどうかのUI
-    [SerializeField]
-    private GameObject m_decisionUI;
+
     //全体のUI
     [SerializeField]
     private GameObject m_DefaultUI;
-    //HP表示のUI
+    
+    //コンテニュー画面のUI
     [SerializeField]
-    private GameObject[] m_hpUI;
+    private GameObject m_continueUI;
+    
+    //コンテニュー選択するかどうかのUI
+    [SerializeField]
+    private GameObject m_decisionUI;
 
     [SerializeField]
     private GameObject m_player;
 
     [SerializeField]
     private GameObject m_timeManager;
+
+    //HP表示のUI
+    [SerializeField]
+    private GameObject[] m_hpUI;
 
     [SerializeField]
     private Vector2 m_playerPosMin;
@@ -29,11 +31,15 @@ public class CameraManager : MonoBehaviour {
     private Vector2 m_playerPosMax;
 
     [SerializeField]
-    private ParticleSystem particle;
+    private ParticleSystem m_particle;
+
+    private int m_continueCount = 0;
 
     private bool m_switchingFlag = true;
 
     private bool m_zoomFlag = true;
+
+    private bool m_stop = true;
 
     //playerのz軸を変更しない
     private const float FIXED = -4.75f;
@@ -44,21 +50,21 @@ public class CameraManager : MonoBehaviour {
     //playerの高さを調整
     private const int SET_POS_Y = 2;
 
-    private int m_continueCount = 0;
-
     private const int CONTINUE_MAX = 2;
+
+    private const float RESET_TIME = 3;
 
     private const float CONTINUE_TIME = 2.0f;
 
     private readonly Vector3 CUNTINUE_SCALE = new Vector3(1.0f, 1.0f, 1.0f);
 
-    private bool stop = true;
-    
+    private readonly Vector3 RESULT_POS = new Vector3(-13.68f, -1.24f, 0);
+
+
     void Start () {
         //最初にカメラがプレイヤーに付いていく(デバック用)
         this.transform.position = new Vector3(m_player.transform.position.x, m_player.transform.position.y, FIXED);
-        //m_switchingFlag = false;
-        //m_zoomFlag = false;
+        
     }
 	
 	void Update () {
@@ -69,8 +75,6 @@ public class CameraManager : MonoBehaviour {
             //カメラが範囲外になったら止める
             this.transform.position = new Vector3(Mathf.Clamp(this.transform.position.x, m_playerPosMin.x, m_playerPosMax.x),
                                                  Mathf.Clamp(this.transform.position.y + SET_POS_Y, m_playerPosMin.y, m_playerPosMax.y), FIXED);
-
-          
         } else{
             if (m_zoomFlag)
             {
@@ -83,22 +87,21 @@ public class CameraManager : MonoBehaviour {
                 Invoke("Cuntinue", CONTINUE_TIME);
                 m_zoomFlag = false;
             }
-         //   m_timeManager.GetComponent<TimeManager>().m_Time = 300;
         }
     }
+    //カメラ切り替え
     public void Death()
     {
         m_switchingFlag = false;
         m_continueCount++;
     }
-
     //Contione表示
     public void Cuntinue()
     {
         iTween.ScaleTo(m_continueUI, iTween.Hash("scale", CUNTINUE_SCALE));
         m_timeManager.GetComponent<TimeManager>().RankFixed();
     }
-
+    //Result表示
     public void Resurrection()
     {
      iTween.ScaleTo(m_continueUI, iTween.Hash("scale", new Vector3(0.0f,0.0f,0.0f)));
@@ -112,7 +115,7 @@ public class CameraManager : MonoBehaviour {
          m_DefaultUI.SetActive(true);
         m_timeManager.GetComponent<TimeManager>().TimeReset();
     }
-
+    //何回かコンテニューしたらさせないようにする
     public void End()
     {
         m_zoomFlag = true;
@@ -125,14 +128,11 @@ public class CameraManager : MonoBehaviour {
 
     public void Result()
     {
-        Debug.Log("ewsrgdhj");
-       // this.transform.position = new Vector3(-13.24f,0.75f,-4.75f);
-        m_player.transform.position = new Vector3(-13.68f, -1.24f, 0);
-      //  m_player.transform.localRotation = Quaternion.Euler(0.0f, 90.0f, 0.0f);
-        
+
+        m_player.transform.position = RESULT_POS;
+
         m_DefaultUI.SetActive(false);
         this.GetComponent<Animator>().enabled = true;
-        //this.GetComponent<CameraManager>().enabled = false;
          m_switchingFlag = false;
          m_zoomFlag = false;
 
@@ -141,18 +141,20 @@ public class CameraManager : MonoBehaviour {
     public void AnimatorStop()
     {
         this.GetComponent<Animator>().speed = 0;
-        if (stop)
+        if (m_stop)
         {
-            particle.GetComponent<ParticleSystem>().Play();
-            Invoke("test", 3f);
-            stop = false;
+            m_particle.GetComponent<ParticleSystem>().Play();
+            Invoke("ResetSpeed", RESET_TIME);
+            m_stop = false;
         }
       
     }
-    public void test()
+    //アニメーションが再生し始める
+    public void ResetSpeed()
     {
         this.GetComponent<Animator>().speed = 1;
     }
+
     private void ResultMove()
     {
         m_timeManager.GetComponent<TimeManager>().TimeResult();
