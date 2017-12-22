@@ -33,23 +33,44 @@ public class Bubble : MonoBehaviour {
 
     //自動で上昇が発動するまでの時間
     private const int RISING_TIME = 3;
+
+
+    public bool test = false;
+
+    public static int tt = 0;
     //敵に当たったらScaleを変更する値
     private readonly Vector3 m_smallerScale = new Vector3(0.2f, 0.2f, 0.2f);
 
+    private GameObject oo;
+    int s=1;
+        
     void Start () {
         m_createManager = GameObject.Find("CreateManager");
         m_player = GameObject.Find("Player");
 
+        oo = GameObject.Find("BubbleStart");
         transform.parent.parent = GameObject.Find("BubbleStart").transform;
        
         Invoke("Rising", RISING_TIME);
         m_createManager.GetComponent<CreateManager>().m_WingMove = new Vector3(0, 0, 0);
         m_inverted = -1;
+        tt++;
+        //s = transform.parent.Find("Bubble(Clone)").GetSiblingIndex();
+        // Debug.Log(s);
+        // s = oo.transform.GetSiblingIndex();
+        //   s=oo.transform.
+        // 
+        if (tt==2)
+        {
+            test = true;
+         //  Debug.Log("wfbn");
+        }
 
     }
 	
 	void Update () {
         m_move = m_createManager.GetComponent<CreateManager>().m_WingMove;
+        Debug.Log(tt);
         if (m_move== Vector3.zero)
         {
             //上昇
@@ -57,10 +78,15 @@ public class Bubble : MonoBehaviour {
 
         }else
         {
-            //風によって動く方向が変わる
-            this.transform.parent.parent.position += m_move * m_bubbleMove * m_inverted * Time.deltaTime;
 
-            this.gameObject.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
+            if (tt == 1 || test == true)
+            {
+                //風によって動く方向が変わる
+                this.transform.parent.position += m_move * m_bubbleMove * m_inverted * Time.deltaTime;
+                Debug.Log("fedbdvc");
+                this.gameObject.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
+
+            }
 
         }
        
@@ -76,9 +102,10 @@ public class Bubble : MonoBehaviour {
 
         ParentRelease();
         this.GetComponent<BubbleController>().Burst();
-   
-        
-        
+
+        tt--;
+
+        test = false;
     }
 
     public void rrr()
@@ -153,12 +180,14 @@ public class Bubble : MonoBehaviour {
                 m_createManager.GetComponent<CreateManager>().m_WingMove = new Vector3(0, 0, 0);
 
                 collision.GetComponent<Rigidbody>().useGravity = false;
-               // collision.transform.position = this.transform.position;
+                collision.transform.position = this.transform.position;
                 collision.transform.localScale = m_smallerScale;
                 m_createManager.GetComponent<CreateManager>().PutInObject(collision);
                 Debug.Log("efsdbvc");
                 m_hitCollider = collision;
                 m_enemyFlag = true;
+
+            //    test = true;
             }
             else
             {

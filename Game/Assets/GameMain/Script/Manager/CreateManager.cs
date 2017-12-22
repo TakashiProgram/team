@@ -29,7 +29,8 @@ public class CreateManager : MonoBehaviour {
 
     private void Update()
     {
-        Debug.Log(m_bubbleCreateBox);
+        
+       
     }
 
     //BubbleボタンをTapした時の処理
@@ -41,8 +42,8 @@ public class CreateManager : MonoBehaviour {
             //シャボン玉に何かが入っているときに処理する
             if (m_object != null)
             {
-                GameObject obj = m_bubble.GetComponent<Transform>().FindChild("Bubble").gameObject;
-                Collider m_hitCollider = obj.GetComponent<Bubble>().m_hitCollider;
+              //  GameObject obj = m_bubble.GetComponent<Transform>().FindChild("Bubble").gameObject;
+              //  Collider m_hitCollider = obj.GetComponent<Bubble>().m_hitCollider;
                 //       Debug.Break();
                 m_object.GetComponent<Rigidbody>().useGravity = true;
                 m_object.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
@@ -50,14 +51,8 @@ public class CreateManager : MonoBehaviour {
                 {
                     m_bubbleCreateBox.GetComponent<BubbleController>().Burst();
                 }
-                if (m_hitCollider == null)
-                {
-                    Debug.Log("aaa");
-                }
-                LarvaController tmp = m_hitCollider.GetComponent<LarvaController>();
-
-                if (tmp) tmp.RemoveBubble();
-                Destroy(m_object);
+               
+               
              //   m_object = null;
 
             }
@@ -77,13 +72,14 @@ public class CreateManager : MonoBehaviour {
               //  GameObject obj = m_bubble.GetComponent<Transform>().FindChild("Bubble").gameObject;
                 //obj.GetComponent<Bubble>().rrr();
              //   Destroy(testObject[0]);
-                Debug.Log("fdsgfvb");
+
             }
 
             // else
             {
-                m_bubbleCreateBox = Instantiate(m_bubble, new Vector3(m_playerFront.transform.position.x, m_playerFront.transform.position.y, 0), Quaternion.identity);
-                testObject[0] = m_bubbleCreateBox;
+               // m_bubbleCreateBox.transform.position = new Vector3(100, 100, 100);
+                   m_bubbleCreateBox = Instantiate(m_bubble, new Vector3(m_playerFront.transform.position.x, m_playerFront.transform.position.y, 0), Quaternion.identity);
+                //    testObject[0] = m_bubbleCreateBox;
             }
 
             //{
@@ -114,6 +110,10 @@ public class CreateManager : MonoBehaviour {
         {
             if (vector != Vector3.zero)
             {
+               // if ()
+                {
+
+                }
                 GameObject m_windBox; m_windBox= Instantiate(m_wind, m_bubbleCreateBox.transform.position, Quaternion.identity);
                 Destroy(m_windBox, 1);
             }

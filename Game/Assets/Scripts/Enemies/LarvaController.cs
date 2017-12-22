@@ -27,7 +27,7 @@ public class LarvaController : MonoBehaviour {
 	void Start () {
         if (m_movePoint.start != null && m_movePoint.end != null)
         {
-            Debug.Log("true");
+
             m_target = new Queue<Vector3>();
             m_target.Enqueue(m_movePoint.start.transform.position);
             m_target.Enqueue(m_movePoint.end.transform.position);
