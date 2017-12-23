@@ -54,10 +54,6 @@ public class Bubble : MonoBehaviour {
         Invoke("Rising", RISING_TIME);
         m_createManager.GetComponent<CreateManager>().m_WingMove = new Vector3(0, 0, 0);
         m_inverted = -1;
-        if (tt<0)
-        {
-            tt = 0;
-        }
         tt++;
         //s = transform.parent.Find("Bubble(Clone)").GetSiblingIndex();
         // Debug.Log(s);
@@ -67,10 +63,7 @@ public class Bubble : MonoBehaviour {
         if (tt==2)
         {
             test = true;
-            //  Debug.Log("wfbn");
-        }else
-        {
-            test = false;
+         //  Debug.Log("wfbn");
         }
 
     }
@@ -96,10 +89,13 @@ public class Bubble : MonoBehaviour {
             }
 
         }
-        Debug.Log(m_enemyFlag);
+       
     }
    
-   
+    public void rr()
+    {
+        Destroy(gameObject);
+    }
     public void Death()
     {
 
@@ -112,7 +108,15 @@ public class Bubble : MonoBehaviour {
         test = false;
     }
 
-   
+    public void rrr()
+    {
+        //   m_hitCollider.GetComponent<LarvaController>().RemoveBubble();
+        m_hitCollider.GetComponent<Rigidbody>().useGravity = true;
+        m_hitCollider.transform.parent = null;
+        LarvaController tmp = m_hitCollider.GetComponent<LarvaController>();
+
+        if (tmp) tmp.RemoveBubble();
+    }
     public void DestroyTime()
     {
         Invoke("Death", m_survivalTime);
@@ -130,13 +134,11 @@ public class Bubble : MonoBehaviour {
         m_player.GetComponent<Player>().BubbleFlag();
         if (m_enemyFlag)
         {
-            Debug.Log("wfaebv");
-           // m_hitCollider.GetComponent<Rigidbody>().useGravity = true;
+            m_hitCollider.GetComponent<Rigidbody>().useGravity = true;
             m_hitCollider.transform.parent = null;
             LarvaController tmp = m_hitCollider.GetComponent<LarvaController>();
 
             if (tmp) tmp.RemoveBubble();
-            Debug.Log("efsdbvc");
             m_enemyFlag = false;
         }
       
@@ -164,8 +166,6 @@ public class Bubble : MonoBehaviour {
                 if (m_createManager.GetComponent<CreateManager>().m_createWindFlag == false)
                 {
                     Debug.Log("m_switchingObject");
-                  
-                    m_enemyFlag = false;
                     Death();
                 }
             }
@@ -173,7 +173,7 @@ public class Bubble : MonoBehaviour {
 
         else if (collision.gameObject.tag == "Enemy" && m_switchingObject.tag == "Enemy")
         {
-            //GameObject gameobject = collision.gameObject;
+            GameObject gameobject = collision.gameObject;
 
             if (m_createManager.GetComponent<CreateManager>().m_createWindFlag)
             {
@@ -183,7 +183,7 @@ public class Bubble : MonoBehaviour {
                 collision.transform.position = this.transform.position;
                 collision.transform.localScale = m_smallerScale;
                 m_createManager.GetComponent<CreateManager>().PutInObject(collision);
-             
+                Debug.Log("efsdbvc");
                 m_hitCollider = collision;
                 m_enemyFlag = true;
 
@@ -191,12 +191,9 @@ public class Bubble : MonoBehaviour {
             }
             else
             {
-                //  m_hitCollider = collision;
-                //  m_enemyFlag = true;
-                //  Death();
-              //  Debug.Log(gameobject);
-                Destroy(gameObject);
-                //rrr();
+
+                Death();
+                rrr();
                 this.GetComponent<SphereCollider>().enabled = false;
             }
         }
@@ -256,7 +253,7 @@ public class Bubble : MonoBehaviour {
             {
 
                 Death();
-             //   rrr();
+                rrr();
                 this.GetComponent<SphereCollider>().enabled = false;
             }
         }
