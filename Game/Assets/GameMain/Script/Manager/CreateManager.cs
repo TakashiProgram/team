@@ -36,71 +36,84 @@ public class CreateManager : MonoBehaviour {
     //BubbleボタンをTapした時の処理
     public void TapBubble(float scale,float flip)
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Bubble.tt != 3)
         {
-            
-            //シャボン玉に何かが入っているときに処理する
-            if (m_object != null)
+
+
+            if (Input.GetMouseButtonDown(0))
             {
-              //  GameObject obj = m_bubble.GetComponent<Transform>().FindChild("Bubble").gameObject;
-              //  Collider m_hitCollider = obj.GetComponent<Bubble>().m_hitCollider;
-                //       Debug.Break();
-                m_object.GetComponent<Rigidbody>().useGravity = true;
-                m_object.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
-                if (m_bubbleCreateBox.GetComponent<BubbleController>())
+
+                //シャボン玉に何かが入っているときに処理する
+                if (m_object != null)
                 {
-                    m_bubbleCreateBox.GetComponent<BubbleController>().Burst();
+                    //  GameObject obj = m_bubble.GetComponent<Transform>().FindChild("Bubble").gameObject;
+                    //  Collider m_hitCollider = obj.GetComponent<Bubble>().m_hitCollider;
+                    //       Debug.Break();
+                    m_object.GetComponent<Rigidbody>().useGravity = true;
+                    m_object.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+                    if (m_bubbleCreateBox.GetComponent<BubbleController>())
+                    {
+                        m_bubbleCreateBox.GetComponent<BubbleController>().Burst();
+                    }
+
+
+                    //   m_object = null;
+
                 }
-               
-               
-             //   m_object = null;
 
+                m_bubbleScale = scale;
+                // Destroy(m_bubbleCreateBox);
+                //   m_bubble.GetComponent<BubbleController>().Burst();
+                if (m_bubbleCreateBox != null)
+                {
+                    //  m_bubbleCreateBox = null;
+                    //  Debug.Log("fedsbfgnbd");
+                    //m_bubble.GetComponent<Bubble>().rrr();
+                    //m_bubble.GetComponent<BubbleController>().Burst();
+                    m_bubbleCreateBox = null;
+
+                    //    Destroy(m_bubbleCreateBox);
+                    //  GameObject obj = m_bubble.GetComponent<Transform>().FindChild("Bubble").gameObject;
+                    //obj.GetComponent<Bubble>().rrr();
+                    //   Destroy(testObject[0]);
+
+                }
+
+                // else
+                {
+                    // m_bubbleCreateBox.transform.position = new Vector3(100, 100, 100);
+
+                    // if (Bubble.tt!=3)
+                    {
+                        m_bubbleCreateBox = Instantiate(m_bubble, new Vector3(m_playerFront.transform.position.x, m_playerFront.transform.position.y, 0), Quaternion.identity);
+
+                    }//else
+                    {
+                      //  Bubble.tt--;
+                    }
+                    //    testObject[0] = m_bubbleCreateBox;
+                }
+
+                //{
+                // m_bubbleCreateBox.GetComponent<BubbleController>().Burst();
+                //Destroy(m_bubbleCreateBox);
+                //m_bubbleCreateBox = Instantiate(m_bubble, new Vector3(m_playerFront.transform.position.x, m_playerFront.transform.position.y, 0), Quaternion.identity);
+
+                //}
+                //  
             }
-            
-            m_bubbleScale = scale;
-            // Destroy(m_bubbleCreateBox);
-            //   m_bubble.GetComponent<BubbleController>().Burst();
-            if (m_bubbleCreateBox!=null)
+
+            m_bubbleScale += Time.deltaTime * flip;
+
+            m_bubbleCreateBox.transform.localScale = new Vector3(m_bubbleScale, m_bubbleScale, m_bubbleScale);
+            //絶対値
+            float value = Mathf.Abs(m_bubbleScale);
+            if (value >= SCALE_MAX)
             {
-                //  m_bubbleCreateBox = null;
-                //  Debug.Log("fedsbfgnbd");
-                //m_bubble.GetComponent<Bubble>().rrr();
-                //m_bubble.GetComponent<BubbleController>().Burst();
-                 m_bubbleCreateBox = null;
+                m_bubbleScale = SCALE_MAX * flip;
 
-                //    Destroy(m_bubbleCreateBox);
-              //  GameObject obj = m_bubble.GetComponent<Transform>().FindChild("Bubble").gameObject;
-                //obj.GetComponent<Bubble>().rrr();
-             //   Destroy(testObject[0]);
-
+                m_createWindFlag = true;
             }
-
-            // else
-            {
-               // m_bubbleCreateBox.transform.position = new Vector3(100, 100, 100);
-                   m_bubbleCreateBox = Instantiate(m_bubble, new Vector3(m_playerFront.transform.position.x, m_playerFront.transform.position.y, 0), Quaternion.identity);
-                //    testObject[0] = m_bubbleCreateBox;
-            }
-
-            //{
-            // m_bubbleCreateBox.GetComponent<BubbleController>().Burst();
-            //Destroy(m_bubbleCreateBox);
-            //m_bubbleCreateBox = Instantiate(m_bubble, new Vector3(m_playerFront.transform.position.x, m_playerFront.transform.position.y, 0), Quaternion.identity);
-
-            //}
-            //  
-        }
-
-        m_bubbleScale +=Time.deltaTime* flip;
-
-        m_bubbleCreateBox.transform.localScale = new Vector3(m_bubbleScale, m_bubbleScale, m_bubbleScale);
-        //絶対値
-        float value = Mathf.Abs(m_bubbleScale);
-        if (value >= SCALE_MAX)
-        {
-            m_bubbleScale = SCALE_MAX* flip;
-
-            m_createWindFlag = true;
         }
     }
     //風作成

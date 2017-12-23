@@ -4,9 +4,8 @@
 	public enum SceneNameList {
 	None,
 
+	Title,
 	GameMain,
-	Select,
 	Stage1,
 	StageSelect,
-	Title,
 }
