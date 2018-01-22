@@ -43,6 +43,9 @@ public class Bubble : MonoBehaviour {
 
     private GameObject oo;
     int s=1;
+    bool testflag=false;
+
+    public static GameObject test3;
         
     void Start () {
         m_createManager = GameObject.Find("CreateManager");
@@ -55,20 +58,31 @@ public class Bubble : MonoBehaviour {
         m_createManager.GetComponent<CreateManager>().m_WingMove = new Vector3(0, 0, 0);
         m_inverted = -1;
         tt++;
+        if (test3!=null)
+        {
+            //Destroy(test3);
+            //  Death();
+            test3.GetComponent<BubbleController>().Burst();
+        }
+      //  else
+        {
+            test3 = this.gameObject;
+        }
+        
+        
+        testflag = true;
         //s = transform.parent.Find("Bubble(Clone)").GetSiblingIndex();
         // Debug.Log(s);
         // s = oo.transform.GetSiblingIndex();
         //   s=oo.transform.
         // 
-        if (tt==2)
-        {
-            test = true;
-         //  Debug.Log("wfbn");
-        }
+       
 
     }
 	
 	void Update () {
+
+       
         m_move = m_createManager.GetComponent<CreateManager>().m_WingMove;
         Debug.Log(tt);
         if (m_move== Vector3.zero)
@@ -79,7 +93,7 @@ public class Bubble : MonoBehaviour {
         }else
         {
 
-            if (tt == 1 || test == true)
+          //  if (tt == 1 || test == true)
             {
                 //風によって動く方向が変わる
                 this.transform.parent.position += m_move * m_bubbleMove * m_inverted * Time.deltaTime;
@@ -103,7 +117,7 @@ public class Bubble : MonoBehaviour {
         ParentRelease();
         this.GetComponent<BubbleController>().Burst();
 
-        tt--;
+        tt=0;
 
         test = false;
     }
@@ -186,8 +200,7 @@ public class Bubble : MonoBehaviour {
                 Debug.Log("efsdbvc");
                 m_hitCollider = collision;
                 m_enemyFlag = true;
-
-            //    test = true;
+                
             }
             else
             {
