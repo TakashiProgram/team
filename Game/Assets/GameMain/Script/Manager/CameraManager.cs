@@ -67,27 +67,9 @@ public class CameraManager : MonoBehaviour {
 
     private readonly Vector3 RESULT_POS = new Vector3(-13.68f, -1.14f, 0.67f);
 
-    //private enum reee
-    //{
-    //    Stage1("Stage1"),
-    //    Stage2,
-    //    Stage3,
-    //    Stage4,
-    //    Stage5;
-    //}
-
-
     void Start () {
         //最初にカメラがプレイヤーに付いていく(デバック用)
         this.transform.position = new Vector3(m_player.transform.position.x, m_player.transform.position.y, FIXED);
-        for (int i = 0; i < 6; i++)
-        {
-           // if (SceneManager.GetActiveScene().name==reee.Stage1)
-            {
-
-            }
-        }
-        
     }
 	
 	void Update () {
