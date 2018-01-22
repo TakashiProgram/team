@@ -88,9 +88,9 @@ public class Bubble : MonoBehaviour {
     {
         m_hitCollider.GetComponent<Rigidbody>().useGravity = true;
         m_hitCollider.transform.parent = null;
-        LarvaController tmp = m_hitCollider.GetComponent<LarvaController>();
+        //LarvaController tmp = m_hitCollider.GetComponent<LarvaController>();
 
-        if (tmp) tmp.RemoveBubble();
+        //if (tmp) tmp.RemoveBubble();
     }
     public void DestroyTime()
     {
@@ -111,9 +111,9 @@ public class Bubble : MonoBehaviour {
         {
             m_hitCollider.GetComponent<Rigidbody>().useGravity = true;
             m_hitCollider.transform.parent = null;
-            LarvaController tmp = m_hitCollider.GetComponent<LarvaController>();
+            //LarvaController tmp = m_hitCollider.GetComponent<LarvaController>();
 
-            if (tmp) tmp.RemoveBubble();
+            //if (tmp) tmp.RemoveBubble();
             m_enemyFlag = false;
         }
       
@@ -158,14 +158,14 @@ public class Bubble : MonoBehaviour {
                 collision.transform.localScale = m_smallerScale;
                 m_createManager.GetComponent<CreateManager>().PutInObject(collision);
                 m_hitCollider = collision;
-                m_enemyFlag = true;
+             //   m_enemyFlag = true;
                 
             }
             else
             {
 
                 Death();
-                EnemyFlag();
+               // EnemyFlag();
                 this.GetComponent<SphereCollider>().enabled = false;
             }
         }
@@ -220,7 +220,7 @@ public class Bubble : MonoBehaviour {
             {
 
                 Death();
-                EnemyFlag();
+              //  EnemyFlag();
                 this.GetComponent<SphereCollider>().enabled = false;
             }
         }
