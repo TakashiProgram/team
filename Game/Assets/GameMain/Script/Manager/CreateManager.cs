@@ -16,6 +16,9 @@ public class CreateManager : MonoBehaviour {
     [SerializeField]
     private GameObject m_wind;
 
+    [SerializeField]
+    private GameObject m_soundManager;
+
     //Bubbleを生成したときに入れておく箱
     private GameObject m_bubbleCreateBox;
 
@@ -80,8 +83,8 @@ public class CreateManager : MonoBehaviour {
         {
             if (vector != Vector3.zero)
             {
-               
-                GameObject m_windBox; m_windBox= Instantiate(m_wind, m_bubbleCreateBox.transform.position, Quaternion.identity);
+                m_soundManager.GetComponent<SoundManage>().sound(3);
+                 GameObject m_windBox; m_windBox= Instantiate(m_wind, m_bubbleCreateBox.transform.position, Quaternion.identity);
                 Destroy(m_windBox, 1);
             }
             

@@ -21,6 +21,9 @@ public class CameraManager : MonoBehaviour {
     [SerializeField]
     private GameObject m_timeManager;
 
+    [SerializeField]
+    private GameObject m_soundManager;
+
     //HP表示のUI
     [SerializeField]
     private GameObject[] m_hpUI;
@@ -135,7 +138,7 @@ public class CameraManager : MonoBehaviour {
     {
 
         m_player.transform.position = RESULT_POS;
-
+        m_soundManager.GetComponent<SoundManage>().ResultBGM();
         m_DefaultUI.SetActive(false);
         this.GetComponent<Animator>().enabled = true;
          m_switchingFlag = false;
