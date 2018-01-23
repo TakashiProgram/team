@@ -15,6 +15,9 @@ public class Player : MonoBehaviour
     private GameObject m_createManager;
 
     [SerializeField]
+    private GameObject m_soundManager;
+
+    [SerializeField]
     private GameObject m_right;
 
     [SerializeField]
@@ -42,10 +45,13 @@ public class Player : MonoBehaviour
     //playerのスピード
     private const float MOVE_COUNT = 0.05f;
 
+    private  float MOVE_SOUND = 0.5f;
+
     void Start()
     {
        m_animator= GetComponent<Animator>();
         m_formerPosition = this.transform.position;
+        
     }
    
     void Update()
@@ -56,10 +62,13 @@ public class Player : MonoBehaviour
         {
             this.transform.position = m_formerPosition;
             m_hp[m_desCount].SetActive(false);
-           
+
+            m_soundManager.GetComponent<SoundManage>().sound(5);
             if (m_desCount == DEATH_COUNT_MAX)
             {
                 m_animator.SetBool("Death", true);
+
+                m_soundManager.GetComponent<SoundManage>().sound(1);
                 m_hp[DEATH_COUNT_MAX].SetActive(false);
 
             }
@@ -81,6 +90,7 @@ public class Player : MonoBehaviour
         Vector3 playerMove = transform.position;
         playerMove.x += MOVE_COUNT * flip;
         transform.position = playerMove;
+       
     }
 
     public void BubbleFlag()
@@ -93,8 +103,12 @@ public class Player : MonoBehaviour
     {
        
         m_animator.SetBool("Death", true);
+
+        m_soundManager.GetComponent<SoundManage>().sound(1);
+
     }
     //無敵時間
+
     IEnumerator InvincibleTime()
     {
         gameObject.layer = LayerMask.NameToLayer("PlayerDamage");
@@ -104,13 +118,16 @@ public class Player : MonoBehaviour
         
         gameObject.layer = LayerMask.NameToLayer("Player");
     }
+
     //リトライ時の倒れるモーション
     public void Down()
     {
         m_animator.SetBool("Death", false);
         m_animator.SetBool("DownUp", true);
+        
         m_desCount = 0;
     }
+
     //playerのダメージをくらったときにHPを減少させる
     private void Damage()
     {
@@ -118,10 +135,12 @@ public class Player : MonoBehaviour
         m_left.GetComponent<CircleCollider2D>().enabled = false;
         m_right.GetComponent<CircleCollider2D>().enabled = false;
 
+        m_soundManager.GetComponent<SoundManage>().sound(5);
         m_hp[m_desCount].SetActive(false);
         m_desCount++;
 
     }
+
     //playerがダメージを食らってある程度したら操作できるようにする
     private void MoveReturn()
     {
@@ -129,27 +148,33 @@ public class Player : MonoBehaviour
         m_right.GetComponent<CircleCollider2D>().enabled = true;
     }
     //リザルトの表示に移行
+
     public void ContinueScene()
     {
         m_mainCamera.GetComponent<CameraManager>().Death();
     }
     //起き上がりモーション
+
     public void GetUp()
     {
         m_animator.SetBool("DownUp", false);
     }
     //playerのダメージモーション処理が終わってIdleモーションに戻る
+
     public void DamageEnd()
     {
         m_animator.SetBool("Damage", false);
     }
+
     //GameClearのポジションに移行
+
     public void GameClear()
     {
         iTween.Stop(gameObject);
         this.transform.eulerAngles = new Vector3(0, 90, 0);
     }
     //当たり判定関係
+
     private void OnTriggerStay(Collider collider)
     {
         //Bubbleと同じ動きをする
@@ -166,7 +191,10 @@ public class Player : MonoBehaviour
         else if (collider.gameObject.tag == "CheackPoint")
         {
             collider.GetComponent<BoxCollider>().enabled = false;
+
+            m_soundManager.GetComponent<SoundManage>().sound(5);
             m_formerPosition = this.transform.position;
+
         }
         else if (collider.gameObject.tag == "Goal")
         {
@@ -188,6 +216,8 @@ public class Player : MonoBehaviour
             if (m_desCount == DEATH_COUNT_MAX)
             {
                 m_animator.SetBool("Death", true);
+
+                m_soundManager.GetComponent<SoundManage>().sound(1);
                 m_hp[DEATH_COUNT_MAX].SetActive(false);
             }
             else

@@ -17,6 +17,9 @@ public class InputManager : MonoBehaviour
     private Camera m_cameraManager;
 
     [SerializeField]
+    private GameObject m_soundManager;
+
+    [SerializeField]
     private SceneNameList changeTarget;
 
     private Vector3 m_downWind;
@@ -29,6 +32,8 @@ public class InputManager : MonoBehaviour
     private bool m_floatEnemyFlag = false;
 
     private bool m_stopWindFlag = false;
+
+    private bool m_bubbleTapSound = false;
 
     private RaycastHit2D m_hitObject;
 
@@ -80,7 +85,8 @@ public class InputManager : MonoBehaviour
                    
                     if (m_stopWindFlag==false)
                     {
-                        
+                       // m_soundManager.GetComponent<SoundManage>().sound(0);
+
                         m_tapWindFlag = false;
                         hit.collider.GetComponent<SpriteRenderer>().color = m_setColor;
                         m_hitObject = hit;
@@ -97,7 +103,7 @@ public class InputManager : MonoBehaviour
                     m_flip = 1;
                     if (m_stopWindFlag == false)
                     {
-                        
+                       // m_soundManager.GetComponent<SoundManage>().sound(0);
                         m_tapWindFlag = false;
                         hit.collider.GetComponent<SpriteRenderer>().color = m_setColor;
                         m_hitObject = hit;
@@ -115,7 +121,7 @@ public class InputManager : MonoBehaviour
                        
                         m_tapWindFlag = false;
                         m_floatEnemyFlag = false;
-
+                        m_bubbleTapSound = true;
                         hit.collider.GetComponent<SpriteRenderer>().color = m_setColor;
                         m_hitObject = hit;
                         m_player.transform.parent = null;
@@ -145,6 +151,7 @@ public class InputManager : MonoBehaviour
 
                     SceneChanger.LoadSceneAtListAsync(SceneNameList.StageSelect);
 
+                    m_soundManager.GetComponent<SoundManage>().sound(5);
                     break;
 
                 case "Decision":
@@ -152,6 +159,8 @@ public class InputManager : MonoBehaviour
                     m_cameraManager.GetComponent<CameraManager>().Resurrection();
 
                     m_cameraManager.GetComponent<CameraManager>().End();
+
+                    m_soundManager.GetComponent<SoundManage>().sound(5);
                     m_player.GetComponent<Player>().Down();
                  
                     break;
@@ -162,6 +171,8 @@ public class InputManager : MonoBehaviour
                     //GameOverを表示するかも？
                     //デバッグ
                     SceneChanger.LoadSceneAtListAsync(SceneNameList.StageSelect);
+
+                    m_soundManager.GetComponent<SoundManage>().sound(5);
 
                     break;
                     
@@ -174,9 +185,14 @@ public class InputManager : MonoBehaviour
             {
                 
                 m_tapWindFlag = true;
+                if (m_bubbleTapSound)
+                {
+                    m_soundManager.GetComponent<SoundManage>().sound(4);
+                    m_bubbleTapSound = false;
+                }
+                
                 if (GameObject.Find("Bubble")!=null)
                 {
-
                     GameObject.Find("Bubble").transform.GetComponent<Bubble>().DestroyTime();
                     GameObject.Find("Bubble").transform.GetComponent<BubbleController>().BubbleVibrate();
 

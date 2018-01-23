@@ -11,6 +11,8 @@ public class Bubble : MonoBehaviour {
 
     private GameObject m_createManager;
 
+    private GameObject m_soundManager;
+
     private GameObject m_player;
 
     //風の向きを保持する
@@ -43,6 +45,7 @@ public class Bubble : MonoBehaviour {
     void Start () {
         m_createManager = GameObject.Find("CreateManager");
         m_player = GameObject.Find("Player");
+        m_soundManager = GameObject.Find("SoundManager");
         
         transform.parent.parent = GameObject.Find("BubbleStart").transform;
        
@@ -53,6 +56,7 @@ public class Bubble : MonoBehaviour {
         {
           
             m_bubbleStock.GetComponent<BubbleController>().Burst();
+            m_soundManager.GetComponent<SoundManage>().sound(4);
         }
       
             m_bubbleStock = this.gameObject;
@@ -82,6 +86,8 @@ public class Bubble : MonoBehaviour {
     {
         ParentRelease();
         this.GetComponent<BubbleController>().Burst();
+
+        m_soundManager.GetComponent<SoundManage>().sound(4);
     }
 
     public void EnemyFlag()
@@ -128,6 +134,7 @@ public class Bubble : MonoBehaviour {
         if (m_switchingObject == null)
         {
             m_switchingObject = collision.gameObject;
+            m_soundManager.GetComponent<SoundManage>().sound(5);
 
         }
 
