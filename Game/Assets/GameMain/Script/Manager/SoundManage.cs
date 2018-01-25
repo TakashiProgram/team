@@ -39,4 +39,12 @@ public class SoundManage : MonoBehaviour {
         m_resultSound.GetComponent<AudioSource>().mute = false;
         m_resultSound.SetActive(true);
     }
+    public void ContinuousSound(int count)
+    {
+        audioSource.clip = audioClip[count];
+        if (!audioSource.isPlaying)
+        {
+            audioSource.Play();
+        }
+    }
 }

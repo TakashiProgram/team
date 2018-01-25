@@ -118,8 +118,8 @@ public class InputManager : MonoBehaviour
                 case "BubbleTap":
                     if (m_stopWindFlag == false)
                     {
-                       
-                        m_tapWindFlag = false;
+                        m_soundManager.GetComponent<SoundManage>().ContinuousSound(1);
+                         m_tapWindFlag = false;
                         m_floatEnemyFlag = false;
                         m_bubbleTapSound = true;
                         hit.collider.GetComponent<SpriteRenderer>().color = m_setColor;
