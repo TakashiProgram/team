@@ -12,6 +12,12 @@ public class Player : MonoBehaviour
     private GameObject m_mainCamera;
 
     [SerializeField]
+    private GameObject m_water;
+
+    [SerializeField]
+    private GameObject m_splash;
+
+    [SerializeField]
     private GameObject m_createManager;
 
     [SerializeField]
@@ -36,6 +42,8 @@ public class Player : MonoBehaviour
     private float m_invincibleTime;
 
     private bool m_bubbleFlag = false;
+
+    private bool m_splashFlag = true;
 
     private const int DEATH_COUNT_MAX = 2;
 
@@ -121,6 +129,51 @@ public class Player : MonoBehaviour
             yield return new WaitForSeconds(m_invincibleTime);
         
         gameObject.layer = LayerMask.NameToLayer("Player");
+    }
+
+
+    public void Water()
+    {
+        m_water.GetComponent<EllipsoidParticleEmitter>().emit = false;
+       
+        //m_water[1].GetComponent<EllipsoidParticleEmitter>().emit = false;
+    }
+    public void Splash()
+    {
+        m_splash.GetComponent<EllipsoidParticleEmitter>().emit = true;
+        m_splashFlag = true;
+    }
+    private void OnCollisionStay(Collision collision)
+    {//ここ追加
+        if (collision.gameObject.tag == "Switch")
+        {
+            Debug.Log(collision.gameObject.name);
+            if (m_splashFlag)
+            {
+                if (collision.gameObject.name == "LeftSwitch")
+                {
+                    Debug.Log("左");
+                    m_water.GetComponent<EllipsoidParticleEmitter>().emit = true;
+                    m_splash.GetComponent<EllipsoidParticleEmitter>().emit = false;
+                    collision.gameObject.GetComponent<Animator>().speed = 1;
+                    Invoke("Water", 2);
+                    Invoke("Splash", 20);
+                    m_splashFlag = false;
+                }
+                else
+                {
+                    Debug.Log("右");
+                    m_water.GetComponent<EllipsoidParticleEmitter>().emit = true;
+                    m_splash.GetComponent<EllipsoidParticleEmitter>().emit = false;
+                    collision.gameObject.GetComponent<Animator>().speed = 1;
+                    Invoke("Water", 2);
+                    Invoke("Splash", 20);
+                    m_splashFlag = false;
+
+                }
+            }
+
+        }
     }
 
     //リトライ時の倒れるモーション
