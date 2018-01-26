@@ -24,7 +24,6 @@ public class InputManager : MonoBehaviour
 
     private Vector3 m_downWind;
 
-
     private int m_flip = 1;
 
     private bool m_tapWindFlag = false;
@@ -39,6 +38,12 @@ public class InputManager : MonoBehaviour
 
     //playerの回転
     private const int PLAYER_ROTATION = 90;
+
+    private const int INFLATE_SOUND = 1;
+
+    private const int BUBBLE_MAX_SOUND = 4;
+
+    private const int DECISION_SOUND = 5;
     //rayが届く距離
     private const float DISTANCE = 10f;
     //bubbleの大きさの変化の値
@@ -118,7 +123,7 @@ public class InputManager : MonoBehaviour
                 case "BubbleTap":
                     if (m_stopWindFlag == false)
                     {
-                        m_soundManager.GetComponent<SoundManage>().ContinuousSound(1);
+                        m_soundManager.GetComponent<SoundManage>().ContinuousSound(INFLATE_SOUND);
                          m_tapWindFlag = false;
                         m_floatEnemyFlag = false;
                         m_bubbleTapSound = true;
@@ -151,7 +156,7 @@ public class InputManager : MonoBehaviour
 
                     SceneChanger.LoadSceneAtListAsync(SceneNameList.StageSelect);
 
-                    m_soundManager.GetComponent<SoundManage>().sound(5);
+                    m_soundManager.GetComponent<SoundManage>().sound(DECISION_SOUND);
                     break;
 
                 case "Decision":
@@ -160,7 +165,7 @@ public class InputManager : MonoBehaviour
 
                     m_cameraManager.GetComponent<CameraManager>().End();
 
-                    m_soundManager.GetComponent<SoundManage>().sound(5);
+                    m_soundManager.GetComponent<SoundManage>().sound(DECISION_SOUND);
                     m_player.GetComponent<Player>().Down();
                  
                     break;
@@ -172,7 +177,7 @@ public class InputManager : MonoBehaviour
                     //デバッグ
                     SceneChanger.LoadSceneAtListAsync(SceneNameList.StageSelect);
 
-                    m_soundManager.GetComponent<SoundManage>().sound(5);
+                    m_soundManager.GetComponent<SoundManage>().sound(DECISION_SOUND);
 
                     break;
                     
@@ -187,7 +192,7 @@ public class InputManager : MonoBehaviour
                 m_tapWindFlag = true;
                 if (m_bubbleTapSound)
                 {
-                    m_soundManager.GetComponent<SoundManage>().sound(4);
+                    m_soundManager.GetComponent<SoundManage>().sound(BUBBLE_MAX_SOUND);
                     m_bubbleTapSound = false;
                 }
                 

@@ -39,6 +39,10 @@ public class Bubble : MonoBehaviour {
     //自動で上昇が発動するまでの時間
     private const int RISING_TIME = 3;
 
+    private const int RUPTURE_SOUND = 4;
+
+    private const int ENTER_SOUND = 5;
+
     //敵に当たったらScaleを変更する値
     private readonly Vector3 m_smallerScale = new Vector3(0.2f, 0.2f, 0.2f);
  
@@ -56,7 +60,7 @@ public class Bubble : MonoBehaviour {
         {
           
             m_bubbleStock.GetComponent<BubbleController>().Burst();
-            m_soundManager.GetComponent<SoundManage>().sound(4);
+            m_soundManager.GetComponent<SoundManage>().sound(RUPTURE_SOUND);
         }
       
             m_bubbleStock = this.gameObject;
@@ -87,7 +91,7 @@ public class Bubble : MonoBehaviour {
         ParentRelease();
         this.GetComponent<BubbleController>().Burst();
 
-        m_soundManager.GetComponent<SoundManage>().sound(4);
+        m_soundManager.GetComponent<SoundManage>().sound(RUPTURE_SOUND);
     }
 
     public void EnemyFlag()
@@ -134,7 +138,7 @@ public class Bubble : MonoBehaviour {
         if (m_switchingObject == null)
         {
             m_switchingObject = collision.gameObject;
-            m_soundManager.GetComponent<SoundManage>().sound(5);
+            m_soundManager.GetComponent<SoundManage>().sound(ENTER_SOUND);
 
         }
 

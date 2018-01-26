@@ -25,6 +25,8 @@ public class CreateManager : MonoBehaviour {
     private Collider m_object;
 
     private float m_bubbleScale;
+
+    private const int WIND_SOUND = 3;
     
     //m_bubbleの最大scale
     private const float SCALE_MAX = 0.7f;
@@ -83,7 +85,7 @@ public class CreateManager : MonoBehaviour {
         {
             if (vector != Vector3.zero)
             {
-                m_soundManager.GetComponent<SoundManage>().sound(3);
+                m_soundManager.GetComponent<SoundManage>().sound(WIND_SOUND);
                  GameObject m_windBox; m_windBox= Instantiate(m_wind, m_bubbleCreateBox.transform.position, Quaternion.identity);
                 Destroy(m_windBox, 1);
             }
