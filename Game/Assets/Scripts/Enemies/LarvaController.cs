@@ -107,24 +107,9 @@ public class LarvaController : MonoBehaviour {
             m_animator.SetBool("isTurn", true);
         }
     }
-    
 
-    private void OnTriggerEnter(Collider _coll)
-    {
-        if(_coll.tag == "Bubble")
-        {
-            m_animator.Play("Dwon");
-            GetComponent<Rigidbody>().velocity = Vector3.zero;
-            m_animator.SetBool("isInBubble", true);
 
-            GetComponent<Rigidbody>().useGravity = false;
-        }else
-        {
-            GetComponent<Rigidbody>().useGravity = true;
-            m_animator.SetBool("isGround", true);
-            m_animator.Play("Move");
-        }
-    }
+
 
     public void RemoveBubble()
     {
@@ -133,6 +118,24 @@ public class LarvaController : MonoBehaviour {
         m_animator.SetBool("isGround", false);
         GetComponent<Rigidbody>().useGravity = true;
     }
+
+
+    /// <summary>
+    /// シャボン玉が最大の時にシャボン玉に入った場合に実行される関数
+    /// </summary>
+    public void OnBubble()
+    {
+        m_animator.Play("Dwon");
+        GetComponent<Rigidbody>().velocity = Vector3.zero;
+        m_animator.SetBool("isInBubble", true);
+        GetComponent<Rigidbody>().useGravity = false;
+    }
+
+
+    private void OnTriggerEnter(Collider _coll)
+    {
+    }
+
 
     private void OnTriggerStay(Collider _coll)
     {
