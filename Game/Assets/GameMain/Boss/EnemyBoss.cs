@@ -24,6 +24,7 @@ public class EnemyBoss : MonoBehaviour
 
     private bool m_lockReleaseFlag = true;
 
+    private bool m_testFlag = false;
 
     void Start()
     {
@@ -83,6 +84,13 @@ public class EnemyBoss : MonoBehaviour
 
 
         }
+        if (m_testFlag)
+        {
+            if (this.transform.position == m_pos)
+            {
+                m_animator.SetBool("Damage", true);
+            }
+        }
 
     }
     public void RandomBehavior()
@@ -128,12 +136,35 @@ public class EnemyBoss : MonoBehaviour
 
     }
 
+    public void test()
+    {
+        m_testFlag = true;
+    }
+    public void test2()
+    {
+        m_testFlag = false;
+    }
+    public void DmageStop()
+    {
+        m_animator.SetBool("Damage", false);
+    }
+
+    //private void OnCollisionEnter(Collision collision)
+    //{
+    //    if (collision.gameObject.tag == "Move")
+    //    {
+    //        Debug.Log("fdsdv");
+    //    }
+    //}
     private void OnTriggerEnter(Collider collider)
     {
         if (collider.gameObject.tag == "Player")
         {
             // StartCoroutine("InvincibleTime");
             Debug.Log("efsddvc");
+            // this.GetComponent<SphereCollider>().enabled = false;
+
+            m_player.GetComponent<Player>().EnemyBoss();
 
             //    if (m_desCount == DEATH_COUNT_MAX)
             //    {
@@ -153,6 +184,10 @@ public class EnemyBoss : MonoBehaviour
             //                                          "time", BACK_TIME
             //        ));
         }
+        //if (collider.gameObject.tag == "Move")
+        //{
+        //    Debug.Log("fdsdv");
+        //}
 
     }
 }
