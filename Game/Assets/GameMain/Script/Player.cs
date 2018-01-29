@@ -18,6 +18,9 @@ public class Player : MonoBehaviour
     private GameObject m_splash;
 
     [SerializeField]
+    private GameObject m_bossObject;
+
+    [SerializeField]
     private GameObject m_createManager;
 
     [SerializeField]
@@ -35,7 +38,7 @@ public class Player : MonoBehaviour
     private Vector3 m_formerPosition;
 
     private Animator m_animator;
-    
+
     private int m_desCount;
 
     [SerializeField]
@@ -57,18 +60,18 @@ public class Player : MonoBehaviour
     //playerのスピード
     private const float MOVE_COUNT = 0.05f;
 
-    private  float MOVE_SOUND = 0.5f;
+    private float MOVE_SOUND = 0.5f;
 
     void Start()
     {
-       m_animator= GetComponent<Animator>();
+        m_animator = GetComponent<Animator>();
         m_formerPosition = this.transform.position;
-        
+
     }
-   
+
     void Update()
     {
-    
+
         //落ちる前に保持したpositionをplayerに入れる
         if (this.transform.position.y <= HOLE_POS_Y)
         {
@@ -102,7 +105,7 @@ public class Player : MonoBehaviour
         Vector3 playerMove = transform.position;
         playerMove.x += MOVE_COUNT * flip;
         transform.position = playerMove;
-       
+
     }
 
     public void BubbleFlag()
@@ -113,7 +116,7 @@ public class Player : MonoBehaviour
     //playerの死亡アニメーションフラグ
     public void Expiration()
     {
-       
+
         m_animator.SetBool("Death", true);
 
         m_soundManager.GetComponent<SoundManage>().sound(DEATH_SOUND);
@@ -124,10 +127,10 @@ public class Player : MonoBehaviour
     IEnumerator InvincibleTime()
     {
         gameObject.layer = LayerMask.NameToLayer("PlayerDamage");
-       
-       
-            yield return new WaitForSeconds(m_invincibleTime);
-        
+
+
+        yield return new WaitForSeconds(m_invincibleTime);
+
         gameObject.layer = LayerMask.NameToLayer("Player");
     }
 
@@ -135,7 +138,8 @@ public class Player : MonoBehaviour
     public void Water()
     {
         m_water.GetComponent<EllipsoidParticleEmitter>().emit = false;
-       
+        m_bossObject.GetComponent<EnemyBoss>().test2();
+
         //m_water[1].GetComponent<EllipsoidParticleEmitter>().emit = false;
     }
     public void Splash()
@@ -143,6 +147,7 @@ public class Player : MonoBehaviour
         m_splash.GetComponent<EllipsoidParticleEmitter>().emit = true;
         m_splashFlag = true;
     }
+
     private void OnCollisionStay(Collision collision)
     {//ここ追加
         if (collision.gameObject.tag == "Switch")
@@ -150,13 +155,15 @@ public class Player : MonoBehaviour
             Debug.Log(collision.gameObject.name);
             if (m_splashFlag)
             {
+                // Invoke("EnemyBossHit()", 1f);
+                EnemyBossHit();
                 if (collision.gameObject.name == "LeftSwitch")
                 {
                     Debug.Log("左");
                     m_water.GetComponent<EllipsoidParticleEmitter>().emit = true;
                     m_splash.GetComponent<EllipsoidParticleEmitter>().emit = false;
                     collision.gameObject.GetComponent<Animator>().speed = 1;
-                    Invoke("Water", 2);
+                    Invoke("Water", 5);
                     Invoke("Splash", 20);
                     m_splashFlag = false;
                 }
@@ -176,12 +183,17 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void EnemyBossHit()
+    {
+        //  m_bossHitObject.GetComponent<Light>().enabled = true;
+        m_bossObject.GetComponent<EnemyBoss>().test();
+    }
     //リトライ時の倒れるモーション
     public void Down()
     {
         m_animator.SetBool("Death", false);
         m_animator.SetBool("DownUp", true);
-        
+
         m_desCount = 0;
     }
 
@@ -232,6 +244,30 @@ public class Player : MonoBehaviour
     }
     //当たり判定関係
 
+
+    public void EnemyBoss()
+    {
+        StartCoroutine("InvincibleTime");
+
+
+        if (m_desCount == DEATH_COUNT_MAX)
+        {
+            m_animator.SetBool("Death", true);
+
+            m_soundManager.GetComponent<SoundManage>().sound(DEATH_SOUND);
+            m_hp[DEATH_COUNT_MAX].SetActive(false);
+        }
+        else
+        {
+            m_animator.SetBool("Damage", true);
+        }
+
+
+        /* iTween.MoveTo(gameObject, iTween.Hash("position",
+                                               transform.position - transform.forward,
+                                               "time", BACK_TIME
+             ));*/
+    }
     private void OnTriggerStay(Collider collider)
     {
         //Bubbleと同じ動きをする
@@ -255,11 +291,11 @@ public class Player : MonoBehaviour
         }
         else if (collider.gameObject.tag == "Goal")
         {
-            
+
             collider.transform.position = transform.position;
-           
+
             m_fade.GetComponent<Fader>().FadeIn();
-           
+
         }
     }
 
@@ -289,7 +325,7 @@ public class Player : MonoBehaviour
                 ));
         }
 
-       
+
 
 
     }

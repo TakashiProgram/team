@@ -22,6 +22,7 @@ public class InputManager : MonoBehaviour
     [SerializeField]
     private SceneNameList changeTarget;
 
+
     private Vector3 m_downWind;
 
     private int m_flip = 1;
@@ -154,7 +155,7 @@ public class InputManager : MonoBehaviour
 
                 case "Clear":
 
-                //    SceneChanger.LoadSceneAtListAsync(SceneNameList.StageSelect);
+                    SceneChanger.LoadSceneAtListAsync(changeTarget);
 
                     m_soundManager.GetComponent<SoundManage>().sound(DECISION_SOUND);
                     break;
@@ -175,7 +176,7 @@ public class InputManager : MonoBehaviour
                     // Select画面に移行する
                     //GameOverを表示するかも？
                     //デバッグ
-                   SceneChanger.LoadSceneAtListAsync(SceneNameList.StageSelect);
+                    SceneChanger.LoadSceneAtListAsync(changeTarget);
 
                     m_soundManager.GetComponent<SoundManage>().sound(DECISION_SOUND);
 
