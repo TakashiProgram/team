@@ -289,6 +289,9 @@ public class Player : MonoBehaviour
                 ));
         }
 
+       
+
+
     }
 
     private void OnTriggerEnter(Collider collider)
@@ -305,6 +308,32 @@ public class Player : MonoBehaviour
 
             }
         }
+
+        //if (collider.gameObject.tag == "EnemyBos")
+        //{
+        //    StartCoroutine("InvincibleTime");
+
+        //    Debug.Log("colliderDisEnabled");
+
+        //   // collider.gameObject.GetComponent<SphereCollider>().isTrigger = false;
+        //    if (m_desCount == DEATH_COUNT_MAX)
+        //    {
+        //        m_animator.SetBool("Death", true);
+
+        //        m_soundManager.GetComponent<SoundManage>().sound(DEATH_SOUND);
+        //        m_hp[DEATH_COUNT_MAX].SetActive(false);
+        //    }
+        //    else
+        //    {
+        //        m_animator.SetBool("Damage", true);
+        //    }
+
+
+        //    iTween.MoveTo(gameObject, iTween.Hash("position",
+        //                                          transform.position - transform.forward,
+        //                                          "time", BACK_TIME
+        //        ));
+        //}
 
     }
 
