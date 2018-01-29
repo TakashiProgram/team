@@ -34,4 +34,16 @@ public class StageData : ScriptableObject {
         return false;
     }
 	
+
+    public ClearRank GetRank(string _name)
+    {
+        for(int i = 0; i < data.Length; i++)
+        {
+            if(data[i].name == _name)
+            {
+                return data[i].rank;
+            }
+        }
+        return ClearRank.rank_none;
+    }
 }

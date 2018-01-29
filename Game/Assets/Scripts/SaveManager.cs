@@ -7,8 +7,9 @@ using System.Runtime.Serialization.Formatters.Binary;
 ///<summary>
 ///StageManagerの情報をもとに、セーブファイルを管理するクラスです。
 /// </summary>
-public static class SaveManager {
-   
+public static class SaveManager
+{
+
     //セーブ情報のすべてを格納する構造体
     [System.Serializable]
     public struct SaveData
@@ -30,12 +31,12 @@ public static class SaveManager {
         StageData.Data[] stageData = _data.data;
 
         //ステージデータの内容をsaveに格納
-       for (int i = 0;i < save.stageData.Length; i++)
+        for (int i = 0; i < save.stageData.Length; i++)
         {
             save.stageData[i] = stageData[i];
         }
 
-       //saveに格納されたデータをJsonをもとにテキストデータへ変換
+        //saveに格納されたデータをJsonをもとにテキストデータへ変換
         string sData = JsonUtility.ToJson(save);
 
         BinaryFormatter bFormatter = new BinaryFormatter();
@@ -45,7 +46,7 @@ public static class SaveManager {
         {
             //変換されたデータをFILE_NAMEで保存
             file = File.Create(Application.dataPath + FILE_NAME);
-            bFormatter.Serialize(file,sData);
+            bFormatter.Serialize(file, sData);
             file.Close();
         }
         catch (IOException)
