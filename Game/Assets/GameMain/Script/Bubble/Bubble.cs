@@ -39,9 +39,9 @@ public class Bubble : MonoBehaviour {
     //自動で上昇が発動するまでの時間
     private const int RISING_TIME = 3;
 
-    private const int RUPTURE_SOUND = 4;
+    private const int RUPTURE_SOUND = 2;
 
-    private const int ENTER_SOUND = 5;
+    private const int ENTER_SOUND = 3;
 
     //敵に当たったらScaleを変更する値
     private readonly Vector3 m_smallerScale = new Vector3(0.2f, 0.2f, 0.2f);

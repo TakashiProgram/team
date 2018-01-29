@@ -40,11 +40,11 @@ public class InputManager : MonoBehaviour
     //playerの回転
     private const int PLAYER_ROTATION = 90;
 
-    private const int INFLATE_SOUND = 1;
+    private const int INFLATE_SOUND = 0;
 
-    private const int BUBBLE_MAX_SOUND = 4;
+    private const int BUBBLE_MAX_SOUND = 1;
 
-    private const int DECISION_SOUND = 5;
+    private const int DECISION_SOUND = 7;
     //rayが届く距離
     private const float DISTANCE = 10f;
     //bubbleの大きさの変化の値
@@ -91,7 +91,6 @@ public class InputManager : MonoBehaviour
                    
                     if (m_stopWindFlag==false)
                     {
-                       // m_soundManager.GetComponent<SoundManage>().sound(0);
 
                         m_tapWindFlag = false;
                         hit.collider.GetComponent<SpriteRenderer>().color = m_setColor;
@@ -109,7 +108,6 @@ public class InputManager : MonoBehaviour
                     m_flip = 1;
                     if (m_stopWindFlag == false)
                     {
-                       // m_soundManager.GetComponent<SoundManage>().sound(0);
                         m_tapWindFlag = false;
                         hit.collider.GetComponent<SpriteRenderer>().color = m_setColor;
                         m_hitObject = hit;

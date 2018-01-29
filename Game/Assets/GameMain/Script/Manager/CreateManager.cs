@@ -26,7 +26,7 @@ public class CreateManager : MonoBehaviour {
 
     private float m_bubbleScale;
 
-    private const int WIND_SOUND = 3;
+    private const int WIND_SOUND = 6;
     
     //m_bubbleの最大scale
     private const float SCALE_MAX = 0.7f;

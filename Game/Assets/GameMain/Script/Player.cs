@@ -50,9 +50,11 @@ public class Player : MonoBehaviour
 
     private const int DEATH_COUNT_MAX = 2;
 
-    private const int DAMAGE_SOUND = 5;
+    private const int DAMAGE_SOUND = 4;
 
-    private const int DEATH_SOUND = 1;
+    private const int CHEACKPOINT_SOUND = 8;
+
+    private const int DEATH_SOUND = 5;
 
     private const float BACK_TIME = 1.0f;
 
@@ -163,7 +165,7 @@ public class Player : MonoBehaviour
                     m_water.GetComponent<EllipsoidParticleEmitter>().emit = true;
                     m_splash.GetComponent<EllipsoidParticleEmitter>().emit = false;
                     collision.gameObject.GetComponent<Animator>().speed = 1;
-                    Invoke("Water", 5);
+                    Invoke("Water", 0.6f);
                     Invoke("Splash", 20);
                     m_splashFlag = false;
                 }
@@ -173,7 +175,7 @@ public class Player : MonoBehaviour
                     m_water.GetComponent<EllipsoidParticleEmitter>().emit = true;
                     m_splash.GetComponent<EllipsoidParticleEmitter>().emit = false;
                     collision.gameObject.GetComponent<Animator>().speed = 1;
-                    Invoke("Water", 2);
+                    Invoke("Water", 0.6f);
                     Invoke("Splash", 20);
                     m_splashFlag = false;
 
@@ -285,7 +287,7 @@ public class Player : MonoBehaviour
         {
             collider.GetComponent<BoxCollider>().enabled = false;
 
-            m_soundManager.GetComponent<SoundManage>().sound(DAMAGE_SOUND);
+            m_soundManager.GetComponent<SoundManage>().sound(CHEACKPOINT_SOUND);
             m_formerPosition = this.transform.position;
 
         }
