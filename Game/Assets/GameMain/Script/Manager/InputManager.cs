@@ -154,7 +154,7 @@ public class InputManager : MonoBehaviour
 
                 case "Clear":
 
-                    SceneChanger.LoadSceneAtListAsync(SceneNameList.StageSelect);
+                //    SceneChanger.LoadSceneAtListAsync(SceneNameList.StageSelect);
 
                     m_soundManager.GetComponent<SoundManage>().sound(DECISION_SOUND);
                     break;
@@ -175,7 +175,7 @@ public class InputManager : MonoBehaviour
                     // Select画面に移行する
                     //GameOverを表示するかも？
                     //デバッグ
-                    SceneChanger.LoadSceneAtListAsync(SceneNameList.StageSelect);
+                   SceneChanger.LoadSceneAtListAsync(SceneNameList.StageSelect);
 
                     m_soundManager.GetComponent<SoundManage>().sound(DECISION_SOUND);
 
