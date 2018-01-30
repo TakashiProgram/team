@@ -30,12 +30,18 @@ public class StageSelectManager : MonoBehaviour {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
             RaycastHit2D hit = Physics2D.Raycast((Vector2)ray.origin, ray.direction, 50.0f);
-            Debug.Log(hit.collider.name);
-            if (hit && hit.collider.GetComponent<StageObject>())
+
+           
+            if (hit && hit.collider.GetComponent<StageObject>() )
             {
-                hit.collider.GetComponent<StageObject>().OpenWindow();
-                m_func = OpenWindow;
-                m_selectObject = hit.collider.gameObject;
+                StageChanger checkTarget = hit.collider.gameObject.transform.FindChild("TargetStage").GetComponent<StageChanger>();
+                Debug.Log(checkTarget);
+                if (checkTarget.IsRelease())
+                {
+                    hit.collider.GetComponent<StageObject>().OpenWindow();
+                    m_func = OpenWindow;
+                    m_selectObject = hit.collider.gameObject;
+                }
             }
         }
     }

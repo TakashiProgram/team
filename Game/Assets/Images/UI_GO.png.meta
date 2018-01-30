@@ -1,13 +1,13 @@
 fileFormatVersion: 2
-guid: a50750bcd7f5cc548bec49f1e4681184
-timeCreated: 1517206213
+guid: d3b6e5505db6c084fbfdab7653eb0ef6
+timeCreated: 1517279472
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: UI_AreaName_0
-    21300002: UI_AreaName_1
-    21300004: UI_AreaName_2
-    21300006: UI_AreaName_3
+    21300000: UI_GO_0
+    21300002: UI_GO_1
+    21300004: UI_GO_2
+    21300006: UI_GO_3
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -90,25 +90,12 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: UI_AreaName_0
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 384
-        width: 512
-        height: 128
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: UI_AreaName_1
+      name: UI_GO_0
       rect:
         serializedVersion: 2
         x: 0
         y: 256
-        width: 512
+        width: 672
         height: 128
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -116,12 +103,12 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: UI_AreaName_2
+      name: UI_GO_1
       rect:
         serializedVersion: 2
-        x: 0
+        x: 314
         y: 128
-        width: 512
+        width: 358
         height: 128
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -129,12 +116,25 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: UI_AreaName_3
+      name: UI_GO_2
       rect:
         serializedVersion: 2
-        x: 0
+        x: 314
         y: 0
-        width: 512
+        width: 358
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: UI_GO_3
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 128
+        width: 314
         height: 128
       alignment: 0
       pivot: {x: 0, y: 0}
