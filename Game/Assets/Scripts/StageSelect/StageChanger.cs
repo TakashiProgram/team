@@ -107,7 +107,7 @@ public class StageChanger : MonoBehaviour {
             return true;
         }
         Debug.Log("ChangeColor");
-        transform.parent.transform.FindChild("Icon").GetComponent<SpriteRenderer>().color = new Color(0.4f, 0.4f, 0.4f);
+        transform.parent.transform.Find("Icon").GetComponent<SpriteRenderer>().color = new Color(0.4f, 0.4f, 0.4f);
         return false;
 
     }

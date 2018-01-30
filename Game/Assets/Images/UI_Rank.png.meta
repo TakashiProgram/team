@@ -1,14 +1,16 @@
 fileFormatVersion: 2
 guid: c40523f4a5f664241a0e7ef1bfdf6950
-timeCreated: 1513738941
+timeCreated: 1517275628
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
     21300000: UI_Rank_0
     21300002: UI_Rank_1
     21300004: UI_Rank_2
-    21300006: UI_Rank_3
-    21300008: UI_Rank_4
+    21300006: UI_Rank_1
+    21300008: UI_Rank_2
+    21300010: UI_Rank_3
+    21300012: UI_Rank_4
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -94,12 +96,12 @@ TextureImporter:
       name: UI_Rank_0
       rect:
         serializedVersion: 2
-        x: 32
-        y: 4
-        width: 321
-        height: 116
+        x: 0
+        y: 0
+        width: 384
+        height: 128
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -107,12 +109,12 @@ TextureImporter:
       name: UI_Rank_1
       rect:
         serializedVersion: 2
-        x: 410
-        y: 9
-        width: 72
-        height: 111
+        x: 384
+        y: 0
+        width: 128
+        height: 128
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -120,12 +122,12 @@ TextureImporter:
       name: UI_Rank_2
       rect:
         serializedVersion: 2
-        x: 531
-        y: 8
-        width: 91
-        height: 109
+        x: 511
+        y: 0
+        width: 128
+        height: 128
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -133,12 +135,12 @@ TextureImporter:
       name: UI_Rank_3
       rect:
         serializedVersion: 2
-        x: 660
-        y: 8
-        width: 92
-        height: 112
+        x: 640
+        y: 0
+        width: 128
+        height: 128
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -146,12 +148,12 @@ TextureImporter:
       name: UI_Rank_4
       rect:
         serializedVersion: 2
-        x: 811
-        y: 35
-        width: 43
-        height: 25
+        x: 768
+        y: 0
+        width: 128
+        height: 128
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
