@@ -92,6 +92,10 @@ public class StageChanger : MonoBehaviour {
     ///</summary>
     private bool ReleaseCheck()
     {
+        if(m_sMgr == null)
+        {
+            m_sMgr = GameObject.Find("StageManager").GetComponent<StageManager>();
+        }
         //解放条件がない場合はtrue
         if (m_checkTarget == SceneNameList.None)
         {
@@ -99,8 +103,11 @@ public class StageChanger : MonoBehaviour {
         }
         else if (m_sMgr.IsClearStage(m_checkTarget))
         {
+  
             return true;
         }
+        Debug.Log("ChangeColor");
+        transform.parent.transform.FindChild("Icon").GetComponent<SpriteRenderer>().color = new Color(0.4f, 0.4f, 0.4f);
         return false;
 
     }
