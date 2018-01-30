@@ -21,6 +21,11 @@ public class StageObject : MonoBehaviour {
 
     private bool m_animationEndFlag;
 
+    [SerializeField]
+    private AudioClip selectAudio;
+    [SerializeField]
+    private AudioClip cancelAudio;
+
     // Use this for initialization
     void Start()
     {
@@ -72,6 +77,8 @@ public class StageObject : MonoBehaviour {
             m_animationEndFlag = false;
             m_state = MoveState.ms_select;
             m_moveTime = 0;
+            GetComponent<AudioSource>().clip = selectAudio;
+            GetComponent<AudioSource>().enabled = true;
         }
     }
 
@@ -83,6 +90,9 @@ public class StageObject : MonoBehaviour {
             m_animator.SetBool("WindowFlag", false);
             m_moveTime = 0;
             m_state = MoveState.ms_cancel;
+
+            GetComponent<AudioSource>().clip = cancelAudio;
+            GetComponent<AudioSource>().enabled = true;
         }
     }
 
@@ -99,5 +109,6 @@ public class StageObject : MonoBehaviour {
     public void AnimEnd()
     {
         m_animationEndFlag = true;
+        GetComponent<AudioSource>().enabled = false;
     }
 }

@@ -26,6 +26,10 @@ public class Fader : MonoBehaviour {
         if (m_fadeFlag)
         {
             m_range = Mathf.Min(m_range + ((1 / m_fadeTime) * Time.deltaTime), 1);
+            if(m_range >= 1.0)
+            {
+                GetComponent<AudioSource>().enabled = false;
+            }
         }else
         {
             m_range = Mathf.Max(m_range - ((1 / m_fadeTime) * Time.deltaTime), 0);
@@ -35,6 +39,7 @@ public class Fader : MonoBehaviour {
     {
         m_fadeFlag = true;
         Debug.Log("FadeInStart");
+        GetComponent<AudioSource>().enabled = true;
     }
 
     public void FadeOut()

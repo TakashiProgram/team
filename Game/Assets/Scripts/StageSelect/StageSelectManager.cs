@@ -34,7 +34,7 @@ public class StageSelectManager : MonoBehaviour {
            
             if (hit && hit.collider.GetComponent<StageObject>() )
             {
-                StageChanger checkTarget = hit.collider.gameObject.transform.Find("TargetStage").GetComponent<StageChanger>();
+                StageChanger checkTarget = hit.collider.gameObject.transform.FindChild("TargetStage").GetComponent<StageChanger>();
                 Debug.Log(checkTarget);
                 if (checkTarget.IsRelease())
                 {
