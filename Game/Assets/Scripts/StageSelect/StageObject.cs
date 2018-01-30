@@ -39,7 +39,7 @@ public class StageObject : MonoBehaviour {
             case MoveState.ms_wait:
                 break;
             case MoveState.ms_select:
-                transform.FindChild("Icon").GetComponent<SpriteRenderer>().sortingOrder = 10;
+                transform.Find("Icon").GetComponent<SpriteRenderer>().sortingOrder = 10;
                 if (m_moveTime < m_moveEndTime)
                 {
                     m_moveTime += Time.deltaTime;
@@ -55,7 +55,7 @@ public class StageObject : MonoBehaviour {
             case MoveState.ms_cancel:
                 if (m_moveTime < m_moveEndTime && m_animationEndFlag)
                 {
-                    transform.FindChild("Icon").GetComponent<SpriteRenderer>().sortingOrder = 5;
+                    transform.Find("Icon").GetComponent<SpriteRenderer>().sortingOrder = 5;
                     m_moveTime += Time.deltaTime;
                     Vector3 tmp = Vector3.Lerp(SELECT_POS, m_initPos, m_moveTime / m_moveEndTime);
                     tmp.z = transform.position.z;
