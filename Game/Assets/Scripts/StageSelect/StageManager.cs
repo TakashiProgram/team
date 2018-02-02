@@ -18,6 +18,8 @@ public class StageManager : MonoBehaviour
 
     private bool m_once;
 
+    private static bool m_LoadData = false;
+
 
     void Start()
     {
@@ -25,11 +27,12 @@ public class StageManager : MonoBehaviour
         if (!m_stagesData) { 
         m_stagesData = Resources.Load<StageData>("StagesData");
 
-            }
-        if (m_stagesData.data == null)
+        }
+        if (!m_LoadData)
         {
             Debug.Log("Save");
             LoadSaveFile();
+            m_LoadData = true;
         }
 
         LoadStagesData();
