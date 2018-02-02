@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 public static class SceneChanger{
 
     private const float DEFAULT_FADE_TIME = 1.0f;
+
+    private static bool m_once = false;
 	
    public static void LoadSceneAtList(SceneNameList _listName)
     {
@@ -19,11 +21,12 @@ public static class SceneChanger{
 
   public static void LoadSceneAtListAsync(SceneNameList _listName)
     {
-
+        m_once = true;
         CoroutineHandler.StartStaticCoroutine(LoadAtListAsync(_listName));
     }
     static IEnumerator LoadAtListAsync(SceneNameList _listName)
     {
+        if (m_once) yield break; 
         Debug.Log("LoadScene To :" + _listName.ToString());
         if ((int)_listName <= 0)
         {
