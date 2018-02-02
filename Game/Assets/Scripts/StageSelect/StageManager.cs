@@ -28,12 +28,12 @@ public class StageManager : MonoBehaviour
             }
         if (m_stagesData.data == null)
         {
+            Debug.Log("Save");
             LoadSaveFile();
         }
-        else
-        {
-            LoadStagesData();
-        }
+
+        LoadStagesData();
+       
         m_once = false;
         
       
