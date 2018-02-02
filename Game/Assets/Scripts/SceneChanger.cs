@@ -56,8 +56,9 @@ public static class SceneChanger{
             yield return new WaitForEndOfFrame();
         }
         Debug.Log("Secene Loaded");
-        m_once = false;
+
         asyncData.allowSceneActivation = true;
+        m_once = false;
     }
 }
 
