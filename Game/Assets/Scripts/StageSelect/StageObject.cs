@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class StageObject : MonoBehaviour {
-    enum MoveState
+    public enum MoveState
     {
         ms_wait,ms_select,ms_cancel
     }
@@ -110,5 +110,15 @@ public class StageObject : MonoBehaviour {
     {
         m_animationEndFlag = true;
         GetComponent<AudioSource>().enabled = false;
+    }
+
+    public MoveState GetState()
+    {
+        return m_state;
+    }
+
+    public bool IsAnimEnd()
+    {
+        return m_animationEndFlag;
     }
 }

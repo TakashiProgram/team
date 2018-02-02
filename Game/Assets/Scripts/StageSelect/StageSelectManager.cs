@@ -31,16 +31,22 @@ public class StageSelectManager : MonoBehaviour {
 
             RaycastHit2D hit = Physics2D.Raycast((Vector2)ray.origin, ray.direction, 50.0f);
 
-           
-            if (hit && hit.collider.GetComponent<StageObject>() )
+            for (int i = 0; i < m_stageObjects.Length; i++)
             {
-                StageChanger checkTarget = hit.collider.gameObject.transform.Find("TargetStage").GetComponent<StageChanger>();
-                Debug.Log(checkTarget);
-                if (checkTarget.IsRelease())
+                if (hit && hit.collider.GetComponent<StageObject>())
                 {
-                    hit.collider.GetComponent<StageObject>().OpenWindow();
-                    m_func = OpenWindow;
-                    m_selectObject = hit.collider.gameObject;
+                    if((m_stageObjects[i].GetComponent<StageObject>().GetState() == StageObject.MoveState.ms_select))
+                    {
+                        return;
+                    }
+                    StageChanger checkTarget = hit.collider.gameObject.transform.Find("TargetStage").GetComponent<StageChanger>();
+                    Debug.Log(checkTarget);
+                    if (checkTarget.IsRelease())
+                    {
+                        hit.collider.GetComponent<StageObject>().OpenWindow();
+                        m_func = OpenWindow;
+                        m_selectObject = hit.collider.gameObject;
+                    }
                 }
             }
         }
@@ -48,6 +54,10 @@ public class StageSelectManager : MonoBehaviour {
 
     private void OpenWindow()
     {
+        for(int i = 0; i < m_stageObjects.Length; i++)
+        {
+            if (!m_stageObjects[i].GetComponent<StageObject>().IsAnimEnd()) return;
+        }
         if (Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
