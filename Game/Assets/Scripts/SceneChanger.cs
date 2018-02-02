@@ -21,12 +21,13 @@ public static class SceneChanger{
 
   public static void LoadSceneAtListAsync(SceneNameList _listName)
     {
-        m_once = true;
+
         CoroutineHandler.StartStaticCoroutine(LoadAtListAsync(_listName));
     }
     static IEnumerator LoadAtListAsync(SceneNameList _listName)
     {
-        if (m_once) yield break; 
+        if (m_once) yield break;
+        m_once = true;
         Debug.Log("LoadScene To :" + _listName.ToString());
         if ((int)_listName <= 0)
         {
