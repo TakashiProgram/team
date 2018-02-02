@@ -18,6 +18,8 @@ public class EnemyBoss : MonoBehaviour
 
     private int m_randomCount = 0;
 
+    private int m_enemyHp = 3;
+
     private bool m_animatorFlag = true;
 
     private bool m_lockFlag = false;
@@ -89,6 +91,16 @@ public class EnemyBoss : MonoBehaviour
             if (this.transform.position == m_pos)
             {
                 m_animator.SetBool("Damage", true);
+                
+                m_enemyHp--;
+                Debug.Log(m_enemyHp);
+                if (m_enemyHp <= 0)
+                {
+                    m_animator.SetBool("Damage", false);
+                    m_animator.SetBool("Death", true);
+                    
+                }
+                test2();
             }
         }
 
