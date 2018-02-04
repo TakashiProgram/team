@@ -8,6 +8,9 @@ public class EnemyBoss : MonoBehaviour
     [SerializeField]
     private GameObject m_player;
 
+    [SerializeField]
+    private GameObject m_goal;
+
     private Animator m_animator;
 
     private Vector3 m_lockPos;
@@ -92,13 +95,15 @@ public class EnemyBoss : MonoBehaviour
             {
                 m_animator.SetBool("Damage", true);
                 
-                m_enemyHp--;
+                m_enemyHp=0;
                 Debug.Log(m_enemyHp);
                 if (m_enemyHp <= 0)
                 {
                     m_animator.SetBool("Damage", false);
                     m_animator.SetBool("Death", true);
-                    
+                    m_goal.SetActive(true);
+
+
                 }
                 test2();
             }
