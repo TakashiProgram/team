@@ -54,6 +54,8 @@ public class Player : MonoBehaviour
 
     private const int CHEACKPOINT_SOUND = 8;
 
+    private const int WATER_SOUN = 9;
+
     private const int DEATH_SOUND = 5;
 
     private const float BACK_TIME = 1.0f;
@@ -139,16 +141,18 @@ public class Player : MonoBehaviour
 
     public void Water()
     {
+        m_soundManager.GetComponent<SoundManage>().sound(WATER_SOUN);
         m_water.GetComponent<EllipsoidParticleEmitter>().emit = false;
         m_bossObject.GetComponent<EnemyBoss>().Invincible();
 
         //m_water[1].GetComponent<EllipsoidParticleEmitter>().emit = false;
     }
-    public void Splash()
-    {
-        m_splash.GetComponent<EllipsoidParticleEmitter>().emit = true;
-        m_splashFlag = true;
-    }
+    //public void Splash()
+    //{
+      
+    //    m_splash.GetComponent<EllipsoidParticleEmitter>().emit = true;
+    //    m_splashFlag = true;
+    //}
 
     private void OnCollisionStay(Collision collision)
     {//ここ追加

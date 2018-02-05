@@ -16,7 +16,6 @@ public class waterSwitch : MonoBehaviour {
     private void stop()
     {
         this.GetComponent<Animator>().speed = 0;
-        Debug.Log("erfbgdrfd");
         Invoke("Reset", 5);
     }
     private void stop2()
