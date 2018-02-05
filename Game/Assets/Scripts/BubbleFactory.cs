@@ -31,6 +31,10 @@ public class BubbleFactory : MonoBehaviour
     private VectorCheckers m_randomArea;
 
     private GameObject[] m_bubbles = new GameObject[BUBBLE_MAX];
+
+    // バブル生成フラグ
+    private bool isFactory = true;
+
     //作成する泡の次の保存位置
     private int m_bubbleIndex = 0;
 
@@ -40,14 +44,17 @@ public class BubbleFactory : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        m_time        = 0;
-        m_bubbleIndex = 0;
+        m_time        = 0;  // 計測
+        m_bubbleIndex = 0;  
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        if (!isFactory)
+        {
+            return;  
+        }
         m_time += Time.deltaTime;
         if (m_time > m_createTime)
         {
@@ -65,13 +72,19 @@ public class BubbleFactory : MonoBehaviour
             }
             else
             {
-                Destroy(m_bubbles[m_bubbleIndex]);
+                Destroy(m_bubbles[m_bubbleIndex]);      // バブル削除
                 m_bubbles[m_bubbleIndex++] = obj;
-                
             }
             //obj.GetComponent<Rigidbody>().AddForce(new Vector3(0, 0, 10));
             m_time = 0;
         }
         m_bubbleIndex = m_bubbleIndex % BUBBLE_MAX;
+    }
+
+    public void stopFactory()
+    {
+        // バブル生成停止
+        Debug.Log("生成停止");
+        isFactory = false;
     }
 }
