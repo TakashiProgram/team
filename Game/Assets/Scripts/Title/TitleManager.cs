@@ -26,6 +26,8 @@ public class TitleManager : MonoBehaviour
             // 画面クリック/タップで遷移
             if (Input.GetMouseButtonDown(0))
             {
+                GameObject.Find("bubbleFactory").GetComponent<BubbleFactory>().stopFactory();
+
                 SceneChanger.LoadSceneAtListAsync(changeTarget);
             }
         }
