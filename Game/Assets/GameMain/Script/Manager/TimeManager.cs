@@ -107,28 +107,26 @@ public class TimeManager : MonoBehaviour {
             if (m_rankTime >= (int)ScoreRank.S)
             {
                 m_image[RANK_COUNT].GetComponent<Image>().sprite = m_rank[(int)Rank.S];
-                //Selectからするようになったら消す
-              //  resources.data[0].rank = ClearRank.rank_S;
-                //Selectからするようになったらコメント解除
+
                 resources.SetClearRank(SceneManager.GetActiveScene().name, ClearRank.rank_S);
 
             } else if (m_Time <= (int)ScoreRank.S && m_Time >= (int)ScoreRank.B)
             {
                 m_image[RANK_COUNT].GetComponent<Image>().sprite = m_rank[(int)Rank.A];
-                //Selectからするようになったらコメント解除
+
                     resources.SetClearRank(SceneManager.GetActiveScene().name, ClearRank.rank_A);
             }
             else
             {
                 m_image[RANK_COUNT].GetComponent<Image>().sprite = m_rank[(int)Rank.B];
-                //Selectからするようになったらコメント解除
+
                   resources.SetClearRank(SceneManager.GetActiveScene().name, ClearRank.rank_B);
             }
         }
         else
         {
             m_image[RANK_COUNT].GetComponent<Image>().sprite = m_rank[(int)Rank.B];
-            //Selectからするようになったらコメント解除
+
                resources.SetClearRank(SceneManager.GetActiveScene().name, ClearRank.rank_B);
         }
         for (int i = 0; i < 3; i++)

@@ -31,6 +31,14 @@ public class EnemyBoss : MonoBehaviour
 
     private bool m_testFlag = false;
 
+    private bool m_attackFlag = false;
+
+    private float m_vector = 0;
+
+    private Vector3 t;
+
+    private Vector3 tr;
+
     void Start()
     {
         //Invoke("Water", 2);
@@ -44,16 +52,19 @@ public class EnemyBoss : MonoBehaviour
     void Update()
     {
         Debug.Log(m_randomCount);
+        Debug.Log(m_pos);
         if (m_animatorFlag)
         {
             switch (m_randomCount)
             {
                 case 0:
                     m_animator.SetBool("DashAttack", true);
+                    m_lockReleaseFlag = true;
                     m_animatorFlag = false;
                     break;
 
                 case 1:
+                 //   Invoke("IdleAttack", 5);
 
                     break;
             }
@@ -65,23 +76,43 @@ public class EnemyBoss : MonoBehaviour
         {
             if (m_lockReleaseFlag)
             {
+
                 this.transform.LookAt(m_player.transform.position);
+                Invoke("LockRelease", 3);
+                Invoke("AttackStart", 5);
+
             }
 
-            Invoke("LockRelease", 3);
-            Invoke("AttackStart", 5);
 
         }
+        if (m_attackFlag)
+        {
+            t = this.transform.position;
+            t.x = m_lockPos.x;
+            t.y = m_lockPos.y;
+            t.z -= 0.5f;
+            this.transform.position = t;
+            //this.transform.position += new Vector3(m_lockPos.x,
+            //                                       m_lockPos.y,
+            //                                       m_lockPos.z - m_vector);
 
+            //this.transform.position += new Vector3(6.86f,
+            //                                      -2.94f,
+            //                                      10.49f + m_vector);
+            //  m_vector+=0.01f;
+            m_attackFlag = false;
+            
+        }
 
-        if (this.transform.position == m_lockPos)
+        if (this.transform.position.z <m_lockPos.z-10)
         {
 
-
+            
             m_pos.y = 14;
             this.transform.position = m_pos;
             this.transform.rotation = m_rotation;
             m_pos.y = -1.4f;
+            
             iTween.MoveTo(gameObject, iTween.Hash("position",
                                                  m_pos,
                                                  "time", 10));
@@ -91,11 +122,11 @@ public class EnemyBoss : MonoBehaviour
         }
         if (m_testFlag)
         {
-            if (this.transform.position == m_pos)
+
+            if (this.transform.position.y < m_pos.y+1.4f)
             {
                 m_animator.SetBool("Damage", true);
-                
-                m_enemyHp=0;
+                m_enemyHp--;
                 Debug.Log(m_enemyHp);
                 if (m_enemyHp <= 0)
                 {
@@ -120,6 +151,11 @@ public class EnemyBoss : MonoBehaviour
     {
         m_randomCount = Random.Range(0, 2);
 
+
+    }
+    public void IdleAttack()
+    {
+        m_randomCount = 0;
     }
     //Enemyが止まってPlayerの方向に向く
     public void RockOn()
@@ -130,14 +166,11 @@ public class EnemyBoss : MonoBehaviour
     //体当たり攻撃を行う
     public void AttackStart()
     {
-
-        iTween.MoveTo(gameObject, iTween.Hash("position",
-                                                 m_lockPos,
-                                                 "time", 5));
-
+        m_attackFlag = true;
+       
         this.GetComponent<Animator>().speed = 1;
         m_lockFlag = false;
-        m_lockReleaseFlag = true;
+        //m_lockReleaseFlag = true;
     }
     public void Reselt()
     {
@@ -146,10 +179,15 @@ public class EnemyBoss : MonoBehaviour
 
     public void LockRelease()
     {
-        m_lockPos = m_player.transform.position;
-        m_lockPos.y = m_player.transform.position.y - 2;
-        m_lockPos.z = -14;
-        m_lockReleaseFlag = false;
+        if (m_lockReleaseFlag)
+        {
+            m_lockPos = m_player.transform.position;
+
+            m_lockPos.y = m_player.transform.position.y - 2;
+            m_lockPos.z = -14;
+            m_lockReleaseFlag = false;
+        }
+       
 
     }
 
@@ -178,7 +216,6 @@ public class EnemyBoss : MonoBehaviour
         if (collider.gameObject.tag == "Player")
         {
             // StartCoroutine("InvincibleTime");
-            Debug.Log("efsddvc");
             // this.GetComponent<SphereCollider>().enabled = false;
 
             m_player.GetComponent<Player>().EnemyBoss();
