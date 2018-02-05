@@ -11,6 +11,8 @@ public class EnemyBoss : MonoBehaviour
     [SerializeField]
     private GameObject m_goal;
 
+    private GameObject m_material;
+
     private Animator m_animator;
 
     private Vector3 m_lockPos;
@@ -39,6 +41,11 @@ public class EnemyBoss : MonoBehaviour
 
     private Vector3 tr;
 
+    private float m_color=1;
+
+    private float m_reversal=0.01f;
+
+    private float m_moveColor;
     void Start()
     {
         m_animator = GetComponent<Animator>();
@@ -46,11 +53,13 @@ public class EnemyBoss : MonoBehaviour
         m_pos = this.transform.position;
 
         m_rotation = this.transform.rotation;
+
+        m_material = transform.Find("StoneMonster").gameObject;
     }
 
     void Update()
     {
-        Debug.Log(m_randomCount);
+        Debug.Log(m_reversal);
         if (m_animatorFlag)
         {
             switch (m_randomCount)
@@ -67,7 +76,70 @@ public class EnemyBoss : MonoBehaviour
                     break;
             }
         }
+        switch (m_enemyHp)
+        {
+            case 0:
+                m_material.GetComponent<SkinnedMeshRenderer>().material.color = new Color(1, m_color, m_color);
 
+                m_color += m_reversal;
+                if (m_color > 1)
+                {
+                    Debug.Log("fedd");
+                    m_reversal = m_reversal * -1;
+                   // m_reversal += m_moveColor;
+                    //  m_color -= 0.01f;
+                }
+                if (m_color < 0)
+                {
+                    m_reversal = m_reversal * -1;
+                   // m_reversal += m_moveColor;
+                    Debug.Log("fedd");
+                    //m_color += 0.01f;
+                }
+                break;
+
+            case 1:
+                m_material.GetComponent<SkinnedMeshRenderer>().material.color = new Color(1, m_color, m_color);
+
+                m_color += m_reversal;
+                if (m_color > 1)
+                {
+                    Debug.Log("fedd");
+                    m_reversal = m_reversal * -1;
+                   // m_reversal += m_moveColor;
+                    //  m_color -= 0.01f;
+                }
+                if (m_color < 0)
+                {
+                    m_reversal = m_reversal * -1;
+                 //   m_reversal += m_moveColor;
+                    Debug.Log("fedd");
+                    //m_color += 0.01f;
+                }
+                break;
+
+            case 2:
+                m_material.GetComponent<SkinnedMeshRenderer>().material.color = new Color(1, m_color, m_color);
+
+                m_color += m_reversal/*+ m_moveColor*/;
+                if (m_color > 1)
+                {
+                    Debug.Log("fedd");
+                    m_reversal = m_reversal * -1;
+                 //   m_reversal += m_moveColor;
+                    //  m_color -= 0.01f;
+                }
+                if (m_color < 0)
+                {
+                    m_reversal = m_reversal * -1;
+                 //   m_reversal += m_moveColor;
+                    Debug.Log("fedd");
+                    //m_color += 0.01f;
+                }
+               // m_moveColor = -0.02f;
+                break;
+
+        }
 
 
         if (m_lockFlag)
@@ -105,13 +177,15 @@ public class EnemyBoss : MonoBehaviour
             if (this.transform.position.y < m_pos.y+1.4f)
             {
                 m_animator.SetBool("Damage", true);
-                m_enemyHp=0;
+                m_enemyHp--;
+                // m_moveColor-=0.01f;
+                m_reversal+=0.01f; 
                 Debug.Log(m_enemyHp);
                 if (m_enemyHp <= 0)
                 {
                     m_animator.SetBool("Damage", false);
                     m_animator.SetBool("Death", true);
-                    m_goal.SetActive(true);
+                   // 
 
 
                 }
@@ -182,6 +256,10 @@ public class EnemyBoss : MonoBehaviour
         m_animatorFlag = true;
     }
 
+    private void End()
+    {
+        m_goal.SetActive(true);
+    }
 
     private void OnTriggerEnter(Collider collider)
     {
