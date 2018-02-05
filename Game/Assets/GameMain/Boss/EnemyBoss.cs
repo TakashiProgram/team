@@ -41,7 +41,6 @@ public class EnemyBoss : MonoBehaviour
 
     void Start()
     {
-        //Invoke("Water", 2);
         m_animator = GetComponent<Animator>();
         RandomAttack();
         m_pos = this.transform.position;
@@ -52,7 +51,6 @@ public class EnemyBoss : MonoBehaviour
     void Update()
     {
         Debug.Log(m_randomCount);
-        Debug.Log(m_pos);
         if (m_animatorFlag)
         {
             switch (m_randomCount)
@@ -64,7 +62,7 @@ public class EnemyBoss : MonoBehaviour
                     break;
 
                 case 1:
-                 //   Invoke("IdleAttack", 5);
+                    Invoke("Idle", 5);
 
                     break;
             }
@@ -78,8 +76,7 @@ public class EnemyBoss : MonoBehaviour
             {
 
                 this.transform.LookAt(m_player.transform.position);
-                Invoke("LockRelease", 3);
-                Invoke("AttackStart", 5);
+               
 
             }
 
@@ -141,6 +138,20 @@ public class EnemyBoss : MonoBehaviour
         }
 
     }
+    //Idle状態からAttackに移動
+    public void Idle()
+    {
+        m_randomCount = 0;
+    }
+
+
+
+
+    public void Reselt()
+    {
+        m_animator.SetBool("DashAttack", false);
+    }
+
     public void RandomBehavior()
     {
         m_randomCount = Random.Range(0, 2);
@@ -153,16 +164,8 @@ public class EnemyBoss : MonoBehaviour
 
 
     }
-    public void IdleAttack()
-    {
-        m_randomCount = 0;
-    }
-    //Enemyが止まってPlayerの方向に向く
-    public void RockOn()
-    {
-        this.GetComponent<Animator>().speed = 0;
-        m_lockFlag = true;
-    }
+   
+   
     //体当たり攻撃を行う
     public void AttackStart()
     {
@@ -172,10 +175,7 @@ public class EnemyBoss : MonoBehaviour
         m_lockFlag = false;
         //m_lockReleaseFlag = true;
     }
-    public void Reselt()
-    {
-        m_animator.SetBool("DashAttack", false);
-    }
+   
 
     public void LockRelease()
     {
@@ -211,6 +211,18 @@ public class EnemyBoss : MonoBehaviour
     //        Debug.Log("fdsdv");
     //    }
     //}
+
+    //Enemyが止まってPlayerの方向に向く
+    //Attackアニメーション
+    public void RockOn()
+    {
+        this.GetComponent<Animator>().speed = 0;
+        m_lockFlag = true;
+        Invoke("LockRelease", 3);
+        Invoke("AttackStart", 5);
+    }
+
+
     private void OnTriggerEnter(Collider collider)
     {
         if (collider.gameObject.tag == "Player")
