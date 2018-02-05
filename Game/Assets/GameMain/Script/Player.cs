@@ -140,7 +140,7 @@ public class Player : MonoBehaviour
     public void Water()
     {
         m_water.GetComponent<EllipsoidParticleEmitter>().emit = false;
-        m_bossObject.GetComponent<EnemyBoss>().test2();
+        m_bossObject.GetComponent<EnemyBoss>().Invincible();
 
         //m_water[1].GetComponent<EllipsoidParticleEmitter>().emit = false;
     }
@@ -188,7 +188,7 @@ public class Player : MonoBehaviour
     public void EnemyBossHit()
     {
         //  m_bossHitObject.GetComponent<Light>().enabled = true;
-        m_bossObject.GetComponent<EnemyBoss>().test();
+        m_bossObject.GetComponent<EnemyBoss>().Damage();
     }
     //リトライ時の倒れるモーション
     public void Down()

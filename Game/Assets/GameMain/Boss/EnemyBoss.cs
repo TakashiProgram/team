@@ -29,7 +29,7 @@ public class EnemyBoss : MonoBehaviour
 
     private bool m_lockReleaseFlag = true;
 
-    private bool m_testFlag = false;
+    private bool m_damageFlag = false;
 
     private bool m_attackFlag = false;
 
@@ -42,7 +42,7 @@ public class EnemyBoss : MonoBehaviour
     void Start()
     {
         m_animator = GetComponent<Animator>();
-        RandomAttack();
+        m_randomCount = 1;
         m_pos = this.transform.position;
 
         m_rotation = this.transform.rotation;
@@ -62,7 +62,7 @@ public class EnemyBoss : MonoBehaviour
                     break;
 
                 case 1:
-                    Invoke("Idle", 5);
+                  //  Invoke("Idle", 5);
 
                     break;
             }
@@ -72,39 +72,22 @@ public class EnemyBoss : MonoBehaviour
 
         if (m_lockFlag)
         {
-            if (m_lockReleaseFlag)
-            {
-
-                this.transform.LookAt(m_player.transform.position);
-               
-
-            }
-
-
-        }
-        if (m_attackFlag)
+            this.transform.LookAt(m_player.transform.position);
+            Invoke("AttackStart", 5);
+       
+        }else if (m_attackFlag)
         {
             t = this.transform.position;
             t.x = m_lockPos.x;
             t.y = m_lockPos.y;
             t.z -= 0.5f;
             this.transform.position = t;
-            //this.transform.position += new Vector3(m_lockPos.x,
-            //                                       m_lockPos.y,
-            //                                       m_lockPos.z - m_vector);
-
-            //this.transform.position += new Vector3(6.86f,
-            //                                      -2.94f,
-            //                                      10.49f + m_vector);
-            //  m_vector+=0.01f;
+           
             m_attackFlag = false;
-            
-        }
 
-        if (this.transform.position.z <m_lockPos.z-10)
+        }//噛みつき攻撃をした後に元のポジションに持っていく
+        else if (this.transform.position.z <m_lockPos.z-10)
         {
-
-            
             m_pos.y = 14;
             this.transform.position = m_pos;
             this.transform.rotation = m_rotation;
@@ -116,14 +99,13 @@ public class EnemyBoss : MonoBehaviour
             Invoke("RandomBehavior", 10);
 
 
-        }
-        if (m_testFlag)
+        }else if (m_damageFlag)
         {
 
             if (this.transform.position.y < m_pos.y+1.4f)
             {
                 m_animator.SetBool("Damage", true);
-                m_enemyHp--;
+                m_enemyHp=0;
                 Debug.Log(m_enemyHp);
                 if (m_enemyHp <= 0)
                 {
@@ -133,51 +115,47 @@ public class EnemyBoss : MonoBehaviour
 
 
                 }
-                test2();
+                Invincible();
             }
         }
 
     }
+   
     //Idle状態からAttackに移動
-    public void Idle()
+    private void Idle()
     {
         m_randomCount = 0;
     }
 
-
-
-
-    public void Reselt()
+    //Enemyが止まってPlayerの方向に向く
+    //Attackアニメーション
+    private void RockOn()
+    {
+        this.GetComponent<Animator>().speed = 0;
+        m_lockFlag = true;
+        Invoke("LockRelease", 3);
+       
+    }
+    //Attackアニメーション
+    private void Reselt()
     {
         m_animator.SetBool("DashAttack", false);
     }
-
-    public void RandomBehavior()
+    //Damageアニメーション
+    private void DmageStop()
     {
-        m_randomCount = Random.Range(0, 2);
-        m_animatorFlag = true;
+        m_animator.SetBool("Damage", false);
     }
-    //毎回違う攻撃を実行
-    public void RandomAttack()
+    public void Damage()
     {
-        m_randomCount = Random.Range(0, 2);
-
-
+        m_damageFlag = true;
     }
-   
-   
-    //体当たり攻撃を行う
-    public void AttackStart()
+    public void Invincible()
     {
-        m_attackFlag = true;
-       
-        this.GetComponent<Animator>().speed = 1;
-        m_lockFlag = false;
-        //m_lockReleaseFlag = true;
+        m_damageFlag = false;
     }
-   
 
-    public void LockRelease()
+    private void LockRelease()
     {
         if (m_lockReleaseFlag)
         {
@@ -186,40 +164,22 @@ public class EnemyBoss : MonoBehaviour
             m_lockPos.y = m_player.transform.position.y - 2;
             m_lockPos.z = -14;
             m_lockReleaseFlag = false;
+            m_lockFlag = false;
         }
+    }
+    //体当たり攻撃を行う
+    private void AttackStart()
+    {
+        m_attackFlag = true;
+
+        this.GetComponent<Animator>().speed = 1;
        
-
     }
-
-    public void test()
+    //攻撃した後に次の攻撃は何をするかを考える
+    private void RandomBehavior()
     {
-        m_testFlag = true;
-    }
-    public void test2()
-    {
-        m_testFlag = false;
-    }
-    public void DmageStop()
-    {
-        m_animator.SetBool("Damage", false);
-    }
-
-    //private void OnCollisionEnter(Collision collision)
-    //{
-    //    if (collision.gameObject.tag == "Move")
-    //    {
-    //        Debug.Log("fdsdv");
-    //    }
-    //}
-
-    //Enemyが止まってPlayerの方向に向く
-    //Attackアニメーション
-    public void RockOn()
-    {
-        this.GetComponent<Animator>().speed = 0;
-        m_lockFlag = true;
-        Invoke("LockRelease", 3);
-        Invoke("AttackStart", 5);
+        m_randomCount = Random.Range(0, 2);
+        m_animatorFlag = true;
     }
 
 
