@@ -11,6 +11,9 @@ public class EnemyBoss : MonoBehaviour
     [SerializeField]
     private GameObject m_goal;
 
+    [SerializeField]
+    private GameObject m_soundManager;
+
     private GameObject m_material;
 
     private Animator m_animator;
@@ -46,6 +49,12 @@ public class EnemyBoss : MonoBehaviour
     private float m_reversal=0.01f;
 
     private float m_moveColor;
+
+    private const int ATTACK_SOUND = 11;
+
+    private const int DAMAGE_SOUND = 12;
+
+    private const int DEATH_SOUND = 13;
     void Start()
     {
         m_animator = GetComponent<Animator>();
@@ -176,18 +185,18 @@ public class EnemyBoss : MonoBehaviour
 
             if (this.transform.position.y < m_pos.y+1.4f)
             {
-                m_animator.SetBool("Damage", true);
-                m_enemyHp--;
-                // m_moveColor-=0.01f;
-                m_reversal+=0.01f; 
-                Debug.Log(m_enemyHp);
+              
                 if (m_enemyHp <= 0)
                 {
+                    m_soundManager.GetComponent<SoundManage>().Sound(DEATH_SOUND, 2);
                     m_animator.SetBool("Damage", false);
                     m_animator.SetBool("Death", true);
-                   // 
+                    // 
 
 
+                }else
+                {
+                    Invoke("DamageAnimator", 0.4f);
                 }
                 Invincible();
             }
@@ -199,6 +208,15 @@ public class EnemyBoss : MonoBehaviour
     private void Idle()
     {
         m_randomCount = 0;
+    }
+    private void DamageAnimator()
+    {
+        m_soundManager.GetComponent<SoundManage>().Sound(DAMAGE_SOUND, 2);
+        m_animator.SetBool("Damage", true);
+        m_enemyHp--;
+        // m_moveColor-=0.01f;
+        m_reversal += 0.01f;
+        Debug.Log(m_enemyHp);
     }
 
     //Enemyが止まってPlayerの方向に向く
@@ -214,6 +232,11 @@ public class EnemyBoss : MonoBehaviour
     private void Reselt()
     {
         m_animator.SetBool("DashAttack", false);
+    }
+
+    private void AttackSound()
+    {
+        m_soundManager.GetComponent<SoundManage>().Sound(ATTACK_SOUND, 1);
     }
     //Damageアニメーション
     private void DmageStop()
@@ -233,6 +256,7 @@ public class EnemyBoss : MonoBehaviour
     {
         if (m_lockReleaseFlag)
         {
+            
             m_lockPos = m_player.transform.position;
 
             m_lockPos.y = m_player.transform.position.y - 2;
@@ -245,7 +269,7 @@ public class EnemyBoss : MonoBehaviour
     private void AttackStart()
     {
         m_attackFlag = true;
-
+        
         this.GetComponent<Animator>().speed = 1;
        
     }

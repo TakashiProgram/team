@@ -12,24 +12,26 @@ public class SoundManage : MonoBehaviour {
 
     [SerializeField]
     private GameObject m_resultSound;
-
-    private AudioSource audioSource;
+    [SerializeField]
+    private AudioSource[] audioSource;
+    
+    private AudioSource audioaSource;
 
     void Start () {
        
-        audioSource = gameObject.GetComponent<AudioSource>();
+        //audioSource = gameObject.GetComponent<AudioSource>();
        
     }
 	
 	void Update () {
        
     }
-    public void sound(int count)
+    public void Sound(int count , int array)
     {
 
-        audioSource.clip = audioClip[count];
+        audioSource[array].clip = audioClip[count];
 
-        audioSource.Play();
+        audioSource[array].Play();
 
     }
 
@@ -39,12 +41,12 @@ public class SoundManage : MonoBehaviour {
         m_resultSound.GetComponent<AudioSource>().mute = false;
         m_resultSound.SetActive(true);
     }
-    public void ContinuousSound(int count)
+    public void ContinuousSound(int count,int array)
     {
-        audioSource.clip = audioClip[count];
-        if (!audioSource.isPlaying)
+        audioSource[array].clip = audioClip[count];
+        if (!audioSource[array].isPlaying)
         {
-            audioSource.Play();
+            audioSource[array].Play();
         }
     }
 }

@@ -85,7 +85,7 @@ public class CreateManager : MonoBehaviour {
         {
             if (vector != Vector3.zero)
             {
-                m_soundManager.GetComponent<SoundManage>().sound(WIND_SOUND);
+                m_soundManager.GetComponent<SoundManage>().Sound(WIND_SOUND,0);
                  GameObject m_windBox; m_windBox= Instantiate(m_wind, m_bubbleCreateBox.transform.position, Quaternion.identity);
                 Destroy(m_windBox, 1);
             }

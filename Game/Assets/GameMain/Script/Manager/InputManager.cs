@@ -122,7 +122,7 @@ public class InputManager : MonoBehaviour
                 case "BubbleTap":
                     if (m_stopWindFlag == false)
                     {
-                        m_soundManager.GetComponent<SoundManage>().ContinuousSound(INFLATE_SOUND);
+                        m_soundManager.GetComponent<SoundManage>().ContinuousSound(INFLATE_SOUND,0);
                          m_tapWindFlag = false;
                         m_floatEnemyFlag = false;
                         m_bubbleTapSound = true;
@@ -155,7 +155,7 @@ public class InputManager : MonoBehaviour
 
                     SceneChanger.LoadSceneAtListAsync(changeTarget);
 
-                    m_soundManager.GetComponent<SoundManage>().sound(DECISION_SOUND);
+                    m_soundManager.GetComponent<SoundManage>().Sound(DECISION_SOUND,0);
                     break;
 
                 case "Decision":
@@ -164,7 +164,7 @@ public class InputManager : MonoBehaviour
 
                     m_cameraManager.GetComponent<CameraManager>().End();
 
-                    m_soundManager.GetComponent<SoundManage>().sound(DECISION_SOUND);
+                    m_soundManager.GetComponent<SoundManage>().Sound(DECISION_SOUND,0);
                     m_player.GetComponent<Player>().Down();
                  
                     break;
@@ -176,7 +176,7 @@ public class InputManager : MonoBehaviour
                     //デバッグ
                     SceneChanger.LoadSceneAtListAsync(changeTarget);
 
-                    m_soundManager.GetComponent<SoundManage>().sound(DECISION_SOUND);
+                    m_soundManager.GetComponent<SoundManage>().Sound(DECISION_SOUND,0);
 
                     break;
                     
@@ -191,7 +191,7 @@ public class InputManager : MonoBehaviour
                 m_tapWindFlag = true;
                 if (m_bubbleTapSound)
                 {
-                    m_soundManager.GetComponent<SoundManage>().sound(BUBBLE_MAX_SOUND);
+                    m_soundManager.GetComponent<SoundManage>().Sound(BUBBLE_MAX_SOUND,0);
                     m_bubbleTapSound = false;
                 }
                 
