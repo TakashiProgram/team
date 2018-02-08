@@ -65,6 +65,8 @@ public class InputManager : MonoBehaviour
 
     private bool once = false;
 
+    private bool tes = false;
+
   
     void Update()
     {
@@ -72,12 +74,19 @@ public class InputManager : MonoBehaviour
         {
             TapVector();
             TapRay();
-            m_ui.SetActive(true);
+            if (tes==false)
+            {
+                m_ui.SetActive(true);
+                tes = true;
+            }
+            
+            Debug.Log("adsgf");
         }
 
         if (m_fade.GetComponent<Fader>().IsFadeEnd() && !once)
         {
             m_particle.Play();
+            m_soundManager.GetComponent<SoundManage>().Sound(14, 0);
             once = true;
         }
         

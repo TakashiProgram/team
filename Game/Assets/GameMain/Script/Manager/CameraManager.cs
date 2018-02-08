@@ -152,6 +152,7 @@ public class CameraManager : MonoBehaviour {
         if (m_stop)
         {
             m_particle.GetComponent<ParticleSystem>().Play();
+            m_soundManager.GetComponent<SoundManage>().Sound(14, 0);
             Invoke("ResetSpeed", RESET_TIME);
             m_stop = false;
         }
