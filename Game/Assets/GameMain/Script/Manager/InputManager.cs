@@ -1,6 +1,7 @@
 ﻿using UnityEngine.SceneManagement;
 using UnityEngine;
 
+
 public class InputManager : MonoBehaviour
 {
 
@@ -9,6 +10,9 @@ public class InputManager : MonoBehaviour
 
     [SerializeField]
     private GameObject m_createManager;
+
+    [SerializeField]
+    private GameObject m_fade;
 
     [SerializeField]
     private Camera m_uiCamera;
@@ -22,6 +26,11 @@ public class InputManager : MonoBehaviour
     [SerializeField]
     private SceneNameList changeTarget;
 
+    [SerializeField]
+    private GameObject m_ui;
+
+    [SerializeField]
+    private ParticleSystem m_particle;
 
     private Vector3 m_downWind;
 
@@ -54,15 +63,31 @@ public class InputManager : MonoBehaviour
 
     private readonly Color m_resetColor = new Color(1.0f, 1.0f, 1.0f, 0.5f);
 
+    private bool once = false;
+
+  
     void Update()
     {
-       
-        TapVector();
-        TapRay();
-    }
+        if (m_particle.GetComponent<ParticleSystem>().isStopped && once)
+        {
+            TapVector();
+            TapRay();
+            m_ui.SetActive(true);
+        }
 
-    //タップしたオブジェクトの名前を取ってくる
-    private void TapRay()
+        if (m_fade.GetComponent<Fader>().IsFadeEnd() && !once)
+        {
+            m_particle.Play();
+            once = true;
+        }
+        
+
+        
+
+    }
+ 
+//タップしたオブジェクトの名前を取ってくる
+private void TapRay()
     {
         if (Input.GetMouseButton(0))
         {

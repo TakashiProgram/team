@@ -35,6 +35,9 @@ public class Player : MonoBehaviour
     [SerializeField]
     private GameObject[] m_hp;
 
+    [SerializeField]
+    private ParticleSystem m_particle;
+
     private Vector3 m_formerPosition;
 
     private Animator m_animator;
@@ -79,32 +82,38 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-
-        //落ちる前に保持したpositionをplayerに入れる
-        if (this.transform.position.y <= HOLE_POS_Y)
-        {
-            this.transform.position = m_formerPosition;
-            m_hp[m_desCount].SetActive(false);
-
-            m_soundManager.GetComponent<SoundManage>().Sound(DAMAGE_SOUND,0);
-            if (m_desCount == DEATH_COUNT_MAX)
+      //  if (m_particle.GetComponent<ParticleSystem>().isStopped)
+       // {
+            Debug.Log("eafsd");
+            //落ちる前に保持したpositionをplayerに入れる
+            if (this.transform.position.y <= HOLE_POS_Y)
             {
-                m_animator.SetBool("Death", true);
+                this.transform.position = m_formerPosition;
+                m_hp[m_desCount].SetActive(false);
 
-                m_soundManager.GetComponent<SoundManage>().Sound(DEATH_SOUND,0);
-                m_hp[DEATH_COUNT_MAX].SetActive(false);
+                m_soundManager.GetComponent<SoundManage>().Sound(DAMAGE_SOUND, 0);
+                if (m_desCount == DEATH_COUNT_MAX)
+                {
+                    m_animator.SetBool("Death", true);
 
+                    m_soundManager.GetComponent<SoundManage>().Sound(DEATH_SOUND, 0);
+                    m_hp[DEATH_COUNT_MAX].SetActive(false);
+
+                }
+                m_desCount++;
             }
-            m_desCount++;
-        }
 
 
-        if (m_fade.GetComponent<Fader>().IsFade() && m_fade.GetComponent<Fader>().IsFadeEnd())
-        {
-            m_fade.GetComponent<Fader>().FadeOut();
-            m_animator.SetBool("GameClear", true);
-            m_mainCamera.GetComponent<CameraManager>().Result();
-        }
+            if (m_fade.GetComponent<Fader>().IsFade() && m_fade.GetComponent<Fader>().IsFadeEnd())
+            {
+                m_fade.GetComponent<Fader>().FadeOut();
+                m_animator.SetBool("GameClear", true);
+                m_mainCamera.GetComponent<CameraManager>().Result();
+            }
+
+      //  }
+
+
     }
 
     //playerの移動
