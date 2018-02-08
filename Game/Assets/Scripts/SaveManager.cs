@@ -45,7 +45,7 @@ public static class SaveManager
         try
         {
             //変換されたデータをFILE_NAMEで保存
-            file = File.Create(Application.dataPath + FILE_NAME);
+            file = File.Create(Application.persistentDataPath + FILE_NAME);
             bFormatter.Serialize(file, sData);
             file.Close();
         }
@@ -61,7 +61,7 @@ public static class SaveManager
     public static StageData.Data[] LoadFile()
     {
         //FILE_NAMEが存在している場合にローディングを実行
-        if (File.Exists(Application.dataPath + FILE_NAME))
+        if (File.Exists(Application.persistentDataPath + FILE_NAME))
         {
             string loadData;
             StageData.Data[] ret;
@@ -70,7 +70,7 @@ public static class SaveManager
             try
             {
                 //データをstring形式で取得
-                file = File.Open(Application.dataPath + FILE_NAME, FileMode.Open);
+                file = File.Open(Application.persistentDataPath + FILE_NAME, FileMode.Open);
                 loadData = bFormatter.Deserialize(file) as string;
                 //Jsonを用いて取得したデータをSaveData形式に変換
                 ret = JsonUtility.FromJson<SaveData>(loadData).stageData;

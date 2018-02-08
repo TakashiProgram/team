@@ -44,7 +44,7 @@ public class DisplayRank : MonoBehaviour {
             return;
         }
         string stageName = target.GetChangeTarget().ToString();
-        m_rank = Resources.Load<StageData>("StagesData").GetRank(stageName);
+        m_rank = StageData.GetInstance().GetRank(stageName);
         m_rankSpriteObj.GetComponent<SpriteRenderer>().sprite = m_sprites[(int)m_rank];
         isLoad = true;
     }

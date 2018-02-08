@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName ="Tools/CreateStageData")]
-public class StageData : ScriptableObject {
+
+public class StageData : MonoBehaviour{
     [System.Serializable]
     public struct Data
     {
@@ -11,10 +11,21 @@ public class StageData : ScriptableObject {
         public bool ReleaseFlag;
         public ClearRank rank;
     }
-
+    protected static StageData m_instance ;
     [SerializeField]
     public Data[] data;
 
+    public static StageData GetInstance()
+    {
+        if(m_instance == null)
+        {
+            GameObject stageDataInstance = new GameObject("StagesData");
+            DontDestroyOnLoad(stageDataInstance);
+            m_instance = stageDataInstance.AddComponent<StageData>();
+
+        }
+        return m_instance;
+    }
     /// <summary>
     /// 存在するデータから指定の名前のランク情報を上書きします
     /// </summary>
@@ -45,5 +56,13 @@ public class StageData : ScriptableObject {
             }
         }
         return ClearRank.rank_none;
+    }
+
+    public void OnDisable()
+    {
+        if (m_instance)
+        {
+            Destroy(m_instance.gameObject);
+        }
     }
 }
