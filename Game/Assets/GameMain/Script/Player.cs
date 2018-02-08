@@ -151,12 +151,12 @@ public class Player : MonoBehaviour
 
         //m_water[1].GetComponent<EllipsoidParticleEmitter>().emit = false;
     }
-    //public void Splash()
-    //{
-      
-    //    m_splash.GetComponent<EllipsoidParticleEmitter>().emit = true;
-    //    m_splashFlag = true;
-    //}
+    public void Splash()
+    {
+
+        m_splash.GetComponent<EllipsoidParticleEmitter>().emit = true;
+        m_splashFlag = true;
+    }
 
     private void OnCollisionStay(Collision collision)
     {//ここ追加
@@ -175,7 +175,7 @@ public class Player : MonoBehaviour
                     m_splash.GetComponent<EllipsoidParticleEmitter>().emit = false;
                     collision.gameObject.GetComponent<Animator>().speed = 1;
                     Invoke("Water", 0.6f);
-                //    Invoke("Splash", 20);
+                    Invoke("Splash", 15);
                     m_splashFlag = false;
                 }
                 else
@@ -186,7 +186,7 @@ public class Player : MonoBehaviour
                     m_splash.GetComponent<EllipsoidParticleEmitter>().emit = false;
                     collision.gameObject.GetComponent<Animator>().speed = 1;
                     Invoke("Water", 0.6f);
-                   // Invoke("Splash", 20);
+                    Invoke("Splash", 15);
                     m_splashFlag = false;
 
                 }
