@@ -26,7 +26,6 @@ public class StageManager : MonoBehaviour
         //アセットのResourcesフォルダから該当のオブジェクトをロード
         if (!m_stagesData) { 
         m_stagesData = Resources.Load<StageData>("StagesData");
-
         }
         if (!m_LoadData)
         {
