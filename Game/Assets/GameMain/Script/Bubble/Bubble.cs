@@ -60,7 +60,7 @@ public class Bubble : MonoBehaviour {
         {
           
             m_bubbleStock.GetComponent<BubbleController>().Burst();
-            m_soundManager.GetComponent<SoundManage>().sound(RUPTURE_SOUND);
+            m_soundManager.GetComponent<SoundManage>().Sound(RUPTURE_SOUND,0);
         }
       
             m_bubbleStock = this.gameObject;
@@ -91,7 +91,7 @@ public class Bubble : MonoBehaviour {
         ParentRelease();
         this.GetComponent<BubbleController>().Burst();
 
-        m_soundManager.GetComponent<SoundManage>().sound(RUPTURE_SOUND);
+        m_soundManager.GetComponent<SoundManage>().Sound(RUPTURE_SOUND,0);
     }
 
     public void EnemyFlag()
@@ -138,7 +138,7 @@ public class Bubble : MonoBehaviour {
         if (m_switchingObject == null)
         {
             m_switchingObject = collision.gameObject;
-            m_soundManager.GetComponent<SoundManage>().sound(ENTER_SOUND);
+            m_soundManager.GetComponent<SoundManage>().Sound(ENTER_SOUND,0);
 
         }
 

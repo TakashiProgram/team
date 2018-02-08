@@ -54,7 +54,9 @@ public class Player : MonoBehaviour
 
     private const int CHEACKPOINT_SOUND = 8;
 
-    private const int WATER_SOUN = 9;
+    private const int WATER_SOUND = 9;
+
+    private const int SWITCH_SOUND = 10;
 
     private const int DEATH_SOUND = 5;
 
@@ -65,6 +67,8 @@ public class Player : MonoBehaviour
     private const float MOVE_COUNT = 0.05f;
 
     private float MOVE_SOUND = 0.5f;
+
+
 
     void Start()
     {
@@ -82,12 +86,12 @@ public class Player : MonoBehaviour
             this.transform.position = m_formerPosition;
             m_hp[m_desCount].SetActive(false);
 
-            m_soundManager.GetComponent<SoundManage>().sound(DAMAGE_SOUND);
+            m_soundManager.GetComponent<SoundManage>().Sound(DAMAGE_SOUND,0);
             if (m_desCount == DEATH_COUNT_MAX)
             {
                 m_animator.SetBool("Death", true);
 
-                m_soundManager.GetComponent<SoundManage>().sound(DEATH_SOUND);
+                m_soundManager.GetComponent<SoundManage>().Sound(DEATH_SOUND,0);
                 m_hp[DEATH_COUNT_MAX].SetActive(false);
 
             }
@@ -123,7 +127,7 @@ public class Player : MonoBehaviour
 
         m_animator.SetBool("Death", true);
 
-        m_soundManager.GetComponent<SoundManage>().sound(DEATH_SOUND);
+        m_soundManager.GetComponent<SoundManage>().Sound(DEATH_SOUND,0);
 
     }
     //無敵時間
@@ -141,7 +145,7 @@ public class Player : MonoBehaviour
 
     public void Water()
     {
-        m_soundManager.GetComponent<SoundManage>().sound(WATER_SOUN);
+        m_soundManager.GetComponent<SoundManage>().Sound(WATER_SOUND,1);
         m_water.GetComponent<EllipsoidParticleEmitter>().emit = false;
         m_bossObject.GetComponent<EnemyBoss>().Invincible();
 
@@ -166,21 +170,23 @@ public class Player : MonoBehaviour
                 if (collision.gameObject.name == "LeftSwitch")
                 {
                     Debug.Log("左");
+                    m_soundManager.GetComponent<SoundManage>().Sound(SWITCH_SOUND,1);
                     m_water.GetComponent<EllipsoidParticleEmitter>().emit = true;
                     m_splash.GetComponent<EllipsoidParticleEmitter>().emit = false;
                     collision.gameObject.GetComponent<Animator>().speed = 1;
                     Invoke("Water", 0.6f);
-                    Invoke("Splash", 20);
+                //    Invoke("Splash", 20);
                     m_splashFlag = false;
                 }
                 else
                 {
                     Debug.Log("右");
+                    m_soundManager.GetComponent<SoundManage>().Sound(SWITCH_SOUND, 1);
                     m_water.GetComponent<EllipsoidParticleEmitter>().emit = true;
                     m_splash.GetComponent<EllipsoidParticleEmitter>().emit = false;
                     collision.gameObject.GetComponent<Animator>().speed = 1;
                     Invoke("Water", 0.6f);
-                    Invoke("Splash", 20);
+                   // Invoke("Splash", 20);
                     m_splashFlag = false;
 
                 }
@@ -210,7 +216,7 @@ public class Player : MonoBehaviour
         m_left.GetComponent<CircleCollider2D>().enabled = false;
         m_right.GetComponent<CircleCollider2D>().enabled = false;
 
-        m_soundManager.GetComponent<SoundManage>().sound(DAMAGE_SOUND);
+        m_soundManager.GetComponent<SoundManage>().Sound(DAMAGE_SOUND,0);
         m_hp[m_desCount].SetActive(false);
         m_desCount++;
 
@@ -260,7 +266,7 @@ public class Player : MonoBehaviour
         {
             m_animator.SetBool("Death", true);
 
-            m_soundManager.GetComponent<SoundManage>().sound(DEATH_SOUND);
+            m_soundManager.GetComponent<SoundManage>().Sound(DEATH_SOUND,0);
             m_hp[DEATH_COUNT_MAX].SetActive(false);
         }
         else
@@ -291,7 +297,7 @@ public class Player : MonoBehaviour
         {
             collider.GetComponent<BoxCollider>().enabled = false;
 
-            m_soundManager.GetComponent<SoundManage>().sound(CHEACKPOINT_SOUND);
+            m_soundManager.GetComponent<SoundManage>().Sound(CHEACKPOINT_SOUND,0);
             m_formerPosition = this.transform.position;
 
         }
@@ -316,7 +322,7 @@ public class Player : MonoBehaviour
             {
                 m_animator.SetBool("Death", true);
 
-                m_soundManager.GetComponent<SoundManage>().sound(DEATH_SOUND);
+                m_soundManager.GetComponent<SoundManage>().Sound(DEATH_SOUND,0);
                 m_hp[DEATH_COUNT_MAX].SetActive(false);
             }
             else
