@@ -22,7 +22,7 @@ public class waterSwitch : MonoBehaviour {
     {
         this.GetComponent<Animator>().speed = 0;
         
-        Invoke("Reset", 5);
+        //Invoke("Reset", 5);
     }
     private void stop2()
     {

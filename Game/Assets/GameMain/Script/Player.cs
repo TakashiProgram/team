@@ -36,6 +36,10 @@ public class Player : MonoBehaviour
     private GameObject[] m_hp;
 
     [SerializeField]
+    private GameObject[] m_rrr;
+
+
+    [SerializeField]
     private ParticleSystem m_particle;
 
     private Vector3 m_formerPosition;
@@ -72,7 +76,7 @@ public class Player : MonoBehaviour
     private float MOVE_SOUND = 0.5f;
 
 
-
+    private Collision col;
     void Start()
     {
         m_animator = GetComponent<Animator>();
@@ -164,6 +168,15 @@ public class Player : MonoBehaviour
     {
 
         m_splash.GetComponent<EllipsoidParticleEmitter>().emit = true;
+       // col.gameObject.GetComponent<waterSwitch>().Reset();
+
+        GameObject[] switchs = GameObject.FindGameObjectsWithTag("Switch");
+        for (int i = 0; i < switchs.Length; i++)
+        {
+            switchs[i].gameObject.GetComponent<waterSwitch>().Reset();
+
+        }
+
         m_splashFlag = true;
     }
 
@@ -176,27 +189,38 @@ public class Player : MonoBehaviour
             {
                 // Invoke("EnemyBossHit()", 1f);
                 EnemyBossHit();
-                if (collision.gameObject.name == "LeftSwitch")
+               // if (collision.gameObject.name == "LeftSwitch")
                 {
                     Debug.Log("左");
                     m_soundManager.GetComponent<SoundManage>().Sound(SWITCH_SOUND,1);
                     m_water.GetComponent<EllipsoidParticleEmitter>().emit = true;
                     m_splash.GetComponent<EllipsoidParticleEmitter>().emit = false;
-                    collision.gameObject.GetComponent<Animator>().speed = 1;
+                    GameObject[] switchs = GameObject.FindGameObjectsWithTag("Switch");
+                    Debug.Log(switchs.Length);
+                    for (int i = 0; i < switchs.Length; i++)
+                    {
+                        switchs[i].gameObject.GetComponent<Animator>().speed = 1;
+
+                    }
+                 //  collision.gameObject.GetComponent<Animator>().speed = 1;
+                   
+                    
                     Invoke("Water", 0.6f);
                     Invoke("Splash", 15);
+                    col = collision;
                     m_splashFlag = false;
                 }
-                else
+             //   else
                 {
-                    Debug.Log("右");
-                    m_soundManager.GetComponent<SoundManage>().Sound(SWITCH_SOUND, 1);
-                    m_water.GetComponent<EllipsoidParticleEmitter>().emit = true;
-                    m_splash.GetComponent<EllipsoidParticleEmitter>().emit = false;
-                    collision.gameObject.GetComponent<Animator>().speed = 1;
-                    Invoke("Water", 0.6f);
-                    Invoke("Splash", 15);
-                    m_splashFlag = false;
+                 //   Debug.Log("右");
+                 //   m_soundManager.GetComponent<SoundManage>().Sound(SWITCH_SOUND, 1);
+                 //   m_water.GetComponent<EllipsoidParticleEmitter>().emit = true;
+                 //   m_splash.GetComponent<EllipsoidParticleEmitter>().emit = false;
+                 ////   collision.gameObject.GetComponent<Animator>().speed = 1;
+                 //   Invoke("Water", 0.6f);
+                 //   Invoke("Splash", 15);
+                 //   col = collision;
+                 //   m_splashFlag = false;
 
                 }
             }
