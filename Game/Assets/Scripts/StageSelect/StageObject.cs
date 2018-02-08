@@ -26,6 +26,9 @@ public class StageObject : MonoBehaviour {
     [SerializeField]
     private AudioClip cancelAudio;
 
+    [SerializeField]
+    private GameObject SE;
+
     // Use this for initialization
     void Start()
     {
@@ -35,6 +38,10 @@ public class StageObject : MonoBehaviour {
         m_state = MoveState.ms_wait;
         m_initPos = transform.position;
         m_animationEndFlag = true;
+        if (!SE)
+        {
+            SE = GameObject.Find("SE");
+        }
     }
 	
 	// Update is called once per frame
@@ -77,8 +84,8 @@ public class StageObject : MonoBehaviour {
             m_animationEndFlag = false;
             m_state = MoveState.ms_select;
             m_moveTime = 0;
-            GetComponent<AudioSource>().clip = selectAudio;
-            GetComponent<AudioSource>().enabled = true;
+            SE.GetComponent<AudioSource>().clip = selectAudio;
+            SE.GetComponent<AudioSource>().enabled = true;
         }
     }
 
@@ -91,8 +98,8 @@ public class StageObject : MonoBehaviour {
             m_moveTime = 0;
             m_state = MoveState.ms_cancel;
 
-            GetComponent<AudioSource>().clip = cancelAudio;
-            GetComponent<AudioSource>().enabled = true;
+            SE.GetComponent<AudioSource>().clip = cancelAudio;
+            SE.GetComponent<AudioSource>().enabled = true;
         }
     }
 
@@ -109,7 +116,7 @@ public class StageObject : MonoBehaviour {
     public void AnimEnd()
     {
         m_animationEndFlag = true;
-        GetComponent<AudioSource>().enabled = false;
+        SE.GetComponent<AudioSource>().enabled = false;
     }
 
     public MoveState GetState()
