@@ -77,10 +77,13 @@ public class Player : MonoBehaviour
 
 
     private Collision col;
+
+    private bool te = false;
     void Start()
     {
         m_animator = GetComponent<Animator>();
         m_formerPosition = this.transform.position;
+        te = false;
 
     }
 
@@ -108,7 +111,7 @@ public class Player : MonoBehaviour
             }
 
 
-            if (m_fade.GetComponent<Fader>().IsFade() && m_fade.GetComponent<Fader>().IsFadeEnd())
+            if (m_fade.GetComponent<Fader>().IsFade() && m_fade.GetComponent<Fader>().IsFadeEnd()&&te)
             {
                 m_fade.GetComponent<Fader>().FadeOut();
                 m_animator.SetBool("GameClear", true);
@@ -340,6 +343,7 @@ public class Player : MonoBehaviour
             collider.transform.position = transform.position;
 
             m_fade.GetComponent<Fader>().FadeIn();
+            te = true;
 
         }
     }

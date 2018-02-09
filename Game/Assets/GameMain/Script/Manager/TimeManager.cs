@@ -47,7 +47,10 @@ public class TimeManager : MonoBehaviour {
     private const int TAP_COUNT = 4;
 
     private StageData resources;
+    private bool te = false;
 
+    [SerializeField]
+    private SceneNameList changeTarget;
     private enum ScoreRank
     {
         S =100,
@@ -61,7 +64,7 @@ public class TimeManager : MonoBehaviour {
         A,
         B
     }
-
+    private bool sss = false;
 
     void Start () {
         m_resetTime = m_Time;
@@ -72,11 +75,15 @@ public class TimeManager : MonoBehaviour {
 	
 	void Update () {
         Disable();
-        if (m_Time<=0)
+        if (m_Time<=0&&sss==false)
         {
             m_Time = 0;
             m_range = 0;
             m_player.GetComponent<Player>().Expiration();
+
+
+            sss = true;
+            SceneChanger.LoadSceneAtListAsync(changeTarget);
         }
     }
     private void Disable()
@@ -139,6 +146,12 @@ public class TimeManager : MonoBehaviour {
             m_digitUp = m_digitUp * 10;
 
         }
+
+        if (te)
+        {
+           // m_image[RANK_COUNT].GetComponent<Image>().sprite = m_rank[(int)Rank.B];
+       //     resources.SetClearRank(SceneManager.GetActiveScene().name, ClearRank.rank_B);
+        }
         
         Invoke("Tap", 1.0f);
     }
@@ -150,5 +163,10 @@ public class TimeManager : MonoBehaviour {
     public void RankFixed()
     {
         m_fixed = false;
+    }
+
+    public void test()
+    {
+        te = true;
     }
 }

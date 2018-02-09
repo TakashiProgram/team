@@ -24,6 +24,9 @@ public class InputManager : MonoBehaviour
     private GameObject m_soundManager;
 
     [SerializeField]
+    private GameObject m_timeManager;
+
+    [SerializeField]
     private SceneNameList changeTarget;
 
     [SerializeField]
@@ -200,7 +203,10 @@ private void TapRay()
 
                     m_soundManager.GetComponent<SoundManage>().Sound(DECISION_SOUND,0);
                     m_player.GetComponent<Player>().Down();
-                 
+
+                    m_timeManager.GetComponent<TimeManager>().test();
+
+
                     break;
 
                 case "Cancel":
