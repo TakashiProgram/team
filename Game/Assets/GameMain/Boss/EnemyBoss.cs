@@ -80,7 +80,7 @@ public class EnemyBoss : MonoBehaviour
                     break;
 
                 case 1:
-                  //  Invoke("Idle", 5);
+                    Invoke("Idle", 5);
 
                     break;
             }
